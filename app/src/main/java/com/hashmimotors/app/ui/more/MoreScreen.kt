@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Assessment
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Inventory
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Settings
@@ -44,7 +45,8 @@ fun MoreScreen(
     onReports: () -> Unit,
     onHistory: () -> Unit,
     onShop: () -> Unit,
-    onSettings: () -> Unit
+    onSettings: () -> Unit,
+    onFastScan: () -> Unit = {}
 ) {
     Column(
         Modifier
@@ -54,6 +56,7 @@ fun MoreScreen(
     ) {
         HmTopBar(title = "Workshop", subtitle = "Every tool is free — nothing to unlock")
         Column(Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            MoreRow("Fast scan", "Keep camera open — stock in, stock out, label ID", Icons.Filled.QrCodeScanner, onFastScan)
             MoreRow("Inventory", "Count, adjust, low stock, movement ledger", Icons.Filled.Inventory, onInventory)
             MoreRow("Receive stock", "Purchase in with cost and supplier", Icons.Filled.Storefront, onAddStock)
             MoreRow("Suppliers", "Vendors for stock-in", Icons.Filled.LocalShipping, onSuppliers)

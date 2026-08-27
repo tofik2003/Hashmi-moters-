@@ -190,7 +190,7 @@ fun SettingsScreen(
             }
 
             SettingsSection("About") {
-                SettingsRow("Version", "1.4.0")
+                SettingsRow("Version", "1.5.0")
                 SettingsRow("Price", "Free forever — no ads, no IAP")
                 SettingsRow("Licence", "MIT · use and share freely")
                 SettingsRow("Data", "On this phone only")

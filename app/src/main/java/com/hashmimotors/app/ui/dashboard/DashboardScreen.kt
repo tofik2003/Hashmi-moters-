@@ -116,8 +116,8 @@ fun DashboardScreen(
                     HmIconWell(Icons.Filled.QrCodeScanner)
                     Spacer(Modifier.padding(8.dp))
                     Column(Modifier.weight(1f)) {
-                        Text("Scan barcode", color = Ivory, fontWeight = FontWeight.SemiBold)
-                        Text("Live camera — QR, EAN, Code-128", color = IvoryMute, fontSize = 12.sp)
+                        Text("Fast scan", color = Ivory, fontWeight = FontWeight.SemiBold)
+                        Text("In / out of stock, or identify a label", color = IvoryMute, fontSize = 12.sp)
                     }
                     Text("Open", color = Gold, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
                 }

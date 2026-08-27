@@ -44,6 +44,8 @@ import com.hashmimotors.app.ui.inventory.InventoryScreen
 import com.hashmimotors.app.ui.inventory.SupplierScreen
 import com.hashmimotors.app.ui.onboarding.OnboardingScreen
 import com.hashmimotors.app.ui.reports.ReportsScreen
+import com.hashmimotors.app.ui.scanner.ScanAction
+import com.hashmimotors.app.ui.scanner.ScanStationScreen
 import com.hashmimotors.app.ui.scanner.ScannerMode
 import com.hashmimotors.app.ui.scanner.ScannerScreen
 import com.hashmimotors.app.ui.settings.SettingsScreen
@@ -74,8 +76,10 @@ object Routes {
     const val IMPORT_HUB = "import_hub"
     const val MORE = "more"
     const val SCANNER = "scanner/{mode}"
+    const val SCAN_STATION = "scan_station/{mode}"
 
     fun scanner(mode: String) = "scanner/$mode"
+    fun scanStation(mode: String) = "scan_station/$mode"
     fun editPart(id: String) = "edit_part/$id"
     fun invoicePreview(id: String) = "invoice_preview/$id"
 }
@@ -186,7 +190,7 @@ fun HashmiMotorsMainScreen(
                     onHistory = { navController.navigate(Routes.INVOICE_HISTORY) },
                     onSettings = { navController.navigate(Routes.SETTINGS) },
                     onCustomers = { navController.navigate(Routes.CUSTOMERS) },
-                    onScan = { navController.navigate(Routes.scanner("search")) },
+                    onScan = { navController.navigate(Routes.scanStation("receive")) },
                     onImport = { navController.navigate(Routes.IMPORT_HUB) },
                     onInvoiceClick = { id -> navController.navigate(Routes.invoicePreview(id)) }
                 )
@@ -208,7 +212,8 @@ fun HashmiMotorsMainScreen(
                     onReports = { navController.navigate(Routes.REPORTS) },
                     onHistory = { navController.navigate(Routes.INVOICE_HISTORY) },
                     onShop = { navController.navigate(Routes.SHOP_SETUP) },
-                    onSettings = { navController.navigate(Routes.SETTINGS) }
+                    onSettings = { navController.navigate(Routes.SETTINGS) },
+                    onFastScan = { navController.navigate(Routes.scanStation("receive")) }
                 )
             }
             composable(Routes.SEARCH) { entry ->
@@ -227,6 +232,7 @@ fun HashmiMotorsMainScreen(
                     onPartClick = { id -> navController.navigate(Routes.editPart(id)) },
                     onAddPartClick = { navController.navigate(Routes.ADD_PART) },
                     onScanClick = { navController.navigate(Routes.scanner("search")) },
+                    onIdentifyClick = { navController.navigate(Routes.scanStation("identify")) },
                     onAddToBill = { partId ->
                         navController.navigate(Routes.NEW_BILL)
                         runCatching {
@@ -340,7 +346,7 @@ fun HashmiMotorsMainScreen(
                     onBack = { navController.popBackStack() },
                     onPartClick = { id -> navController.navigate(Routes.editPart(id)) },
                     onAddStock = { navController.navigate(Routes.ADD_STOCK) },
-                    onScan = { navController.navigate(Routes.scanner("inventory")) }
+                    onScan = { navController.navigate(Routes.scanStation("receive")) }
                 )
             }
             composable(Routes.SUPPLIERS) {
@@ -379,6 +385,34 @@ fun HashmiMotorsMainScreen(
                     onVoiceQuery = { spoken ->
                         navController.navigate(Routes.SEARCH)
                         navController.currentBackStackEntry?.savedStateHandle?.set("voice_query", spoken)
+                    }
+                )
+            }
+            composable(
+                Routes.SCAN_STATION,
+                arguments = listOf(navArgument("mode") { type = NavType.StringType })
+            ) { entry ->
+                val modeArg = entry.arguments?.getString("mode") ?: "receive"
+                val action = when (modeArg) {
+                    "checkout", "out" -> ScanAction.CHECKOUT
+                    "lookup", "find" -> ScanAction.LOOKUP
+                    "identify", "label" -> ScanAction.IDENTIFY
+                    else -> ScanAction.RECEIVE
+                }
+                ScanStationScreen(
+                    initialAction = action,
+                    onClose = { navController.popBackStack() },
+                    onOpenPart = { id -> navController.navigate(Routes.editPart(id)) },
+                    onAddUnknown = { code ->
+                        navController.navigate(Routes.ADD_PART)
+                        navController.currentBackStackEntry?.savedStateHandle?.set("scan_barcode", code)
+                    },
+                    onBillPart = { partId ->
+                        navController.navigate(Routes.NEW_BILL)
+                        runCatching {
+                            navController.getBackStackEntry(Routes.NEW_BILL)
+                                .savedStateHandle["add_part_id"] = partId
+                        }
                     }
                 )
             }
@@ -449,7 +483,7 @@ fun HashmiMotorsMainScreen(
                             popUpTo(Routes.DASHBOARD)
                             launchSingleTop = true
                         }
-                        MainTab.SCAN -> navController.navigate(Routes.scanner("search"))
+                        MainTab.SCAN -> navController.navigate(Routes.scanStation("receive"))
                         MainTab.BILL -> navController.navigate(Routes.NEW_BILL)
                         MainTab.MORE -> navController.navigate(Routes.MORE) {
                             popUpTo(Routes.DASHBOARD)

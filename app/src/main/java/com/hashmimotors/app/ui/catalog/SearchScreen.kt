@@ -29,6 +29,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.DocumentScanner
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Warning
@@ -76,6 +77,7 @@ fun SearchScreen(
     onPartClick: (String) -> Unit,
     onAddPartClick: () -> Unit,
     onScanClick: () -> Unit,
+    onIdentifyClick: () -> Unit = {},
     onAddToBill: (String) -> Unit = {},
     onBack: () -> Unit
 ) {
@@ -86,7 +88,15 @@ fun SearchScreen(
     LaunchedEffect(incomingQuery) {
         if (incomingQuery.isNotBlank()) {
             viewModel.onSearchChange(incomingQuery)
+            viewModel.rememberQuery()
             onIncomingConsumed()
+        }
+    }
+
+    LaunchedEffect(state.searchQuery) {
+        if (state.searchQuery.trim().length >= 2) {
+            kotlinx.coroutines.delay(700)
+            viewModel.rememberQuery()
         }
     }
 
@@ -105,13 +115,13 @@ fun SearchScreen(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
-            HmTopBar(title = "Catalog", subtitle = "Search, scan, or add a part", onBack = onBack)
+            HmTopBar(title = "Catalog", subtitle = "Smart search · scan · label ID", onBack = onBack)
             Spacer(modifier = Modifier.height(4.dp))
 
             OutlinedTextField(
                 value = state.searchQuery,
                 onValueChange = { viewModel.onSearchChange(it) },
-                placeholder = { Text("Name, OEM, brand, barcode…") },
+                placeholder = { Text("Name, OEM, brand, barcode, notes…") },
                 leadingIcon = { Icon(Icons.Filled.Search, null, tint = Ivory.copy(alpha = 0.6f)) },
                 trailingIcon = {
                     Row {
@@ -134,6 +144,9 @@ fun SearchScreen(
                         IconButton(onClick = onScanClick) {
                             Icon(Icons.Filled.QrCodeScanner, "Scan", tint = Gold)
                         }
+                        IconButton(onClick = onIdentifyClick) {
+                            Icon(Icons.Filled.DocumentScanner, "Label ID", tint = Gold)
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -143,7 +156,26 @@ fun SearchScreen(
                 colors = hmFieldColors()
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (state.searchQuery.isBlank() && state.recent.isNotEmpty()) {
+                Text("Recent", color = Ivory.copy(0.6f), fontSize = 11.sp)
+                Spacer(Modifier.height(6.dp))
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(state.recent) { q ->
+                        CategoryChip(name = q, selected = false, onClick = { viewModel.onSearchChange(q) })
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            if (state.searchQuery.isNotBlank() && state.suggestions.isNotEmpty()) {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(state.suggestions) { s ->
+                        CategoryChip(name = s, selected = false, onClick = { viewModel.onSearchChange(s) })
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
 
             if (state.categories.isNotEmpty()) {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -188,7 +220,7 @@ fun SearchScreen(
             }
 
             Text(
-                text = "${state.parts.size} part${if (state.parts.size != 1) "s" else ""} found",
+                text = state.matchHint ?: "${state.parts.size} part${if (state.parts.size != 1) "s" else ""}",
                 color = Ivory.copy(alpha = 0.6f),
                 fontSize = 12.sp
             )
@@ -231,7 +263,16 @@ fun SearchScreen(
                         ) {
                             Icon(Icons.Filled.QrCodeScanner, null)
                             Spacer(Modifier.width(8.dp))
-                            Text("Open camera scanner")
+                            Text("Scan barcode")
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(
+                            onClick = onIdentifyClick,
+                            colors = ButtonDefaults.buttonColors(containerColor = Ivory.copy(0.18f), contentColor = Ivory)
+                        ) {
+                            Icon(Icons.Filled.DocumentScanner, null)
+                            Spacer(Modifier.width(8.dp))
+                            Text("Identify from label")
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Button(
@@ -414,6 +455,16 @@ fun PartListItem(
                         fontSize = 10.sp,
                         fontWeight = FontWeight.SemiBold
                     )
+                    if (onBillClick != null) {
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = "Bill",
+                            color = Gold,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.clickable { onBillClick() }
+                        )
+                    }
                 }
             }
         }
