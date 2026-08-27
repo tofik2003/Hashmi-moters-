@@ -228,15 +228,15 @@ eval "set -- $(
 
 # Execute Gradle and capture log on failure
 TMP_LOG=$(mktemp 2>/dev/null || echo "/tmp/gradle_build.log")
-"$JAVACMD" "$@" 2>&1 | tee "$TMP_LOG"
-GRADLE_EXIT_CODE=${PIPESTATUS[0]}
+"$JAVACMD" "$@" > "$TMP_LOG" 2>&1
+GRADLE_EXIT_CODE=$?
+cat "$TMP_LOG"
 
 if [ $GRADLE_EXIT_CODE -ne 0 ]; then
-    tail -n 40 "$TMP_LOG" | while IFS= read -r line; do
+    tail -n 30 "$TMP_LOG" | while IFS= read -r line; do
         if [ -n "$line" ]; then
-            # Clean special characters if needed
-            cleaned_line=$(echo "$line" | tr -d '\r\n')
-            echo "::error title=Gradle::$cleaned_line"
+            cleaned=$(echo "$line" | sed 's/[%#\r\n]/ /g')
+            echo "::error title=GradleLog::$cleaned"
         fi
     done
 fi
