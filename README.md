@@ -2,140 +2,115 @@
 
 A personal-use Android app for managing a spare parts shop. Built for shop owners and their staff (in this case: you and your father) to run the counter, manage inventory, and create GST-compliant bills.
 
-## ✨ Features
+## ✨ What actually works today
 
-- 📦 **Catalog Management** — Add 100s-1000s of parts, search by name/OEM/brand
-- 🚗 **Vehicle Compatibility Search** — "What fits my car?" 3-step wizard
-- 💰 **Billing & Invoicing** — GST-compliant Bill of Supply, PDF/WhatsApp/SMS share
-- 📊 **Inventory Tracking** — Add stock, low-stock alerts, movement history
-- 👥 **Multi-device Sync** — Two Google accounts share the same data
-- 🎨 **Polished UI** — Animated backgrounds, bounce buttons, confetti, sound effects
-- 📥 **7 SKU Import Methods** — Manual, CSV, Google Sheets, OCR, AI, barcode, voice
-- 🌐 **Web Enrichment** — On-demand part suggestions from public catalogs (optional)
+- 📦 **Catalog** — add parts, search by name / SKU / OEM / brand, filter by category
+- 💰 **Billing** — cart with per-line and bill-level discounts, GST-composition Bill of Supply
+- 🧾 **Invoice sharing** — PDF generation, WhatsApp deep link, SMS share sheet
+- 📊 **Inventory** — stock in, manual adjustments, low-stock list, movement history
+- 📈 **Reports** — today, this month, and inventory valuation
+- 🚗 **Vehicle fitment** — 3-step make → model → variant wizard, 50+ Indian models pre-seeded
+- 👥 **Customers** — contact list with running purchase totals
+- 🎨 **Polish** — animated gradient/particle background, bounce buttons, splash, sound + haptics on bill save
+- ⚙️ **Settings** — theme mode, accent colour, background style, sounds, animations
+
+## 🚧 Not implemented yet (do not expect these)
+
+The plan in [`docs/APP_PLAN.md`](docs/APP_PLAN.md) describes a larger app. These parts are **not built**:
+
+- Multi-device sync / Firebase (dependencies are present but commented out; no sync code exists)
+- Photo capture, barcode scanning, OCR shelf photos, voice input, CSV/Sheets import
+- PIN lock and biometric unlock
+- Web enrichment (part suggestions from public catalogs)
+- Regular-scheme GST tax invoices — **only the composition scheme (Bill of Supply) is supported**
 
 ## 🏗️ Tech Stack
 
-- **Kotlin** + **Jetpack Compose** — Modern Android UI
-- **Room** — Local encrypted database (works offline)
-- **Hilt** — Dependency injection
-- **Firebase** (optional) — Multi-device sync
-- **ML Kit** — OCR & barcode scanning
-- **Material 3** — Design system
+| Layer | Tech |
+|---|---|
+| Language / UI | Kotlin 1.9.22 + Jetpack Compose (BOM 2024.02.00) + Material 3 |
+| Local storage | Room 2.6.1 (SQLite), KSP |
+| DI | Hilt 2.50 |
+| PDF | `android.graphics.pdf.PdfDocument` (framework, no extra dependency) |
+| Build | Gradle 8.5, AGP 8.2.2, JDK 17, `compileSdk` 34 / `minSdk` 26 |
 
-## 📊 Current Build Status
+> **The database is not encrypted.** An earlier revision of this README claimed
+> "Room — Local encrypted database". There is no SQLCipher dependency and no
+> encryption is configured; `hashmi_motors.db` is a plain SQLite file in app-private
+> storage. Treat the device itself as the security boundary.
 
-| Layer | Status | Files | Lines |
-|---|---|---|---|
-| Project setup (Gradle, manifest) | ✅ Complete | 8 | ~250 |
-| Theme & resources | ✅ Complete | 6 | ~400 |
-| Domain models | ✅ Complete | 1 | ~280 |
-| Data layer (Room) | ✅ Complete | 5 | ~700 |
-| Repositories | ✅ Complete | 7 | ~500 |
-| ViewModels | 🟡 Partial | 6 | ~400 |
-| UI Screens | 🟡 Partial | 7 | ~800 |
-| Navigation | 🟡 Basic | 1 | ~150 |
-| GitHub Actions CI | ✅ Complete | 1 | ~80 |
+## 🚀 Build & test
 
-**What's working:**
-- App opens, shows splash, onboarding, dashboard, shop setup, settings
-- Local database creates and persists
-- Hilt DI is fully wired
-- Theme & animations are functional
-- Build pipeline is configured
+### CI (recommended)
 
-**What's still needed (to be added in future iterations):**
-- Search Parts screen
-- Add Part form
-- Billing/Cart screen
-- Invoice Preview with PDF/WhatsApp
-- Inventory management screen
-- Fitment wizard
-- Web enrichment (Firebase Cloud Functions)
-- Release signing config
+Every push builds and tests automatically — see [`.github/workflows/build-apk.yml`](.github/workflows/build-apk.yml):
 
-## 🚀 Quick Start
+1. `./gradlew testDebugUnitTest` — unit tests (billing math, invoice numbering, Room converters)
+2. `./gradlew assembleDebug` — produces the APK
 
-### Option 1: Download pre-built APK (when available)
+Then: repo → **Actions** → latest green run → **Artifacts** → `HashmiMotors-debug`.
+Transfer to the phone and install (enable "Install from unknown sources").
 
-Once the GitHub Actions workflow runs successfully:
-1. Go to your repo → Actions tab
-2. Click the latest green build
-3. Scroll to "Artifacts" → Download `hashmi-motors-debug-apk`
-4. Transfer to your phone
-5. Install (you may need to enable "Install from unknown sources")
+### Local build
 
-### Option 2: Build locally in Android Studio
+```bash
+cp local.properties.example local.properties   # then set sdk.dir to your Android SDK
+./gradlew testDebugUnitTest                    # run the tests
+./gradlew assembleDebug                        # -> app/build/outputs/apk/debug/app-debug.apk
+```
 
-1. Install [Android Studio](https://developer.android.com/studio) (Hedgehog or later)
-2. Open this project
-3. Let Gradle sync (may take 5-10 minutes first time)
-4. Connect your phone with USB debugging enabled
-5. Click Run
+Or open the project in Android Studio (Hedgehog or later) and press Run.
 
-## 🔧 Setup Firebase (Optional - for sync)
+## 🧪 Tests
 
-If you want multi-device sync between your phone and your father's phone:
+Unit tests live in `app/src/test/` and cover the code where a mistake costs money
+or corrupts a bill:
 
-1. Go to https://console.firebase.google.com
-2. Create a new project: "Hashmi Motors"
-3. Add an Android app with package name: `com.hashmimotors.app`
-4. Download `google-services.json` to `app/google-services.json`
-5. Enable Authentication → Google Sign-In
-6. Create Firestore database (start in test mode)
-7. Edit `app/build.gradle.kts`:
-   - Uncomment Firebase dependencies
-   - Uncomment `id("com.google.gms.google-services")` plugin
-8. Add to `gradle.properties`:
-   ```
-   firebase.enabled=true
-   ```
+| Test | Guards against |
+|---|---|
+| `BillingUiStateTest` | Line discounts being subtracted twice from the grand total |
+| `InvoiceMathTest` | Discount clamping, negative totals |
+| `FinancialYearTest` | Invoice numbers using the calendar year instead of the 1 Apr – 31 Mar financial year |
+| `ConvertersTest` | Room TypeConverters losing or corrupting stored invoice lines |
+
+## 🔧 Setup Firebase (optional — sync is not implemented)
+
+Adding `google-services.json` alone does **not** give you sync; no synchronisation
+code has been written. If you later build it:
+
+1. Create a project at https://console.firebase.google.com named "Hashmi Motors"
+2. Add an Android app with package name `com.hashmimotors.app`
+3. Put `google-services.json` in `app/`
+4. Uncomment the Firebase dependencies in `app/build.gradle.kts`
+5. Add `firebase.enabled=true` to `gradle.properties`
 
 ## 📋 Requirements
 
-- **Android 8.0+** (API 26) — covers ~98% of devices
-- **2GB RAM minimum** for smooth animations
-- **100MB storage** for app + database
-- **Internet** only for sync (not required for daily use)
+- **Android 8.0+** (API 26)
+- **JDK 17** to build
+- Internet only for the optional sync (not needed for daily use)
 
 ## 📂 Project Structure
 
 ```
 Hashmi-moters-/
-├── .github/workflows/         # GitHub Actions CI/CD
-├── app/
-│   ├── build.gradle.kts       # App dependencies
-│   ├── src/main/
-│   │   ├── java/com/hashmimotors/app/
-│   │   │   ├── data/
-│   │   │   │   ├── local/     # Room DB
-│   │   │   │   └── repository/# Business logic
-│   │   │   ├── domain/model/  # Data classes
-│   │   │   ├── di/            # Hilt modules
-│   │   │   └── ui/            # Compose UI
-│   │   │       ├── theme/
-│   │   │       ├── components/
-│   │   │       ├── dashboard/
-│   │   │       ├── catalog/
-│   │   │       ├── billing/
-│   │   │       ├── inventory/
-│   │   │       ├── shop/
-│   │   │       ├── settings/
-│   │   │       ├── splash/
-│   │   │       └── onboarding/
-│   │   ├── res/               # Resources
-│   │   └── AndroidManifest.xml
-│   └── google-services.json   # (you add this)
+├── .github/workflows/build-apk.yml   # CI: unit tests + debug APK
+├── app/src/
+│   ├── main/java/com/hashmimotors/app/
+│   │   ├── data/local/               # Room entities, DAOs, converters, database
+│   │   ├── data/repository/          # Repositories (domain <-> Room mapping)
+│   │   ├── di/                       # Hilt modules
+│   │   ├── domain/model/             # Pure domain models
+│   │   ├── domain/money/             # Pure invoice math + financial year (unit tested)
+│   │   └── ui/                       # Compose screens, ViewModels, components
+│   ├── main/res/                     # Resources
+│   ├── main/AndroidManifest.xml
+│   └── test/java/                    # JVM unit tests
 ├── docs/
-│   └── APP_PLAN.md            # Full app specification
-├── gradle/wrapper/
-├── gradlew
-├── build.gradle.kts
-└── settings.gradle.kts
+│   ├── APP_PLAN.md                   # Full product specification (aspirational)
+│   └── AUDIT_REPORT.md               # Verified defect list and what was fixed
+└── gradle/wrapper/                   # Wrapper jar is committed, so ./gradlew works
 ```
-
-## 🐛 Known Issues / Roadmap
-
-This is an active build. The first build may have errors that we'll fix together.
 
 ## 📄 License
 

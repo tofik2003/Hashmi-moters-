@@ -96,24 +96,9 @@ class PartRepository @Inject constructor(
         )
     }
 
-    /**
-     * Decrement stock for a sale (used by billing).
-     */
-    suspend fun decrementStock(partId: String, qty: Int, invoiceId: String, userId: String) {
-        if (qty <= 0) return
-        partDao.adjustStock(partId, -qty)
-        stockMovementDao.insert(
-            StockMovementEntity(
-                id = java.util.UUID.randomUUID().toString(),
-                partId = partId,
-                type = StockMovementType.OUT.name,
-                qty = -qty,
-                refType = "INVOICE",
-                refId = invoiceId,
-                userId = userId
-            )
-        )
-    }
+    // NOTE: stock for a *sale* is decremented by InvoiceRepository.recordSale(),
+    // inside the same transaction as the invoice itself. Do not add a second,
+    // non-transactional path for it here.
 
     fun getRecentMovements(limit: Int = 50): Flow<List<StockMovementEntity>> =
         stockMovementDao.getRecent(limit)

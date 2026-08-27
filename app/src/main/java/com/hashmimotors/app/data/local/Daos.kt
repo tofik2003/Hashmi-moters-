@@ -175,14 +175,13 @@ interface InvoiceDao {
     @Query("SELECT * FROM invoices WHERE customerId = :customerId ORDER BY date DESC")
     fun getForCustomer(customerId: String): Flow<List<InvoiceEntity>>
 
-    @Query("SELECT COUNT(*) FROM invoices WHERE date >= :startOfDay AND date < :endOfDay")
-    fun countForDay(startOfDay: Long, endOfDay: Long): Flow<Int>
+    /** Sum of grandTotal for any half-open time range [start, end). */
+    @Query("SELECT COALESCE(SUM(grandTotal), 0) FROM invoices WHERE date >= :start AND date < :end")
+    fun totalBetween(start: Long, end: Long): Flow<Double>
 
-    @Query("SELECT COALESCE(SUM(grandTotal), 0) FROM invoices WHERE date >= :startOfDay AND date < :endOfDay")
-    fun totalForDay(startOfDay: Long, endOfDay: Long): Flow<Double>
-
-    @Query("SELECT COALESCE(SUM(grandTotal), 0) FROM invoices WHERE date >= :startOfDay AND date < :endOfDay AND status = 'PAID'")
-    fun paidTotalForDay(startOfDay: Long, endOfDay: Long): Flow<Double>
+    /** Number of invoices in any half-open time range [start, end). */
+    @Query("SELECT COUNT(*) FROM invoices WHERE date >= :start AND date < :end")
+    fun countBetween(start: Long, end: Long): Flow<Int>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(invoice: InvoiceEntity)

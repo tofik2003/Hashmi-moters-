@@ -70,6 +70,14 @@ android {
     }
 }
 
+// The CI workflow runs `./gradlew assembleDebug` and nothing else, and this
+// repository's GitHub App token is not allowed to edit .github/workflows/.
+// Gate the APK on the unit tests here instead, so a red test suite can never
+// produce a shippable artifact: `assembleDebug` fails if any test fails.
+tasks.named("assembleDebug") {
+    dependsOn("testDebugUnitTest")
+}
+
 dependencies {
     // Core
     implementation("androidx.core:core-ktx:1.12.0")
@@ -101,8 +109,20 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
     ksp("androidx.room:room-compiler:2.6.1")
 
-    // Security (for encrypted DB)
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    // NOTE: the following were previously declared but never referenced from any
+    // source file. They only inflated the APK (ML Kit + CameraX alone add several
+    // MB) and, in ML Kit's case, pulled a manifest placeholder for OCR/barcode
+    // models that the app never loads. Add them back together with the feature
+    // that actually uses them:
+    //   androidx.security:security-crypto   (DB is NOT encrypted - see README)
+    //   com.google.mlkit:text-recognition / barcode-scanning   (no OCR/scanner UI)
+    //   androidx.camera:*                                    (no photo capture)
+    //   com.airbnb.android:lottie-compose                    (animations are Compose)
+    //   nl.dionsegijn:konfetti-compose                       (no confetti screen)
+    //   io.coil-kt:coil-compose                              (no image loading)
+    //   androidx.datastore:datastore-preferences             (settings live in Room)
+    //   androidx.biometric:biometric                         (no PIN/biometric lock)
+    //   kotlinx-coroutines-play-services                     (no Firebase)
 
     // Firebase (optional - only included if firebase.enabled=true)
     // Uncomment these when you have set up Firebase and added google-services.json
@@ -111,38 +131,13 @@ dependencies {
     // implementation("com.google.firebase:firebase-firestore-ktx")
     // implementation("com.google.firebase:firebase-storage-ktx")
     // implementation("com.google.android.gms:play-services-auth:20.7.0")
-
-    // ML Kit (OCR & Barcode)
-    implementation("com.google.mlkit:text-recognition:16.0.0")
-    implementation("com.google.mlkit:barcode-scanning:17.2.0")
-
-    // CameraX
-    implementation("androidx.camera:camera-core:1.3.1")
-    implementation("androidx.camera:camera-camera2:1.3.1")
-    implementation("androidx.camera:camera-lifecycle:1.3.1")
-    implementation("androidx.camera:camera-view:1.3.1")
-
-    // Lottie animations
-    implementation("com.airbnb.android:lottie-compose:6.3.0")
-
-    // Konfetti (confetti animations)
-    implementation("nl.dionsegijn:konfetti-compose:2.0.5")
-
-    // Coil for image loading
-    implementation("io.coil-kt:coil-compose:2.5.0")
-
-    // DataStore
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
-
-    // Biometric
-    implementation("androidx.biometric:biometric:1.1.0")
 
     // Splash screen
     implementation("androidx.core:core-splashscreen:1.0.1")

@@ -33,7 +33,11 @@ object DatabaseModule {
             HashmiDatabase::class.java,
             "hashmi_motors.db"
         )
-            .fallbackToDestructiveMigration()
+            // NOTE: deliberately no fallbackToDestructiveMigration().
+            // This database holds the shop's real parts, bills and stock history.
+            // Silently wiping it on a schema change would destroy business data, so a
+            // missing migration must fail loudly instead. When you bump
+            // HashmiDatabase.version, add a matching Migration here.
             .build()
     }
 

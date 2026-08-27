@@ -8,6 +8,7 @@ import com.hashmimotors.app.domain.model.AnimationSpeed
 import com.hashmimotors.app.domain.model.AppSettings
 import com.hashmimotors.app.domain.model.BackgroundStyle
 import com.hashmimotors.app.domain.model.ThemeMode
+import com.hashmimotors.app.ui.sound.SoundManager
 import com.hashmimotors.app.ui.theme.AccentBlue
 import com.hashmimotors.app.ui.theme.AccentGreen
 import com.hashmimotors.app.ui.theme.AccentIndigo
@@ -22,7 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val soundManager: SoundManager
 ) : ViewModel() {
     val settings: StateFlow<AppSettings> = settingsRepository.getSettings()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AppSettings())
@@ -30,8 +32,17 @@ class SettingsViewModel @Inject constructor(
     fun setThemeMode(mode: ThemeMode) = update { it.copy(themeMode = mode) }
     fun setBackgroundStyle(style: BackgroundStyle) = update { it.copy(backgroundStyle = style) }
     fun setAccentColor(color: AccentColorType) = update { it.copy(accentColor = color) }
-    fun setSoundsEnabled(enabled: Boolean) = update { it.copy(soundsEnabled = enabled) }
-    fun setSoundVolume(volume: Int) = update { it.copy(soundVolume = volume) }
+    fun setSoundsEnabled(enabled: Boolean) {
+        // Keep the live player in step with the persisted setting so the toggle
+        // takes effect immediately instead of on the next app start.
+        soundManager.setEnabled(enabled)
+        update { it.copy(soundsEnabled = enabled) }
+    }
+
+    fun setSoundVolume(volume: Int) {
+        soundManager.setVolume(volume)
+        update { it.copy(soundVolume = volume) }
+    }
     fun setAnimationsEnabled(enabled: Boolean) = update { it.copy(animationsEnabled = enabled) }
     fun setAnimationSpeed(speed: AnimationSpeed) = update { it.copy(animationSpeed = speed) }
 

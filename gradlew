@@ -74,26 +74,6 @@ esac
 
 CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
 
-# If gradle-wrapper.jar is missing, download it automatically
-if [ ! -f "$CLASSPATH" ]; then
-    mkdir -p "$APP_HOME/gradle/wrapper"
-    echo "Gradle wrapper jar missing. Attempting to download..."
-    WRAPPER_URLS="https://raw.githubusercontent.com/gradle/gradle/v8.5.0/gradle/wrapper/gradle-wrapper.jar https://repo.maven.apache.org/maven2/org/gradle/gradle-wrapper/8.5/gradle-wrapper-8.5.jar"
-    for url in $WRAPPER_URLS; do
-        if command -v curl >/dev/null 2>&1; then
-            curl -fsSL -o "$CLASSPATH" "$url" && break
-        elif command -v wget >/dev/null 2>&1; then
-            wget -q -O "$CLASSPATH" "$url" && break
-        fi
-    done
-    if [ ! -f "$CLASSPATH" ]; then
-        if command -v gradle >/dev/null 2>&1; then
-            echo "Falling back to installed gradle..."
-            exec gradle "$@"
-        fi
-    fi
-fi
-
 
 # Determine the Java command to use to start the JVM.
 if [ -n "$JAVA_HOME" ] ; then

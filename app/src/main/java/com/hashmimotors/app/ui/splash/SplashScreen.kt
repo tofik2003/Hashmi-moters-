@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,6 +42,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+/** Minimum time the splash stays on screen, so the animation is never cut short. */
+private const val SPLASH_MIN_DURATION_MS = 1800L
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
@@ -78,12 +80,18 @@ fun SplashScreen(
 
     val isSetup = viewModel.isShopSetup.collectAsState().value
 
+    // Kick the entrance animation off immediately, independent of the DB read.
+    LaunchedEffect(Unit) { startAnimation = true }
+
+    // Decide where to go only once the shop-setup state is known. Navigating on a
+    // null value would send an already-configured shop back through onboarding
+    // whenever the first database read is slower than the splash animation.
+    val splashStartedAt = remember { System.currentTimeMillis() }
     LaunchedEffect(isSetup) {
-        startAnimation = true
-        delay(1800)
-        // Navigate based on setup state
-        val destination = if (isSetup == true) Routes.DASHBOARD else Routes.ONBOARDING
-        onNavigate(destination)
+        val setupComplete = isSetup ?: return@LaunchedEffect
+        val elapsed = System.currentTimeMillis() - splashStartedAt
+        if (elapsed < SPLASH_MIN_DURATION_MS) delay(SPLASH_MIN_DURATION_MS - elapsed)
+        onNavigate(if (setupComplete) Routes.DASHBOARD else Routes.ONBOARDING)
     }
 
     Box(

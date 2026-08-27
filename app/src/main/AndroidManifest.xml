@@ -2,19 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Network is only needed when the optional Firebase sync is switched on. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- Used by HapticManager for tactile feedback on bill save / errors. -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
+    <!--
+        Deliberately NOT requested: CAMERA, RECORD_AUDIO, READ_EXTERNAL_STORAGE and
+        READ_MEDIA_IMAGES. No screen in this app captures a photo, scans a barcode or
+        records audio yet, and asking for dangerous permissions the app cannot use is
+        both a privacy problem and a Play Store rejection risk. Add each one back
+        together with the feature that needs it.
+    -->
 
     <queries>
         <package android:name="com.whatsapp" />
@@ -58,10 +58,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <meta-data
-            android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="ocr,barcode" />
 
     </application>
 

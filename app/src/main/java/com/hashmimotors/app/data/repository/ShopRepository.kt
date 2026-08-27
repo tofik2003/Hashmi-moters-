@@ -1,9 +1,12 @@
 package com.hashmimotors.app.data.repository
 
+import androidx.room.withTransaction
+import com.hashmimotors.app.data.local.HashmiDatabase
 import com.hashmimotors.app.data.local.ShopDao
 import com.hashmimotors.app.data.local.ShopEntity
 import com.hashmimotors.app.domain.model.GstMode
 import com.hashmimotors.app.domain.model.Shop
+import com.hashmimotors.app.domain.money.FinancialYear
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -11,6 +14,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ShopRepository @Inject constructor(
+    private val db: HashmiDatabase,
     private val shopDao: ShopDao
 ) {
     fun getShop(): Flow<Shop?> = shopDao.get().map { it?.toDomain() }
@@ -22,10 +26,31 @@ class ShopRepository @Inject constructor(
     }
 
     /**
-     * Atomically increment invoice counter and return the next number.
+     * Reserve the next invoice number.
+     *
+     * The counter bump and the read-back happen inside one transaction, so two
+     * bills created at the same moment can never be handed the same number
+     * (`invoices.invoiceNo` carries a UNIQUE index, so a duplicate would abort
+     * the whole sale).
      */
-    suspend fun getNextInvoiceNumber(): String {
-        val shop = shopDao.getOnce() ?: ShopEntity(
+    suspend fun claimNextInvoiceNumber(): String = db.withTransaction {
+        val shop = shopDao.getOnce() ?: DEFAULT_SHOP_ENTITY
+        shopDao.upsert(shop)
+        shopDao.incrementInvoiceCounter()
+        val claimed = shopDao.getOnce() ?: shop.copy(invoiceCounter = shop.invoiceCounter + 1)
+        "${claimed.invoicePrefix}/${financialYearFor(System.currentTimeMillis())}" +
+            "/${claimed.invoiceCounter.toString().padStart(6, '0')}"
+    }
+
+    companion object {
+        /**
+         * Financial-year label used in invoice numbers, e.g. "2026-27".
+         * GST numbering follows the 1 April - 31 March financial year; see
+         * [FinancialYear] for the pure, unit-tested implementation.
+         */
+        fun financialYearFor(epochMillis: Long): String = FinancialYear.label(epochMillis)
+
+        private val DEFAULT_SHOP_ENTITY = ShopEntity(
             id = "default",
             name = "Hashmi Motors",
             address = "", city = "", state = "", stateCode = "", pincode = "",
@@ -37,13 +62,6 @@ class ShopRepository @Inject constructor(
             footerText = "Thank you!",
             isSetupComplete = false
         )
-        val nextCounter = shop.invoiceCounter + 1
-        val year = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
-        val nextYear = year + 1
-        val financialYear = "$year-${(nextYear % 100).toString().padStart(2, '0')}"
-        val invoiceNo = "${shop.invoicePrefix}/$financialYear/${nextCounter.toString().padStart(6, '0')}"
-        shopDao.upsert(shop.copy(invoiceCounter = nextCounter))
-        return invoiceNo
     }
 }
 

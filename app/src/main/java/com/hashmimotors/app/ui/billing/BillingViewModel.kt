@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashmimotors.app.data.repository.CustomerRepository
 import com.hashmimotors.app.data.repository.InvoiceRepository
-import com.hashmimotors.app.data.repository.PartRepository
 import com.hashmimotors.app.data.repository.ShopRepository
 import com.hashmimotors.app.domain.model.Customer
 import com.hashmimotors.app.domain.model.CustomerSnapshot
@@ -14,11 +13,14 @@ import com.hashmimotors.app.domain.model.InvoiceStatus
 import com.hashmimotors.app.domain.model.InvoiceType
 import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.domain.model.PartSnapshot
+import com.hashmimotors.app.domain.money.InvoiceMath
+import com.hashmimotors.app.ui.sound.HapticManager
+import com.hashmimotors.app.ui.sound.SoundEffect
+import com.hashmimotors.app.ui.sound.SoundManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,23 +34,38 @@ data class BillingUiState(
     val savedInvoice: Invoice? = null,
     val error: String? = null
 ) {
-    val subtotal: Double get() = lines.sumOf { it.lineTotal }
-    val totalDiscount: Double get() {
-        val lineDiscounts = lines.sumOf { it.qty * it.rate * (it.discountPct / 100.0) }
-        val billLevelDiscount = subtotal * (billDiscountPct / 100.0)
-        return lineDiscounts + billLevelDiscount
-    }
-    val totalGst: Double get() = 0.0 // Composition = no tax on bill
-    val grandTotal: Double get() = (subtotal - totalDiscount).coerceAtLeast(0.0)
+    /** Gross value before any discount: sum of qty * rate. */
+    val subtotal: Double get() = InvoiceMath.subtotal(lines.map { (it.qty * it.rate).toDouble() })
+
+    /** Value after per-line discounts. Equal to sum of lineTotal. */
+    val netAfterLineDiscounts: Double get() = lines.sumOf { it.lineTotal }
+
+    /** Total money given away by per-line discounts. */
+    val lineDiscount: Double get() = (subtotal - netAfterLineDiscounts).coerceAtLeast(0.0)
+
+    /**
+     * Bill-level discount, applied on top of the line-discounted value so that a
+     * line discount is never subtracted twice from the grand total.
+     */
+    val billDiscount: Double get() = InvoiceMath.billDiscount(netAfterLineDiscounts, billDiscountPct)
+
+    /** Sum of line + bill level discounts; each counted exactly once. */
+    val totalDiscount: Double get() = lineDiscount + billDiscount
+
+    val totalGst: Double get() = 0.0 // Composition scheme = no tax charged on the bill
+
+    val grandTotal: Double get() = InvoiceMath.grandTotal(subtotal, totalDiscount)
+
     val totalItems: Int get() = lines.sumOf { it.qty }
 }
 
 @HiltViewModel
 class BillingViewModel @Inject constructor(
-    private val partRepo: PartRepository,
     private val customerRepo: CustomerRepository,
     private val invoiceRepo: InvoiceRepository,
-    private val shopRepo: ShopRepository
+    private val shopRepo: ShopRepository,
+    private val soundManager: SoundManager,
+    private val hapticManager: HapticManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BillingUiState())
@@ -69,15 +86,19 @@ class BillingViewModel @Inject constructor(
             qty = qty,
             rate = part.sellingPrice,
             discountPct = 0.0,
-            lineTotal = part.sellingPrice * qty
+            lineTotal = lineTotalFor(qty, part.sellingPrice, 0.0)
         )
         _state.update { current ->
-            // If part already in cart, increase qty
+            // If part already in cart, increase qty (keeping any discount already applied)
             val existing = current.lines.find { it.partId == part.id }
             val newLines = if (existing != null) {
                 current.lines.map {
                     if (it.partId == part.id) {
-                        it.copy(qty = it.qty + qty, lineTotal = (it.qty + qty) * it.rate)
+                        val newQty = it.qty + qty
+                        it.copy(
+                            qty = newQty,
+                            lineTotal = lineTotalFor(newQty, it.rate, it.discountPct)
+                        )
                     } else it
                 }
             } else {
@@ -98,7 +119,7 @@ class BillingViewModel @Inject constructor(
                 val line = newLines[index]
                 newLines[index] = line.copy(
                     qty = newQty,
-                    lineTotal = newQty * line.rate * (1 - line.discountPct / 100.0)
+                    lineTotal = lineTotalFor(newQty, line.rate, line.discountPct)
                 )
             }
             current.copy(lines = newLines)
@@ -110,9 +131,10 @@ class BillingViewModel @Inject constructor(
             val newLines = current.lines.toMutableList()
             if (index in newLines.indices) {
                 val line = newLines[index]
+                val rate = newRate.coerceAtLeast(0.0)
                 newLines[index] = line.copy(
-                    rate = newRate.coerceAtLeast(0.0),
-                    lineTotal = line.qty * newRate.coerceAtLeast(0.0) * (1 - line.discountPct / 100.0)
+                    rate = rate,
+                    lineTotal = lineTotalFor(line.qty, rate, line.discountPct)
                 )
             }
             current.copy(lines = newLines)
@@ -124,9 +146,10 @@ class BillingViewModel @Inject constructor(
             val newLines = current.lines.toMutableList()
             if (index in newLines.indices) {
                 val line = newLines[index]
+                val discount = newDiscountPct.coerceIn(0.0, 100.0)
                 newLines[index] = line.copy(
-                    discountPct = newDiscountPct.coerceIn(0.0, 100.0),
-                    lineTotal = line.qty * line.rate * (1 - newDiscountPct.coerceIn(0.0, 100.0) / 100.0)
+                    discountPct = discount,
+                    lineTotal = lineTotalFor(line.qty, line.rate, discount)
                 )
             }
             current.copy(lines = newLines)
@@ -170,7 +193,16 @@ class BillingViewModel @Inject constructor(
             _state.update { it.copy(isSaving = true, error = null) }
             try {
                 val shop = shopRepo.getShopOnce()
-                val invoiceNo = shopRepo.getNextInvoiceNumber()
+                if (shop == null || !shop.isSetupComplete) {
+                    _state.update {
+                        it.copy(
+                            isSaving = false,
+                            error = "Please complete Shop Setup before creating bills"
+                        )
+                    }
+                    return@launch
+                }
+                val invoiceNo = shopRepo.claimNextInvoiceNumber()
 
                 val customer = current.customer
                 val snapshot = if (customer != null) {
@@ -187,8 +219,10 @@ class BillingViewModel @Inject constructor(
                 val invoice = Invoice(
                     invoiceNo = invoiceNo,
                     date = System.currentTimeMillis(),
-                    type = if (shop?.gstMode == com.hashmimotors.app.domain.model.GstMode.COMPOSITION)
-                        InvoiceType.BILL_OF_SUPPLY else InvoiceType.BILL_OF_SUPPLY,
+                    // The app is built for the GST composition scheme, which issues a
+                    // Bill of Supply and charges no tax on the bill. Regular-scheme tax
+                    // invoices are not supported (see docs/APP_PLAN.md, decision #8).
+                    type = InvoiceType.BILL_OF_SUPPLY,
                     customerId = customer?.id,
                     customerSnapshot = snapshot,
                     userId = userId,
@@ -201,12 +235,9 @@ class BillingViewModel @Inject constructor(
                     notes = current.notes
                 )
 
-                invoiceRepo.saveInvoice(invoice)
-
-                // Decrement stock for each line
-                current.lines.forEach { line ->
-                    partRepo.decrementStock(line.partId, line.qty, invoice.id, userId)
-                }
+                // Invoice + stock movements are written in a single transaction so a
+                // bill can never exist without its stock being decremented.
+                invoiceRepo.recordSale(invoice, userId)
 
                 // Update customer total purchases
                 if (customer != null) {
@@ -219,13 +250,23 @@ class BillingViewModel @Inject constructor(
                 }
 
                 _state.value = BillingUiState(savedInvoice = invoice)
+                soundManager.play(SoundEffect.BILL_SAVED)
+                hapticManager.success()
             } catch (e: Exception) {
                 _state.update { it.copy(isSaving = false, error = e.message ?: "Failed to save bill") }
+                soundManager.play(SoundEffect.ERROR)
+                hapticManager.error()
             }
         }
     }
 
     fun clearError() {
         _state.update { it.copy(error = null) }
+    }
+
+    companion object {
+        /** See [InvoiceMath.lineTotal]; kept here as the single call site for the cart. */
+        fun lineTotalFor(qty: Int, rate: Double, discountPct: Double): Double =
+            InvoiceMath.lineTotal(qty, rate, discountPct)
     }
 }
