@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,6 +19,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.hashmimotors.app.data.repository.CategoryRepository
@@ -30,8 +32,11 @@ import com.hashmimotors.app.ui.billing.InvoicePreviewScreen
 import com.hashmimotors.app.ui.catalog.AddPartScreen
 import com.hashmimotors.app.ui.catalog.SearchScreen
 import com.hashmimotors.app.ui.components.AnimatedParticleBackground
+import com.hashmimotors.app.ui.components.HmBottomBar
+import com.hashmimotors.app.ui.components.MainTab
 import com.hashmimotors.app.ui.customers.CustomerListScreen
 import com.hashmimotors.app.ui.dashboard.DashboardScreen
+import com.hashmimotors.app.ui.more.MoreScreen
 import com.hashmimotors.app.ui.fitment.FitmentScreen
 import com.hashmimotors.app.ui.importhub.ImportHubScreen
 import com.hashmimotors.app.ui.inventory.AddStockScreen
@@ -65,6 +70,7 @@ object Routes {
     const val REPORTS = "reports"
     const val CUSTOMERS = "customers"
     const val IMPORT_HUB = "import_hub"
+    const val MORE = "more"
     const val SCANNER = "scanner/{mode}"
 
     fun scanner(mode: String) = "scanner/$mode"
@@ -92,6 +98,14 @@ fun HashmiMotorsMainScreen(
 ) {
     val navController = rememberNavController()
     val settings by viewModel.settings.collectAsStateWithLifecycle(initialValue = AppSettings())
+    val navBack by navController.currentBackStackEntryAsState()
+    val route = navBack?.destination?.route
+    val showBar = route in setOf(Routes.DASHBOARD, Routes.SEARCH, Routes.MORE)
+    val selectedTab = when (route) {
+        Routes.SEARCH -> MainTab.CATALOG
+        Routes.MORE -> MainTab.MORE
+        else -> MainTab.HOME
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (settings.backgroundStyle == BackgroundStyle.GRADIENT_PARTICLES && settings.animationsEnabled) {
@@ -150,8 +164,10 @@ fun HashmiMotorsMainScreen(
             composable(Routes.SHOP_SETUP) {
                 ShopSetupScreen(
                     onComplete = {
-                        navController.navigate(Routes.DASHBOARD) {
-                            popUpTo(Routes.SHOP_SETUP) { inclusive = true }
+                        if (!navController.popBackStack()) {
+                            navController.navigate(Routes.DASHBOARD) {
+                                popUpTo(Routes.SHOP_SETUP) { inclusive = true }
+                            }
                         }
                     }
                 )
@@ -169,11 +185,28 @@ fun HashmiMotorsMainScreen(
                     onSettings = { navController.navigate(Routes.SETTINGS) },
                     onCustomers = { navController.navigate(Routes.CUSTOMERS) },
                     onScan = { navController.navigate(Routes.scanner("search")) },
-                    onImport = { navController.navigate(Routes.IMPORT_HUB) }
+                    onImport = { navController.navigate(Routes.IMPORT_HUB) },
+                    onInvoiceClick = { id -> navController.navigate(Routes.invoicePreview(id)) }
                 )
             }
             composable(Routes.SETTINGS) {
-                SettingsScreen(onBack = { navController.popBackStack() })
+                SettingsScreen(
+                    onBack = { navController.popBackStack() },
+                    onEditShop = { navController.navigate(Routes.SHOP_SETUP) }
+                )
+            }
+            composable(Routes.MORE) {
+                MoreScreen(
+                    onInventory = { navController.navigate(Routes.INVENTORY) },
+                    onAddStock = { navController.navigate(Routes.ADD_STOCK) },
+                    onImport = { navController.navigate(Routes.IMPORT_HUB) },
+                    onFitment = { navController.navigate(Routes.FITMENT_WIZARD) },
+                    onCustomers = { navController.navigate(Routes.CUSTOMERS) },
+                    onReports = { navController.navigate(Routes.REPORTS) },
+                    onHistory = { navController.navigate(Routes.INVOICE_HISTORY) },
+                    onShop = { navController.navigate(Routes.SHOP_SETUP) },
+                    onSettings = { navController.navigate(Routes.SETTINGS) }
+                )
             }
             composable(Routes.SEARCH) { entry ->
                 val barcode by entry.savedStateHandle
@@ -374,6 +407,29 @@ fun HashmiMotorsMainScreen(
                     },
                     onClose = { navController.popBackStack() }
                 )
+            }
+        }
+
+        if (showBar) {
+            Box(Modifier.align(Alignment.BottomCenter)) {
+                HmBottomBar(selected = selectedTab) { tab ->
+                    when (tab) {
+                        MainTab.HOME -> navController.navigate(Routes.DASHBOARD) {
+                            popUpTo(Routes.DASHBOARD) { inclusive = false }
+                            launchSingleTop = true
+                        }
+                        MainTab.CATALOG -> navController.navigate(Routes.SEARCH) {
+                            popUpTo(Routes.DASHBOARD)
+                            launchSingleTop = true
+                        }
+                        MainTab.SCAN -> navController.navigate(Routes.scanner("search"))
+                        MainTab.BILL -> navController.navigate(Routes.NEW_BILL)
+                        MainTab.MORE -> navController.navigate(Routes.MORE) {
+                            popUpTo(Routes.DASHBOARD)
+                            launchSingleTop = true
+                        }
+                    }
+                }
             }
         }
     }

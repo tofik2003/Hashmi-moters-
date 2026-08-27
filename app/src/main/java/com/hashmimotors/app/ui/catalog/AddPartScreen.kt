@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
@@ -375,6 +376,20 @@ fun AddPartScreen(
                     onSaved()
                 }
             )
+            if (partId != null) {
+                Spacer(modifier = Modifier.height(12.dp))
+                androidx.compose.material3.TextButton(
+                    onClick = {
+                        state.parts.find { it.id == partId }?.let { viewModel.deletePart(it) }
+                        onSaved()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(Icons.Filled.Delete, null, tint = Color(0xFFFFB4AB))
+                    Spacer(Modifier.width(8.dp))
+                    Text("Remove from catalog", color = Color(0xFFFFB4AB))
+                }
+            }
             Spacer(modifier = Modifier.height(40.dp))
         }
     }

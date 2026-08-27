@@ -8,7 +8,7 @@
     <color name="brand_amber">#FFA000</color>
 
     <!-- Primary palette -->
-    <color name="md_theme_light_primary">#3F51B5</color>
+    <color name="md_theme_light_primary">#C9A227</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>
     <color name="md_theme_light_primaryContainer">#DDE1FF</color>
     <color name="md_theme_light_onPrimaryContainer">#001454</color>
@@ -50,9 +50,9 @@
     <color name="md_theme_dark_outline">#90909A</color>
 
     <!-- Gradients -->
-    <color name="gradient_start">#1A237E</color>
-    <color name="gradient_middle">#000000</color>
-    <color name="gradient_end">#4A148C</color>
+    <color name="gradient_start">#0C1018</color>
+    <color name="gradient_middle">#07080C</color>
+    <color name="gradient_end">#1A150C</color>
 
     <!-- Status -->
     <color name="status_success">#2E7D32</color>

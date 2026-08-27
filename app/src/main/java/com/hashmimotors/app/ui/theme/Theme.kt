@@ -74,7 +74,7 @@ private val DarkColorScheme = darkColorScheme(
 fun HashmiMotorsTheme(
     darkTheme: Boolean = true,
     dynamicColor: Boolean = false,
-    accentColor: Color = AccentOrange,
+    accentColor: Color = Gold,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -93,8 +93,9 @@ fun HashmiMotorsTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+            window.statusBarColor = Ink.toArgb()
+            window.navigationBarColor = Ink.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
         }
     }
 

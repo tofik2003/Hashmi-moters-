@@ -85,8 +85,8 @@ fun AnimatedParticleBackground(
             val y = drift * size.height
             val alpha = (0.3f + 0.3f * sin(drift * Math.PI.toFloat() * 2)) * pulse
             drawCircle(
-                color = Color.White.copy(alpha = alpha * 0.5f),
-                radius = particleScale * 6f,
+                color = Color(0xFFC9A227).copy(alpha = alpha * 0.35f),
+                radius = particleScale * 4.5f,
                 center = Offset(x, y)
             )
         }

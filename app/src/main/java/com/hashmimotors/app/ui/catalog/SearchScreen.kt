@@ -260,7 +260,7 @@ fun SearchScreen(
             } else {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(bottom = 80.dp)
+                    modifier = Modifier.padding(bottom = 120.dp)
                 ) {
                     items(state.parts, key = { it.id }) { part ->
                         PartListItem(part = part, onClick = { onPartClick(part.id) })

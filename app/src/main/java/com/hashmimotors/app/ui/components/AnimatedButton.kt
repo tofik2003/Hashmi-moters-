@@ -33,8 +33,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hashmimotors.app.ui.theme.GradientEnd
-import com.hashmimotors.app.ui.theme.GradientStart
+import com.hashmimotors.app.ui.theme.Gold
+import com.hashmimotors.app.ui.theme.GoldDim
+import com.hashmimotors.app.ui.theme.Ink
 
 /**
  * Big animated button with bouncy press effect.
@@ -77,7 +78,7 @@ fun AnimatedBigButton(
                 if (gradient) {
                     it.background(
                         brush = Brush.horizontalGradient(
-                            colors = listOf(GradientStart, GradientEnd)
+                            colors = listOf(Gold, GoldDim)
                         ),
                         shape = RoundedCornerShape(16.dp)
                     )
@@ -105,14 +106,14 @@ fun AnimatedBigButton(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = Ink,
                     modifier = Modifier.size(28.dp)
                 )
                 Box(modifier = Modifier.size(12.dp))
             }
             Text(
                 text = text,
-                color = Color.White,
+                color = Ink,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
             )

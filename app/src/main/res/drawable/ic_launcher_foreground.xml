@@ -8,7 +8,7 @@
     <group android:translateX="22" android:translateY="22">
         <!-- Outer gear ring (spare parts theme) -->
         <path
-            android:fillColor="#FFC107"
+            android:fillColor="#C9A227"
             android:pathData="M32,4 L36,4 L37,9 L42,11 L46,8 L49,11 L46,15 L48,20 L53,21 L53,25 L53,29 L53,33 L48,34 L46,39 L49,43 L46,46 L42,43 L37,45 L36,50 L32,50 L28,50 L27,45 L22,43 L18,46 L15,43 L18,39 L16,34 L11,33 L11,29 L11,25 L11,21 L16,20 L18,15 L15,11 L18,8 L22,11 L27,9 L28,4 Z" />
         <!-- Inner circle (wheel) -->
         <path

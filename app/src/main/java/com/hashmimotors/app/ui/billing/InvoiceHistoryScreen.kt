@@ -27,6 +27,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,6 +65,10 @@ fun InvoiceHistoryScreen(
     onInvoiceClick: (String) -> Unit
 ) {
     val invoices by viewModel.invoices.collectAsState()
+    var query by remember { mutableStateOf("") }
+    val filtered = if (query.isBlank()) invoices else invoices.filter {
+        it.invoiceNo.contains(query, true) || it.customerSnapshot.name.contains(query, true)
+    }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Spacer(modifier = Modifier.height(24.dp))
@@ -78,7 +85,16 @@ fun InvoiceHistoryScreen(
         }
         Spacer(modifier = Modifier.height(12.dp))
 
-        if (invoices.isEmpty()) {
+        androidx.compose.material3.OutlinedTextField(
+            value = query,
+            onValueChange = { query = it },
+            placeholder = { Text("Search number or customer") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+
+        if (filtered.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -96,7 +112,7 @@ fun InvoiceHistoryScreen(
             }
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(invoices, key = { it.id }) { invoice ->
+                items(filtered, key = { it.id }) { invoice ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()

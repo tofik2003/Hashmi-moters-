@@ -143,7 +143,7 @@ fun ShopSetupScreen(
             OutlinedTextField(
                 value = gstin,
                 onValueChange = { gstin = it.uppercase() },
-                label = { Text("GSTIN (15 characters)") },
+                label = { Text("GSTIN (optional)") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
@@ -162,7 +162,7 @@ fun ShopSetupScreen(
             AnimatedBigButton(
                 text = if (saving) "Saving..." else "Continue",
                 icon = Icons.Filled.ArrowForward,
-                enabled = !saving && name.isNotBlank() && gstin.isNotBlank(),
+                enabled = !saving && name.isNotBlank(),
                 onClick = {
                     saving = true
                     val stateCode = getStateCode(state)

@@ -37,20 +37,12 @@ fun ReportsScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Spacer(modifier = Modifier.height(24.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onBack) {
-                Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
-            }
-            Text(
-                text = "Reports",
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
+    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+        com.hashmimotors.app.ui.components.HmTopBar(
+            title = "Reports",
+            subtitle = "From bills saved on this phone",
+            onBack = onBack
+        )
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             // Today's stats

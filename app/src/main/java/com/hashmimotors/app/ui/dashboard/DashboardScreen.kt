@@ -1,13 +1,6 @@
 package com.hashmimotors.app.ui.dashboard
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,40 +8,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Inventory
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Receipt
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,12 +29,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hashmimotors.app.ui.components.AnimatedBarChart
 import com.hashmimotors.app.ui.components.AnimatedCounter
-import com.hashmimotors.app.ui.components.PromotionCarousel
-import com.hashmimotors.app.ui.components.SparklineCard
-import com.hashmimotors.app.ui.components.SavingsHighlight
+import com.hashmimotors.app.ui.components.HmCard
+import com.hashmimotors.app.ui.components.HmIconWell
+import com.hashmimotors.app.ui.theme.Gold
+import com.hashmimotors.app.ui.theme.GoldSoft
+import com.hashmimotors.app.ui.theme.Ivory
+import com.hashmimotors.app.ui.theme.IvoryMute
 import com.hashmimotors.app.ui.theme.StatusWarning
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun DashboardScreen(
@@ -77,479 +54,149 @@ fun DashboardScreen(
     onSettings: () -> Unit,
     onCustomers: () -> Unit = {},
     onScan: () -> Unit = {},
-    onImport: () -> Unit = {}
+    onImport: () -> Unit = {},
+    onInvoiceClick: (String) -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val greeting = remember {
+        val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
+        when {
+            hour < 12 -> "Good morning"
+            hour < 17 -> "Good afternoon"
+            else -> "Good evening"
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item {
-            Spacer(modifier = Modifier.height(40.dp))
-            // Top bar with greeting
+            Spacer(Modifier.height(8.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                Modifier.fillMaxWidth().padding(top = 28.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text(
-                        text = state.shopName,
-                        color = Color.White,
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                    val greeting = remember {
-                        val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
-                        when {
-                            hour < 12 -> "Good morning ☀️"
-                            hour < 17 -> "Good afternoon 🌤️"
-                            else -> "Good evening 🌙"
-                        }
-                    }
-                    Text(
-                        text = greeting,
-                        color = Color.White.copy(alpha = 0.7f),
-                        fontSize = 13.sp
-                    )
+                    Text(greeting.uppercase(), color = Gold, fontSize = 11.sp, letterSpacing = 1.6.sp, fontWeight = FontWeight.Medium)
+                    Text(state.shopName, color = Ivory, fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Counter · catalog · bills", color = IvoryMute, fontSize = 13.sp)
                 }
                 IconButton(onClick = onSettings) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .background(
-                                color = Color.White.copy(alpha = 0.15f),
-                                shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            Icons.Filled.Settings,
-                            contentDescription = "Settings",
-                            tint = Color.White,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
+                    Icon(Icons.Filled.Settings, "Settings", tint = IvoryMute)
                 }
             }
         }
 
         item {
-            Spacer(modifier = Modifier.height(8.dp))
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onScan() },
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFE64A19))
-            ) {
-                Row(
-                    Modifier.padding(18.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        Modifier
-                            .size(56.dp)
-                            .background(Color.White.copy(0.18f), CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("📷", fontSize = 26.sp)
-                    }
-                    Spacer(Modifier.width(14.dp))
+            HmCard(modifier = Modifier.fillMaxWidth()) {
+                Text("Today’s counter", color = IvoryMute, fontSize = 12.sp, letterSpacing = 0.8.sp)
+                Spacer(Modifier.height(4.dp))
+                AnimatedCounter(target = state.todaySales, fontSize = 36, textColor = GoldSoft)
+                Spacer(Modifier.height(12.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    MiniStat("Bills", state.todayBills.toString())
+                    MiniStat("Items sold", state.todayItems.toString())
+                    MiniStat("In catalog", state.totalParts.toString())
+                }
+            }
+        }
+
+        item {
+            HmCard(modifier = Modifier.fillMaxWidth(), onClick = onScan) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    HmIconWell(Icons.Filled.QrCodeScanner)
+                    Spacer(Modifier.padding(8.dp))
                     Column(Modifier.weight(1f)) {
-                        Text("Scan QR / barcode", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                        Text("Opens the camera — not a dead button", color = Color.White.copy(0.9f), fontSize = 12.sp)
+                        Text("Scan barcode", color = Ivory, fontWeight = FontWeight.SemiBold)
+                        Text("Live camera — QR, EAN, Code-128", color = IvoryMute, fontSize = 12.sp)
                     }
-                    Text("▶", color = Color.White, fontSize = 20.sp)
+                    Text("Open", color = Gold, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
                 }
             }
         }
 
         item {
-            PromotionCarousel()
-        }
-
-        // === TODAY'S SALES WITH ANIMATED COUNTER ===
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
-            // Today's sales card with animated counter
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(
-                        elevation = 12.dp,
-                        shape = RoundedCornerShape(20.dp),
-                        clip = false
-                    ),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White.copy(alpha = 0.15f)
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(20.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "Today's Sales",
-                                color = Color.White.copy(alpha = 0.8f),
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            AnimatedCounter(
-                                target = state.todaySales,
-                                fontSize = 32
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(20.dp)
-                            ) {
-                                StatChip(label = "Bills", value = state.todayBills.toString())
-                                StatChip(label = "Items", value = state.totalParts.toString())
-                            }
-                        }
-                        // Decorative element
-                        Box(
-                            modifier = Modifier
-                                .size(70.dp)
-                                .background(
-                                    brush = Brush.linearGradient(
-                                        colors = listOf(
-                                            Color(0xFFFFA726),
-                                            Color(0xFFFF6B35)
-                                        )
-                                    ),
-                                    shape = CircleShape
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text("💰", fontSize = 32.sp)
-                        }
-                    }
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                HmCard(modifier = Modifier.weight(1f), onClick = onInventory) {
+                    Text("Stock value", color = IvoryMute, fontSize = 11.sp)
+                    Text("₹${"%,.0f".format(state.totalStockValue)}", color = Ivory, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                }
+                HmCard(modifier = Modifier.weight(1f), onClick = onReports) {
+                    Text("This week", color = IvoryMute, fontSize = 11.sp)
+                    Text("₹${"%,.0f".format(state.weekTotal)}", color = Ivory, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
 
-        // === KPI SPARKLINE CARDS ===
         item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                SparklineCard(
-                    title = "Total Parts",
-                    value = state.totalParts.toString(),
-                    change = "+12% this week",
-                    changePositive = true,
-                    sparklineData = listOf(20f, 22f, 25f, 24f, 28f, 30f, state.totalParts.toFloat().coerceAtLeast(1f)),
-                    modifier = Modifier.weight(1f)
-                )
-                SparklineCard(
-                    title = "Stock Value",
-                    value = "₹${"%,.0f".format(state.totalStockValue)}",
-                    change = "+8% this week",
-                    changePositive = true,
-                    sparklineData = listOf(40f, 42f, 45f, 44f, 48f, 50f, state.totalStockValue.toFloat() / 1000f),
-                    modifier = Modifier.weight(1f)
+            HmCard(modifier = Modifier.fillMaxWidth()) {
+                Text("Sales · last 7 days", color = Ivory, fontWeight = FontWeight.SemiBold)
+                Spacer(Modifier.height(10.dp))
+                AnimatedBarChart(
+                    data = state.weekSales,
+                    labels = listOf("−6", "−5", "−4", "−3", "−2", "−1", "Today"),
+                    barColor = Gold,
+                    highlightColor = GoldSoft
                 )
             }
         }
 
-        // === WEEKLY SALES BAR CHART ===
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White.copy(alpha = 0.08f)
-                )
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "📊 Sales This Week",
-                            color = Color.White,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            text = "Total: ₹${"%,.0f".format(state.todaySales * 7)}",
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    AnimatedBarChart(
-                        data = listOf(
-                            state.todaySales.toFloat() * 0.7f,
-                            state.todaySales.toFloat() * 0.85f,
-                            state.todaySales.toFloat() * 1.1f,
-                            state.todaySales.toFloat() * 0.6f,
-                            state.todaySales.toFloat() * 0.95f,
-                            state.todaySales.toFloat() * 1.2f,
-                            state.todaySales.toFloat()
-                        ),
-                        labels = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Today"),
-                        barColor = Color(0xFF4FC3F7),
-                        highlightColor = Color(0xFFFFA726)
-                    )
-                }
-            }
-        }
-
-        // === QUICK ACTIONS GRID ===
-        item {
-            Text(
-                text = "Quick Actions",
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-        }
-
-        items(quickActions.chunked(2)) { row ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                row.forEach { action ->
-                    QuickActionCard(
-                        title = action.title,
-                        icon = action.icon,
-                        color = action.color,
-                        onClick = when (action.id) {
-                            "search" -> onSearch
-                            "new_bill" -> onNewBill
-                            "add_part" -> onAddPart
-                            "add_stock" -> onAddStock
-                            "fitment" -> onFitment
-                            "inventory" -> onInventory
-                            "history" -> onHistory
-                            "customers" -> onCustomers
-                            "scan" -> onScan
-                            "import" -> onImport
-                            else -> onNewBill
-                        },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                if (row.size == 1) {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
-        }
-
-        // === LOW STOCK ALERT ===
         if (state.lowStockCount > 0) {
             item {
-                AnimatedVisibility(
-                    visible = state.lowStockCount > 0,
-                    enter = slideInVertically { -it } + fadeIn(),
-                    exit = fadeOut()
-                ) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onInventory() }
-                            .padding(vertical = 4.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = StatusWarning.copy(alpha = 0.95f)
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .background(Color.White.copy(alpha = 0.2f), CircleShape),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    Icons.Filled.Warning,
-                                    contentDescription = null,
-                                    tint = Color.White,
-                                    modifier = Modifier.size(22.dp)
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Low Stock Alert",
-                                    color = Color.White,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "${state.lowStockCount} parts need restocking",
-                                    color = Color.White.copy(alpha = 0.9f),
-                                    fontSize = 13.sp
-                                )
-                            }
-                            Text("→", color = Color.White, fontSize = 24.sp)
+                HmCard(modifier = Modifier.fillMaxWidth(), onClick = onInventory) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        HmIconWell(Icons.Filled.Warning, tint = StatusWarning)
+                        Spacer(Modifier.padding(8.dp))
+                        Column {
+                            Text("Low stock", color = Ivory, fontWeight = FontWeight.SemiBold)
+                            Text("${state.lowStockCount} parts at or below reorder level", color = IvoryMute, fontSize = 12.sp)
                         }
                     }
                 }
             }
         }
 
-        // === SAVINGS HIGHLIGHT (if applicable) ===
-        if (state.todayBills > 0) {
-            item {
-                val estimatedSavings = state.todaySales * 0.08
-                SavingsHighlight(amount = estimatedSavings)
-            }
+        item {
+            Text("Recent bills", color = Ivory, fontWeight = FontWeight.SemiBold, fontSize = 16.sp, modifier = Modifier.padding(top = 4.dp))
         }
 
-        // === VIEW REPORTS ===
-        item {
-            Spacer(modifier = Modifier.height(8.dp))
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onReports() }
-                    .padding(vertical = 4.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White.copy(alpha = 0.1f)
-                )
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("📈", fontSize = 24.sp)
-                    }
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Detailed Reports",
-                            color = Color.White,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            text = "Daily, monthly, GST analytics",
-                            color = Color.White.copy(alpha = 0.7f),
-                            fontSize = 12.sp
-                        )
-                    }
-                    Text("→", color = Color.White, fontSize = 24.sp)
+        if (state.recentInvoices.isEmpty()) {
+            item {
+                HmCard(modifier = Modifier.fillMaxWidth(), onClick = onNewBill) {
+                    Text("No bills yet", color = Ivory, fontWeight = FontWeight.SemiBold)
+                    Text("Create a bill from the counter tab. All tools are included — nothing is locked.", color = IvoryMute, fontSize = 12.sp)
                 }
             }
-            Spacer(modifier = Modifier.height(40.dp))
-        }
-    }
-}
-
-@Composable
-private fun StatChip(label: String, value: String) {
-    Column {
-        Text(
-            text = value,
-            color = Color.White,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = label,
-            color = Color.White.copy(alpha = 0.7f),
-            fontSize = 11.sp
-        )
-    }
-}
-
-@Composable
-private fun QuickActionCard(
-    title: String,
-    icon: ImageVector,
-    color: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-            .height(96.dp)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White.copy(alpha = 0.12f)
-        )
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(color = color.copy(alpha = 0.3f), shape = CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    icon,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(24.dp)
-                )
+        } else {
+            items(state.recentInvoices, key = { it.id }) { inv ->
+                HmCard(modifier = Modifier.fillMaxWidth(), onClick = { onInvoiceClick(inv.id) }) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Column {
+                            Text(inv.invoiceNo, color = Ivory, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                            Text(
+                                "${inv.customerSnapshot.name} · ${SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault()).format(Date(inv.date))}",
+                                color = IvoryMute,
+                                fontSize = 12.sp
+                            )
+                        }
+                        Text("₹${"%,.0f".format(inv.grandTotal)}", color = GoldSoft, fontWeight = FontWeight.Bold)
+                    }
+                }
             }
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = title,
-                color = Color.White,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold
-            )
         }
+
+        item { Spacer(Modifier.height(96.dp)) }
     }
 }
 
-data class QuickAction(
-    val id: String,
-    val title: String,
-    val icon: ImageVector,
-    val color: Color
-)
-
-private val quickActions = listOf(
-    QuickAction("scan", "Scan QR", Icons.Filled.QrCodeScanner, Color(0xFFE64A19)),
-    QuickAction("search", "Search Parts", Icons.Filled.Search, Color(0xFF4FC3F7)),
-    QuickAction("new_bill", "New Bill", Icons.Filled.Receipt, Color(0xFF66BB6A)),
-    QuickAction("import", "Add / Import", Icons.Filled.UploadFile, Color(0xFFFFA726)),
-    QuickAction("add_stock", "Add Stock", Icons.Filled.Inventory, Color(0xFFAB47BC)),
-    QuickAction("inventory", "Inventory", Icons.Filled.Inventory, Color(0xFF26C6DA)),
-    QuickAction("fitment", "Find by Vehicle", Icons.Filled.ShoppingCart, Color(0xFFEC407A)),
-    QuickAction("history", "Bill History", Icons.Filled.Receipt, Color(0xFF7E57C2)),
-    QuickAction("customers", "Customers", Icons.Filled.Person, Color(0xFF26A69A))
-)
+@Composable
+private fun MiniStat(label: String, value: String) {
+    Column {
+        Text(value, color = Ivory, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+        Text(label, color = IvoryMute, fontSize = 11.sp)
+    }
+}

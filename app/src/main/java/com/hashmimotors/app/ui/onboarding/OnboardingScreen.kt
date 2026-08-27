@@ -1,12 +1,12 @@
 package com.hashmimotors.app.ui.onboarding
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,14 +20,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.PhoneAndroid
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Inventory2
+import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.ReceiptLong
+import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -38,160 +37,105 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hashmimotors.app.ui.theme.Gold
 import com.hashmimotors.app.ui.theme.GradientEnd
 import com.hashmimotors.app.ui.theme.GradientStart
+import com.hashmimotors.app.ui.theme.Ink
+import com.hashmimotors.app.ui.theme.Ivory
+import com.hashmimotors.app.ui.theme.IvoryMute
 
-data class OnboardingPage(
+private data class OnboardingPage(
     val title: String,
     val description: String,
     val icon: ImageVector
 )
 
 @Composable
-fun OnboardingScreen(
-    onComplete: () -> Unit
-) {
+fun OnboardingScreen(onComplete: () -> Unit) {
     val pages = listOf(
         OnboardingPage(
-            title = "Welcome to Hashmi Motors",
-            description = "Manage your spare parts shop with ease. Everything you need, in your pocket.",
-            icon = Icons.Filled.Build
+            "Hashmi Motors",
+            "A complete spare-parts counter on this phone. Catalog, stock, GST bills — nothing locked behind a plan.",
+            Icons.Filled.Storefront
         ),
         OnboardingPage(
-            title = "Camera, QR & barcode",
-            description = "Open a live camera preview to scan QR codes, barcodes, part photos, and labels — not empty buttons.",
-            icon = Icons.Filled.Search
+            "Find any part",
+            "Search by name, OEM, brand, or barcode. Open the camera for QR and labels.",
+            Icons.Filled.QrCodeScanner
         ),
         OnboardingPage(
-            title = "GST Bills in 1 Tap",
-            description = "Create professional bills, share via PDF, WhatsApp, or SMS in seconds.",
-            icon = Icons.Filled.Description
+            "Bills in one pass",
+            "Add lines, save a Bill of Supply, share PDF or WhatsApp. Invoice QR is included.",
+            Icons.Filled.ReceiptLong
         ),
         OnboardingPage(
-            title = "Always in Sync",
-            description = "You and your father see the same data, even on different phones, in real time.",
-            icon = Icons.Filled.PhoneAndroid
+            "Yours, offline",
+            "Data stays on the device. Export a JSON backup whenever you like. No account, no fees.",
+            Icons.Filled.Inventory2
         )
     )
-
     var currentPage by remember { mutableIntStateOf(0) }
 
     Box(
-        modifier = Modifier
+        Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(GradientStart, Color.Black, GradientEnd)
-                )
-            )
+            .background(Brush.verticalGradient(listOf(GradientStart, Ink, GradientEnd)))
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
+            Modifier.fillMaxSize().padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Top: Skip button
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                if (currentPage < pages.size - 1) {
-                    TextButton(onClick = onComplete) {
-                        Text("Skip", color = Color.White)
-                    }
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                if (currentPage < pages.lastIndex) {
+                    TextButton(onClick = onComplete) { Text("Skip", color = IvoryMute) }
                 }
             }
-
-            // Middle: Page content with slide animation
             AnimatedContent(
                 targetState = currentPage,
                 transitionSpec = {
                     (slideInHorizontally(tween(400)) { it } + fadeIn(tween(400)))
                         .togetherWith(slideOutHorizontally(tween(400)) { -it } + fadeOut(tween(400)))
                 },
-                label = "onboarding_page"
+                label = "onboarding"
             ) { page ->
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Box(
-                        modifier = Modifier
-                            .size(200.dp)
-                            .background(
-                                color = Color.White.copy(alpha = 0.1f),
-                                shape = CircleShape
-                            ),
+                        Modifier.size(160.dp).background(Gold.copy(0.12f), CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = pages[page].icon,
-                            contentDescription = null,
-                            tint = Color(0xFFFFA000),
-                            modifier = Modifier.size(120.dp)
-                        )
+                        Icon(pages[page].icon, null, tint = Gold, modifier = Modifier.size(72.dp))
                     }
-                    Spacer(modifier = Modifier.height(48.dp))
-                    Text(
-                        text = pages[page].title,
-                        color = Color.White,
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = pages[page].description,
-                        color = Color.White.copy(alpha = 0.8f),
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Center
-                    )
+                    Spacer(Modifier.height(40.dp))
+                    Text(pages[page].title, color = Ivory, fontSize = 28.sp, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center)
+                    Spacer(Modifier.height(12.dp))
+                    Text(pages[page].description, color = IvoryMute, fontSize = 16.sp, textAlign = TextAlign.Center, lineHeight = 24.sp)
                 }
             }
-
-            // Bottom: Page indicator + Next/Get Started button
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(bottom = 32.dp)
-                ) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(bottom = 28.dp)) {
                     pages.indices.forEach { index ->
                         Box(
-                            modifier = Modifier
-                                .size(if (index == currentPage) 12.dp else 8.dp)
-                                .background(
-                                    color = if (index == currentPage) Color(0xFFFFA000)
-                                    else Color.White.copy(alpha = 0.3f),
-                                    shape = CircleShape
-                                )
+                            Modifier
+                                .size(if (index == currentPage) 10.dp else 6.dp)
+                                .background(if (index == currentPage) Gold else Ivory.copy(0.25f), CircleShape)
                         )
                     }
                 }
                 Button(
-                    onClick = {
-                        if (currentPage < pages.size - 1) currentPage++
-                        else onComplete()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFFA000)
-                    )
+                    onClick = { if (currentPage < pages.lastIndex) currentPage++ else onComplete() },
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Gold, contentColor = Ink)
                 ) {
                     Text(
-                        text = if (currentPage < pages.size - 1) "Next" else "Get Started",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
+                        if (currentPage < pages.lastIndex) "Continue" else "Enter the shop",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             }

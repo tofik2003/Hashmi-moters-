@@ -2,42 +2,46 @@ package com.hashmimotors.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Brand colors
-val BrandIndigo = Color(0xFF3F51B5)
-val BrandIndigoDark = Color(0xFF1A237E)
-val BrandIndigoLight = Color(0xFFC5CAE9)
-val BrandPurple = Color(0xFF7B1FA2)
-val BrandTeal = Color(0xFF00897B)
-val BrandAmber = Color(0xFFFFA000)
+// Luxury atelier palette — ink, ivory, champagne gold
+val Gold = Color(0xFFC9A227)
+val GoldSoft = Color(0xFFE4C878)
+val GoldDim = Color(0xFF8A6E1C)
+val Ivory = Color(0xFFF3EEE3)
+val IvoryMute = Color(0xFFC8C0B0)
+val Ink = Color(0xFF07080C)
+val InkElevated = Color(0xFF14161F)
+val InkCard = Color(0xCC161821)
+val HairlineGold = Color(0x55C9A227)
+val Glass = Color(0x14F3EEE3)
 
-// Accent palette (user-selectable)
-val AccentIndigo = Color(0xFF3F51B5)
-val AccentBlue = Color(0xFF1976D2)
-val AccentGreen = Color(0xFF388E3C)
-val AccentOrange = Color(0xFFE64A19)
+val BrandIndigo = Color(0xFFC9A227)
+val BrandIndigoDark = Color(0xFF07080C)
+val BrandIndigoLight = Color(0xFFE4C878)
+val BrandPurple = Color(0xFF3D3220)
+val BrandTeal = Color(0xFF6E8B74)
+val BrandAmber = Color(0xFFC9A227)
 
-// Gradient colors for background
-val GradientStart = Color(0xFF1A1040)
-val GradientMiddle = Color(0xFF0B0B12)
-val GradientEnd = Color(0xFF3D1408)
+val AccentIndigo = Color(0xFFC9A227)
+val AccentBlue = Color(0xFF7AA2C4)
+val AccentGreen = Color(0xFF7C9A72)
+val AccentOrange = Color(0xFFC9A227)
 
-// Confetti colors
+val GradientStart = Color(0xFF0C1018)
+val GradientMiddle = Color(0xFF07080C)
+val GradientEnd = Color(0xFF1A150C)
+
 val ConfettiColors = listOf(
-    Color(0xFFFF6B6B),
-    Color(0xFF4ECDC4),
-    Color(0xFFFFE66D),
-    Color(0xFF95E1D3),
-    Color(0xFFF38181),
-    Color(0xFFAA96DA),
-    Color(0xFFFFA000),
-    Color(0xFF7B1FA2)
+    Color(0xFFC9A227),
+    Color(0xFFE4C878),
+    Color(0xFFF3EEE3),
+    Color(0xFF8A6E1C),
+    Color(0xFF7C9A72)
 )
 
-// Light theme
-val LightPrimary = Color(0xFF3F51B5)
-val LightOnPrimary = Color(0xFFFFFFFF)
-val LightPrimaryContainer = Color(0xFFDDE1FF)
-val LightOnPrimaryContainer = Color(0xFF001454)
+val LightPrimary = Color(0xFFC9A227)
+val LightOnPrimary = Color(0xFF1A1408)
+val LightPrimaryContainer = Color(0xFFEFE4C4)
+val LightOnPrimaryContainer = Color(0xFF2A220C)
 val LightSecondary = Color(0xFF5A5D72)
 val LightOnSecondary = Color(0xFFFFFFFF)
 val LightSecondaryContainer = Color(0xFFDEE1F9)
@@ -59,15 +63,14 @@ val LightOnSurfaceVariant = Color(0xFF45464F)
 val LightOutline = Color(0xFF75767F)
 val LightOutlineVariant = Color(0xFFC6C5D0)
 
-// Dark theme
-val DarkPrimary = Color(0xFFBAC3FF)
-val DarkOnPrimary = Color(0xFF02218F)
-val DarkPrimaryContainer = Color(0xFF22359B)
-val DarkOnPrimaryContainer = Color(0xFFDDE1FF)
-val DarkSecondary = Color(0xFFC2C5DD)
-val DarkOnSecondary = Color(0xFF2C2F42)
-val DarkSecondaryContainer = Color(0xFF424659)
-val DarkOnSecondaryContainer = Color(0xFFDEE1F9)
+val DarkPrimary = Color(0xFFE4C878)
+val DarkOnPrimary = Color(0xFF1A1408)
+val DarkPrimaryContainer = Color(0xFF8A6E1C)
+val DarkOnPrimaryContainer = Color(0xFFF3EEE3)
+val DarkSecondary = Color(0xFFC8C0B0)
+val DarkOnSecondary = Color(0xFF1A1408)
+val DarkSecondaryContainer = Color(0xFF2A2C36)
+val DarkOnSecondaryContainer = Color(0xFFF3EEE3)
 val DarkTertiary = Color(0xFFE5B5EB)
 val DarkOnTertiary = Color(0xFF44244B)
 val DarkTertiaryContainer = Color(0xFF5C3A63)
@@ -76,17 +79,16 @@ val DarkError = Color(0xFFFFB4AB)
 val DarkOnError = Color(0xFF690005)
 val DarkErrorContainer = Color(0xFF93000A)
 val DarkOnErrorContainer = Color(0xFFFFDAD6)
-val DarkBackground = Color(0xFF1B1B1F)
-val DarkOnBackground = Color(0xFFE4E1E6)
-val DarkSurface = Color(0xFF1B1B1F)
-val DarkOnSurface = Color(0xFFE4E1E6)
-val DarkSurfaceVariant = Color(0xFF45464F)
-val DarkOnSurfaceVariant = Color(0xFFC6C5D0)
-val DarkOutline = Color(0xFF90909A)
-val DarkOutlineVariant = Color(0xFF45464F)
+val DarkBackground = Color(0xFF07080C)
+val DarkOnBackground = Color(0xFFF3EEE3)
+val DarkSurface = Color(0xFF101218)
+val DarkOnSurface = Color(0xFFF3EEE3)
+val DarkSurfaceVariant = Color(0xFF2A2C36)
+val DarkOnSurfaceVariant = Color(0xFFC8C0B0)
+val DarkOutline = Color(0xFF8A8478)
+val DarkOutlineVariant = Color(0xFF2A2C36)
 
-// Status colors
-val StatusSuccess = Color(0xFF2E7D32)
-val StatusWarning = Color(0xFFF57C00)
-val StatusError = Color(0xFFC62828)
-val StatusInfo = Color(0xFF0277BD)
+val StatusSuccess = Color(0xFF7C9A72)
+val StatusWarning = Color(0xFFC9A227)
+val StatusError = Color(0xFFC45C4A)
+val StatusInfo = Color(0xFF7AA2C4)
