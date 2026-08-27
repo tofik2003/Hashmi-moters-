@@ -32,6 +32,7 @@ import com.hashmimotors.app.ui.billing.InvoicePreviewScreen
 import com.hashmimotors.app.ui.catalog.AddPartScreen
 import com.hashmimotors.app.ui.catalog.SearchScreen
 import com.hashmimotors.app.ui.components.AnimatedParticleBackground
+import com.hashmimotors.app.ui.customers.CustomerListScreen
 import com.hashmimotors.app.ui.dashboard.DashboardScreen
 import com.hashmimotors.app.ui.fitment.FitmentScreen
 import com.hashmimotors.app.ui.inventory.AddStockScreen
@@ -61,6 +62,7 @@ object Routes {
     const val INVENTORY = "inventory"
     const val ADD_STOCK = "add_stock"
     const val REPORTS = "reports"
+    const val CUSTOMERS = "customers"
 }
 
 @HiltViewModel
@@ -157,7 +159,8 @@ fun HashmiMotorsApp(
                     onInventory = { navController.navigate(Routes.INVENTORY) },
                     onReports = { navController.navigate(Routes.REPORTS) },
                     onHistory = { navController.navigate(Routes.INVOICE_HISTORY) },
-                    onSettings = { navController.navigate(Routes.SETTINGS) }
+                    onSettings = { navController.navigate(Routes.SETTINGS) },
+                    onCustomers = { navController.navigate(Routes.CUSTOMERS) }
                 )
             }
             composable(Routes.SETTINGS) {
@@ -238,6 +241,9 @@ fun HashmiMotorsApp(
             }
             composable(Routes.REPORTS) {
                 ReportsScreen(onBack = { navController.popBackStack() })
+            }
+            composable(Routes.CUSTOMERS) {
+                CustomerListScreen(onBack = { navController.popBackStack() })
             }
         }
     }

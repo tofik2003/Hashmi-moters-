@@ -32,19 +32,23 @@ class FitmentViewModel @Inject constructor(
     private val _selectedVehicleId = MutableStateFlow<String?>(null)
 
     val uiState: StateFlow<FitmentUiState> = combine(
-        vehicleRepository.getAllVehicles(),
+        combine(
+            vehicleRepository.getAllVehicles(),
+            _selectedMake
+        ) { all, selectedMake ->
+            all to selectedMake
+        },
         _selectedMake.flatMapLatest { make ->
             if (make == null) kotlinx.coroutines.flow.flowOf(emptyList())
             else vehicleRepository.getByMake(make)
-        }
-    ) { all, models ->
-        Pair(all, models)
-    }.combine(_selectedVehicleId) { (all, models), vid ->
+        },
+        _selectedVehicleId
+    ) { (all, selectedMake), models, selectedVehicleId ->
         FitmentUiState(
             allMakes = all.map { it.make }.distinct().sorted(),
-            selectedMake = _selectedMake.value,
+            selectedMake = selectedMake,
             models = models,
-            selectedVehicleId = vid
+            selectedVehicleId = selectedVehicleId
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), FitmentUiState())
 

@@ -29,13 +29,23 @@ class DashboardViewModel @Inject constructor(
 ) : ViewModel() {
 
     val uiState: StateFlow<DashboardUiState> = combine(
-        invoiceRepo.getTodaySalesTotal(),
-        invoiceRepo.getTodayBillCount(),
-        partRepo.getLowStockCount(),
-        partRepo.getPartCount(),
-        partRepo.getTotalStockValue(),
-        shopRepo.getShop()
-    ) { sales, bills, lowStock, totalParts, stockValue, shop ->
+        combine(
+            invoiceRepo.getTodaySalesTotal(),
+            invoiceRepo.getTodayBillCount(),
+            partRepo.getLowStockCount()
+        ) { sales, bills, lowStock ->
+            Triple(sales, bills, lowStock)
+        },
+        combine(
+            partRepo.getPartCount(),
+            partRepo.getTotalStockValue(),
+            shopRepo.getShop()
+        ) { totalParts, stockValue, shop ->
+            Triple(totalParts, stockValue, shop)
+        }
+    ) { first, second ->
+        val (sales, bills, lowStock) = first
+        val (totalParts, stockValue, shop) = second
         DashboardUiState(
             todaySales = sales,
             todayBills = bills,

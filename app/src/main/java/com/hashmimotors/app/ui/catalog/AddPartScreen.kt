@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -67,9 +68,9 @@ fun AddPartScreen(
 
     val state by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(partId) {
+    LaunchedEffect(partId, state.parts) {
         partId?.let { id ->
-            viewModel.uiState.value.parts.find { it.id == id }?.let { part ->
+            state.parts.find { it.id == id }?.let { part ->
                 name = part.name
                 sku = part.sku
                 oemNumbersText = part.oemNumbers.joinToString(", ")
@@ -337,7 +338,7 @@ private fun CategorySelector(
     androidx.compose.foundation.lazy.LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(categories.size) { idx ->
+        items(count = categories.size) { idx ->
             val (id, name) = categories[idx]
             CategoryChip(
                 name = name,
@@ -346,8 +347,4 @@ private fun CategorySelector(
             )
         }
     }
-}
-
-private fun androidx.compose.foundation.lazy.LazyListScope.items(count: Int, content: @Composable (Int) -> Unit) {
-    items(count) { idx -> content(idx) }
 }

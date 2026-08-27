@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Inventory
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -63,7 +64,8 @@ fun DashboardScreen(
     onInventory: () -> Unit,
     onReports: () -> Unit,
     onHistory: () -> Unit,
-    onSettings: () -> Unit
+    onSettings: () -> Unit,
+    onCustomers: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -168,6 +170,8 @@ fun DashboardScreen(
                     "add_stock" -> onAddStock
                     "fitment" -> onFitment
                     "inventory" -> onInventory
+                    "history" -> onHistory
+                    "customers" -> onCustomers
                     else -> onNewBill
                 }
             )
@@ -351,5 +355,7 @@ private val quickActions = listOf(
     QuickAction("new_bill", "New Bill", Icons.Filled.Receipt, Color(0xFF66BB6A)),
     QuickAction("add_part", "Add Part", Icons.Filled.Add, Color(0xFFFFA726)),
     QuickAction("add_stock", "Add Stock", Icons.Filled.Inventory, Color(0xFFAB47BC)),
-    QuickAction("fitment", "Find by Vehicle", Icons.Filled.ShoppingCart, Color(0xFFEC407A))
+    QuickAction("fitment", "Find by Vehicle", Icons.Filled.ShoppingCart, Color(0xFFEC407A)),
+    QuickAction("history", "Bill History", Icons.Filled.Receipt, Color(0xFF7E57C2)),
+    QuickAction("customers", "Customers", Icons.Filled.Person, Color(0xFF26A69A))
 )
