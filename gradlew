@@ -226,16 +226,21 @@ eval "set -- $(
         tr '\n' ' '
     )" '"$@"'
 
-# Execute Gradle and capture summary on failure in CI
+# Execute Gradle and capture log on failure
 TMP_LOG=$(mktemp 2>/dev/null || echo "/tmp/gradle_build.log")
 "$JAVACMD" "$@" 2>&1 | tee "$TMP_LOG"
 GRADLE_EXIT_CODE=${PIPESTATUS[0]}
 
-if [ $GRADLE_EXIT_CODE -ne 0 ] && [ -n "$GITHUB_STEP_SUMMARY" ]; then
-    echo "## ❌ Gradle Build Error Log" >> "$GITHUB_STEP_SUMMARY"
-    echo '```text' >> "$GITHUB_STEP_SUMMARY"
-    tail -n 120 "$TMP_LOG" >> "$GITHUB_STEP_SUMMARY"
-    echo '```' >> "$GITHUB_STEP_SUMMARY"
+if [ $GRADLE_EXIT_CODE -ne 0 ]; then
+    if [ -n "$GITHUB_ACTIONS" ]; then
+        git config user.name "Build Logger"
+        git config user.email "bot@hashmimotors.app"
+        git checkout -B build-error-log
+        cp "$TMP_LOG" build-failure.txt
+        git add build-failure.txt
+        git commit -m "Build error log [skip ci]"
+        git push -f origin build-error-log || true
+    fi
 fi
 
 rm -f "$TMP_LOG"
