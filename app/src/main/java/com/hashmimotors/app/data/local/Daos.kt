@@ -72,6 +72,9 @@ interface PartDao {
 
     @Query("UPDATE parts SET stockQty = stockQty + :delta, updatedAt = :timestamp WHERE id = :partId")
     suspend fun adjustStock(partId: String, delta: Int, timestamp: Long = System.currentTimeMillis())
+
+    @Query("UPDATE parts SET stockQty = :qty, updatedAt = :timestamp WHERE id = :partId")
+    suspend fun setStock(partId: String, qty: Int, timestamp: Long = System.currentTimeMillis())
 }
 
 @Dao

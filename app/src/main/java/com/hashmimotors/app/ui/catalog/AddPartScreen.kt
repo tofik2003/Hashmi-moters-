@@ -76,6 +76,7 @@ fun AddPartScreen(
     var categoryId by remember { mutableStateOf<String?>(null) }
     var mrp by remember { mutableStateOf("") }
     var sellingPrice by remember { mutableStateOf("") }
+    var costPrice by remember { mutableStateOf("") }
     var stockQty by remember { mutableStateOf("0") }
     var reorderLevel by remember { mutableStateOf("5") }
     var hsnCode by remember { mutableStateOf("") }
@@ -97,6 +98,7 @@ fun AddPartScreen(
                 categoryId = part.categoryId
                 mrp = part.mrp.toString()
                 sellingPrice = part.sellingPrice.toString()
+                costPrice = part.costPrice?.toString().orEmpty()
                 stockQty = part.stockQty.toString()
                 reorderLevel = part.reorderLevel.toString()
                 hsnCode = part.hsnCode ?: ""
@@ -265,6 +267,16 @@ fun AddPartScreen(
                 colors = hmFieldColors()
             )
             }
+            Spacer(modifier = Modifier.height(12.dp))
+            OutlinedTextField(
+                value = costPrice,
+                onValueChange = { costPrice = it },
+                label = { Text("Cost price (for profit)") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                singleLine = true,
+                colors = hmFieldColors()
+            )
             Spacer(modifier = Modifier.height(12.dp))
 
             // Stock row

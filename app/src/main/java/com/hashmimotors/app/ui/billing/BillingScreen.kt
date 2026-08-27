@@ -250,6 +250,37 @@ fun BillingScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            Text("Payment", color = Ivory, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+            Spacer(modifier = Modifier.height(6.dp))
+            androidx.compose.foundation.lazy.LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(listOf("CASH", "UPI", "CARD", "CREDIT")) { mode ->
+                    val selected = state.paymentMode == mode
+                    androidx.compose.material3.FilterChip(
+                        selected = selected,
+                        onClick = { billingViewModel.setPaymentMode(mode) },
+                        label = { Text(if (mode == "CREDIT") "Credit" else mode.lowercase().replaceFirstChar { it.uppercase() }) }
+                    )
+                }
+            }
+            if (state.customers.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("Saved customers", color = IvoryMute, fontSize = 12.sp)
+                androidx.compose.foundation.lazy.LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(state.customers.take(12), key = { it.id }) { c ->
+                        androidx.compose.material3.AssistChip(
+                            onClick = {
+                                customerName = c.name
+                                customerPhone = c.phone
+                                billingViewModel.setCustomer(c)
+                            },
+                            label = { Text(c.name) }
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
             // Totals card
             Card(
                 modifier = Modifier.fillMaxWidth(),

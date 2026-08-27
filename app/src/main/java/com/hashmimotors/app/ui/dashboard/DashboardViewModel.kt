@@ -42,8 +42,9 @@ class DashboardViewModel @Inject constructor(
         shopRepo.getShop()
     ) { invoices, lowStock, totalParts, stockValue, shop ->
         val (start, end) = todayRange()
-        val today = invoices.filter { it.date in start until end }
-        val week = weekBuckets(invoices)
+        val live = invoices.filter { it.status != com.hashmimotors.app.domain.model.InvoiceStatus.VOID }
+        val today = live.filter { it.date in start until end }
+        val week = weekBuckets(live)
         DashboardUiState(
             todaySales = today.sumOf { it.grandTotal },
             todayBills = today.size,
@@ -54,7 +55,7 @@ class DashboardViewModel @Inject constructor(
             shopName = shop?.name ?: "Hashmi Motors",
             weekSales = week,
             weekTotal = week.sum().toDouble(),
-            recentInvoices = invoices.take(6)
+            recentInvoices = live.take(6)
         )
     }.stateIn(
         scope = viewModelScope,

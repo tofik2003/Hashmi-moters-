@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -74,6 +75,10 @@ class CustomerListViewModel @Inject constructor(
                 Customer(name = name.trim(), phone = phone.trim())
             )
         }
+    }
+
+    fun deleteCustomer(customer: Customer) {
+        viewModelScope.launch { customerRepository.deleteCustomer(customer) }
     }
 }
 
@@ -178,6 +183,9 @@ fun CustomerListScreen(
                                         color = MaterialTheme.colorScheme.primary,
                                         fontWeight = FontWeight.SemiBold
                                     )
+                                }
+                                IconButton(onClick = { viewModel.deleteCustomer(customer) }) {
+                                    Icon(Icons.Filled.Delete, "Delete", tint = Color(0xFFFFB4AB))
                                 }
                             }
                         }

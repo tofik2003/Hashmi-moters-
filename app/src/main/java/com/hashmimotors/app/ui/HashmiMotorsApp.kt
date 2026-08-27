@@ -41,6 +41,7 @@ import com.hashmimotors.app.ui.fitment.FitmentScreen
 import com.hashmimotors.app.ui.importhub.ImportHubScreen
 import com.hashmimotors.app.ui.inventory.AddStockScreen
 import com.hashmimotors.app.ui.inventory.InventoryScreen
+import com.hashmimotors.app.ui.inventory.SupplierScreen
 import com.hashmimotors.app.ui.onboarding.OnboardingScreen
 import com.hashmimotors.app.ui.reports.ReportsScreen
 import com.hashmimotors.app.ui.scanner.ScannerMode
@@ -67,6 +68,7 @@ object Routes {
     const val INVOICE_HISTORY = "invoice_history"
     const val INVENTORY = "inventory"
     const val ADD_STOCK = "add_stock"
+    const val SUPPLIERS = "suppliers"
     const val REPORTS = "reports"
     const val CUSTOMERS = "customers"
     const val IMPORT_HUB = "import_hub"
@@ -202,6 +204,7 @@ fun HashmiMotorsMainScreen(
                     onImport = { navController.navigate(Routes.IMPORT_HUB) },
                     onFitment = { navController.navigate(Routes.FITMENT_WIZARD) },
                     onCustomers = { navController.navigate(Routes.CUSTOMERS) },
+                    onSuppliers = { navController.navigate(Routes.SUPPLIERS) },
                     onReports = { navController.navigate(Routes.REPORTS) },
                     onHistory = { navController.navigate(Routes.INVOICE_HISTORY) },
                     onShop = { navController.navigate(Routes.SHOP_SETUP) },
@@ -313,11 +316,21 @@ fun HashmiMotorsMainScreen(
                     onInvoiceClick = { id -> navController.navigate(Routes.invoicePreview(id)) }
                 )
             }
-            composable(Routes.INVENTORY) {
+            composable(Routes.INVENTORY) { entry ->
+                val barcode by entry.savedStateHandle
+                    .getStateFlow("scan_barcode", "")
+                    .collectAsStateWithLifecycle()
                 InventoryScreen(
+                    incomingQuery = barcode,
+                    onIncomingConsumed = { entry.savedStateHandle["scan_barcode"] = "" },
                     onBack = { navController.popBackStack() },
-                    onPartClick = { id -> navController.navigate(Routes.editPart(id)) }
+                    onPartClick = { id -> navController.navigate(Routes.editPart(id)) },
+                    onAddStock = { navController.navigate(Routes.ADD_STOCK) },
+                    onScan = { navController.navigate(Routes.scanner("inventory")) }
                 )
+            }
+            composable(Routes.SUPPLIERS) {
+                SupplierScreen(onBack = { navController.popBackStack() })
             }
             composable(Routes.ADD_STOCK) { entry ->
                 val barcode by entry.savedStateHandle

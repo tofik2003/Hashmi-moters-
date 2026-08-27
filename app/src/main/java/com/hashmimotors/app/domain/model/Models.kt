@@ -163,6 +163,7 @@ data class Invoice(
     val totalGst: Double = 0.0,
     val grandTotal: Double = 0.0,
     val status: InvoiceStatus = InvoiceStatus.PAID,
+    val paymentMode: String = "CASH",
     val notes: String? = null,
     val synced: Boolean = false,
     val createdAt: Long = System.currentTimeMillis()

@@ -138,6 +138,7 @@ data class InvoiceEntity(
     val totalGst: Double,
     val grandTotal: Double,
     val status: String,
+    val paymentMode: String = "CASH",
     val notes: String?,
     val synced: Boolean,
     val createdAt: Long

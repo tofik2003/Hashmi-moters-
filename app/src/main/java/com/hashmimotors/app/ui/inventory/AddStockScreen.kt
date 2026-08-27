@@ -61,7 +61,9 @@ fun AddStockScreen(
     val invState by inventoryViewModel.uiState.collectAsState()
     var selectedPartId by remember { mutableStateOf<String?>(null) }
     var qty by remember { mutableStateOf("") }
+    var cost by remember { mutableStateOf("") }
     var supplierId by remember { mutableStateOf<String?>(null) }
+    var newSupplier by remember { mutableStateOf("") }
 
     val selectedPart = state.parts.find { it.id == selectedPartId }
 
@@ -183,7 +185,18 @@ fun AddStockScreen(
                 onClick = {
                     val q = qty.toIntOrNull() ?: 0
                     if (q > 0) {
-                        inventoryViewModel.addStock(selectedPartId!!, q, supplierId, "default-user")
+                        if (newSupplier.isNotBlank()) {
+                            val sup = com.hashmimotors.app.domain.model.Supplier(name = newSupplier.trim())
+                            inventoryViewModel.saveSupplier(sup)
+                            supplierId = sup.id
+                        }
+                        inventoryViewModel.addStock(
+                            selectedPartId!!,
+                            q,
+                            supplierId,
+                            "default-user",
+                            cost = cost.toDoubleOrNull()
+                        )
                         onSaved()
                     }
                 }

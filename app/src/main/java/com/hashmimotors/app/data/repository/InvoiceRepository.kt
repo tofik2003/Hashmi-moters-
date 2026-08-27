@@ -48,6 +48,10 @@ class InvoiceRepository @Inject constructor(
         invoiceDao.delete(invoice.toEntity())
     }
 
+    suspend fun setStatus(invoice: Invoice, status: InvoiceStatus) {
+        invoiceDao.insert(invoice.copy(status = status).toEntity())
+    }
+
     private fun todayRange(): Pair<Long, Long> {
         val cal = java.util.Calendar.getInstance()
         cal.set(java.util.Calendar.HOUR_OF_DAY, 0)
@@ -96,6 +100,7 @@ fun InvoiceEntity.toDomain() = Invoice(
     totalGst = totalGst,
     grandTotal = grandTotal,
     status = runCatching { InvoiceStatus.valueOf(status) }.getOrDefault(InvoiceStatus.PAID),
+    paymentMode = paymentMode,
     notes = notes,
     synced = synced,
     createdAt = createdAt
@@ -131,6 +136,7 @@ fun Invoice.toEntity() = InvoiceEntity(
     totalGst = totalGst,
     grandTotal = grandTotal,
     status = status.name,
+    paymentMode = paymentMode,
     notes = notes,
     synced = synced,
     createdAt = createdAt

@@ -132,12 +132,19 @@ fun InvoiceHistoryScreen(
                                     fontSize = 11.sp
                                 )
                             }
-                            Text(
-                                "₹${"%,.0f".format(invoice.grandTotal)}",
-                                color = Ivory,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
+                            Column(horizontalAlignment = Alignment.End) {
+                                Text(
+                                    "₹${"%,.0f".format(invoice.grandTotal)}",
+                                    color = Ivory,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    invoice.status.name + " · " + invoice.paymentMode,
+                                    color = Ivory.copy(alpha = 0.5f),
+                                    fontSize = 10.sp
+                                )
+                            }
                         }
                     }
                 }

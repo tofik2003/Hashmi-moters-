@@ -69,11 +69,18 @@ fun InvoicePreviewScreen(
     val context = LocalContext.current
     val invoice by viewModel.invoice.collectAsState()
     val shop by viewModel.shop.collectAsState()
+    val message by viewModel.message.collectAsState()
 
     var showConfetti by remember { mutableStateOf(true) }
 
     LaunchedEffect(invoiceId) {
         viewModel.loadInvoice(invoiceId)
+    }
+    LaunchedEffect(message) {
+        message?.let {
+            android.widget.Toast.makeText(context, it, android.widget.Toast.LENGTH_SHORT).show()
+            viewModel.clearMessage()
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -382,6 +389,22 @@ fun InvoicePreviewScreen(
                         icon = Icons.Filled.Share,
                         onClick = { shareOnWhatsApp(context, inv, shop) }
                     )
+                    if (inv.status != com.hashmimotors.app.domain.model.InvoiceStatus.VOID) {
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            if (inv.status == com.hashmimotors.app.domain.model.InvoiceStatus.UNPAID) {
+                                androidx.compose.material3.TextButton(
+                                    onClick = { viewModel.markPaid() },
+                                    modifier = Modifier.weight(1f)
+                                ) { Text("Mark paid", color = Color(0xFF81C784)) }
+                            }
+                            androidx.compose.material3.TextButton(
+                                onClick = { viewModel.voidBill() },
+                                modifier = Modifier.weight(1f)
+                            ) { Text("Void & restore stock", color = Color(0xFFFFB4AB)) }
+                        }
+                    } else {
+                        Text("VOID — stock returned to shelves", color = Color(0xFFFFB4AB), fontSize = 13.sp)
+                    }
                 }
             }
         }

@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Assessment
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Inventory
+import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Storefront
@@ -39,6 +40,7 @@ fun MoreScreen(
     onImport: () -> Unit,
     onFitment: () -> Unit,
     onCustomers: () -> Unit,
+    onSuppliers: () -> Unit,
     onReports: () -> Unit,
     onHistory: () -> Unit,
     onShop: () -> Unit,

@@ -1,6 +1,6 @@
 # Hashmi Motors — Spare Parts Manager
 
-**v1.2.1** — gold/ink atelier UI, compile fix for the scan tab, live camera / QR, billing with customer on the bill, backup. No plans or paywalls.
+**v1.3.0** — industry inventory: stock ledger, count/adjust, receive with cost & supplier, credit bills, void+restore, profit reports, CSV export. No plans or paywalls.
 
 A personal-use Android app for managing a spare parts shop. Built for shop owners and their staff (in this case: you and your father) to run the counter, manage inventory, and create GST-compliant bills.
 

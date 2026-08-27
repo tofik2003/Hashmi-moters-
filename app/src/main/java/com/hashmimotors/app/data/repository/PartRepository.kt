@@ -5,6 +5,7 @@ import com.hashmimotors.app.data.local.PartEntity
 import com.hashmimotors.app.data.local.StockMovementDao
 import com.hashmimotors.app.data.local.StockMovementEntity
 import com.hashmimotors.app.domain.model.Part
+import com.hashmimotors.app.domain.model.StockMovement
 import com.hashmimotors.app.domain.model.StockMovementType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -64,8 +65,25 @@ class PartRepository @Inject constructor(
     /**
      * Add stock to a part (purchase received).
      */
-    suspend fun addStock(partId: String, qty: Int, userId: String, supplierId: String? = null) {
+    suspend fun addStock(
+        partId: String,
+        qty: Int,
+        userId: String,
+        supplierId: String? = null,
+        costPerUnit: Double? = null,
+        reason: String? = null
+    ) {
         if (qty <= 0) return
+        val existing = partDao.getByIdOnce(partId) ?: return
+        if (costPerUnit != null || supplierId != null) {
+            partDao.update(
+                existing.copy(
+                    costPrice = costPerUnit ?: existing.costPrice,
+                    supplierId = supplierId ?: existing.supplierId,
+                    updatedAt = System.currentTimeMillis()
+                )
+            )
+        }
         partDao.adjustStock(partId, qty)
         stockMovementDao.insert(
             StockMovementEntity(
@@ -73,8 +91,9 @@ class PartRepository @Inject constructor(
                 partId = partId,
                 type = StockMovementType.IN.name,
                 qty = qty,
-                refType = if (supplierId != null) "SUPPLIER" else "MANUAL",
+                refType = if (supplierId != null) "SUPPLIER" else "PURCHASE",
                 refId = supplierId,
+                reason = reason ?: "Stock in +$qty",
                 userId = userId
             )
         )
@@ -84,6 +103,7 @@ class PartRepository @Inject constructor(
      * Adjust stock manually (damage, count correction, etc).
      */
     suspend fun adjustStock(partId: String, delta: Int, reason: String, userId: String) {
+        if (delta == 0) return
         partDao.adjustStock(partId, delta)
         stockMovementDao.insert(
             StockMovementEntity(
@@ -94,6 +114,26 @@ class PartRepository @Inject constructor(
                 refType = "ADJUSTMENT",
                 refId = null,
                 reason = reason,
+                userId = userId
+            )
+        )
+    }
+
+    /** Physical count — set absolute on-hand quantity. */
+    suspend fun setStock(partId: String, qty: Int, reason: String, userId: String) {
+        val current = partDao.getByIdOnce(partId)?.stockQty ?: return
+        val safe = qty.coerceAtLeast(0)
+        val delta = safe - current
+        partDao.setStock(partId, safe)
+        stockMovementDao.insert(
+            StockMovementEntity(
+                id = java.util.UUID.randomUUID().toString(),
+                partId = partId,
+                type = StockMovementType.ADJUST.name,
+                qty = delta,
+                refType = "COUNT",
+                refId = null,
+                reason = reason.ifBlank { "Stock take → $safe" },
                 userId = userId
             )
         )
@@ -118,9 +158,24 @@ class PartRepository @Inject constructor(
         )
     }
 
-    fun getRecentMovements(limit: Int = 50): Flow<List<StockMovementEntity>> =
-        stockMovementDao.getRecent(limit)
+    fun getRecentMovements(limit: Int = 80): Flow<List<StockMovement>> =
+        stockMovementDao.getRecent(limit).map { list -> list.map { it.toDomain() } }
+
+    fun getMovementsForPart(partId: String): Flow<List<StockMovement>> =
+        stockMovementDao.getForPart(partId).map { list -> list.map { it.toDomain() } }
 }
+
+fun StockMovementEntity.toDomain() = StockMovement(
+    id = id,
+    partId = partId,
+    type = runCatching { StockMovementType.valueOf(type) }.getOrDefault(StockMovementType.ADJUST),
+    qty = qty,
+    refType = refType,
+    refId = refId,
+    reason = reason,
+    userId = userId,
+    timestamp = timestamp
+)
 
 // ============================================
 // Mappers

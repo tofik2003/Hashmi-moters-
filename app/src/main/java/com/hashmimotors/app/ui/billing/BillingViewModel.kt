@@ -30,7 +30,9 @@ data class BillingUiState(
     val notes: String = "",
     val isSaving: Boolean = false,
     val savedInvoice: Invoice? = null,
-    val error: String? = null
+    val error: String? = null,
+    val paymentMode: String = "CASH",
+    val customers: List<Customer> = emptyList()
 ) {
     val subtotal: Double get() = lines.sumOf { it.lineTotal }
     val totalDiscount: Double get() {
@@ -53,6 +55,14 @@ class BillingViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(BillingUiState())
     val state: StateFlow<BillingUiState> = _state.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            customerRepo.getAllCustomers().collect { list ->
+                _state.update { it.copy(customers = list) }
+            }
+        }
+    }
 
     fun addPart(part: Part, qty: Int = 1) {
         if (qty <= 0) return
@@ -153,6 +163,10 @@ class BillingViewModel @Inject constructor(
         _state.update { it.copy(notes = notes) }
     }
 
+    fun setPaymentMode(mode: String) {
+        _state.update { it.copy(paymentMode = mode) }
+    }
+
     fun clearCart() {
         _state.value = BillingUiState()
     }
@@ -202,11 +216,11 @@ class BillingViewModel @Inject constructor(
                     )
                 }
 
+                val credit = current.paymentMode.equals("CREDIT", ignoreCase = true)
                 val invoice = Invoice(
                     invoiceNo = invoiceNo,
                     date = System.currentTimeMillis(),
-                    type = if (shop?.gstMode == com.hashmimotors.app.domain.model.GstMode.COMPOSITION)
-                        InvoiceType.BILL_OF_SUPPLY else InvoiceType.BILL_OF_SUPPLY,
+                    type = InvoiceType.BILL_OF_SUPPLY,
                     customerId = customer?.id,
                     customerSnapshot = snapshot,
                     userId = userId,
@@ -215,7 +229,8 @@ class BillingViewModel @Inject constructor(
                     totalDiscount = current.totalDiscount,
                     totalGst = current.totalGst,
                     grandTotal = current.grandTotal,
-                    status = InvoiceStatus.PAID,
+                    status = if (credit) InvoiceStatus.UNPAID else InvoiceStatus.PAID,
+                    paymentMode = current.paymentMode,
                     notes = current.notes
                 )
 
@@ -236,7 +251,7 @@ class BillingViewModel @Inject constructor(
                     )
                 }
 
-                _state.value = BillingUiState(savedInvoice = invoice)
+                _state.value = BillingUiState(savedInvoice = invoice, customers = current.customers)
             } catch (e: Exception) {
                 _state.update { it.copy(isSaving = false, error = e.message ?: "Failed to save bill") }
             }

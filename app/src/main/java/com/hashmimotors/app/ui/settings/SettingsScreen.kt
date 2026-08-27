@@ -190,7 +190,7 @@ fun SettingsScreen(
             }
 
             SettingsSection("About") {
-                SettingsRow("Version", "1.2.0")
+                SettingsRow("Version", "1.3.0")
                 SettingsRow("Licence", "Personal use · all features included")
                 SettingsRow("Data", "On this phone only")
                 SettingsRow("Accounts", "None required")
