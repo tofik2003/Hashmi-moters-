@@ -480,7 +480,7 @@ private fun generatePdf(context: Context, invoice: Invoice, shop: com.hashmimoto
         val pdf = PdfDocument()
         val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create() // A4
         val page = pdf.startPage(pageInfo)
-        val canvas = android.graphics.Canvas(page.canvas)
+        val canvas = page.canvas
         val paint = Paint().apply {
             color = android.graphics.Color.BLACK
             textSize = 12f

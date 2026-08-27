@@ -22,7 +22,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.BarcodeReader
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
@@ -80,7 +80,7 @@ fun SearchScreen(
             leadingIcon = { Icon(Icons.Filled.Search, null, tint = Color.White.copy(alpha = 0.6f)) },
             trailingIcon = {
                 IconButton(onClick = onScanClick) {
-                    Icon(Icons.Filled.BarcodeReader, "Scan", tint = Color.White)
+                    Icon(Icons.Filled.QrCodeScanner, "Scan", tint = Color.White)
                 }
             },
             modifier = Modifier.fillMaxWidth(),

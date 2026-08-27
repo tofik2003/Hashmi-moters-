@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 /**
  * Room entity for Parts.
@@ -142,6 +143,7 @@ data class InvoiceEntity(
     val createdAt: Long
 )
 
+@Serializable
 data class InvoiceLineEmbedded(
     val partId: String,
     val partName: String,
@@ -163,9 +165,9 @@ data class StockMovementEntity(
     val qty: Int,
     val refType: String?,
     val refId: String?,
-    val reason: String?,
+    val reason: String? = null,
     val userId: String,
-    val timestamp: Long
+    val timestamp: Long = System.currentTimeMillis()
 )
 
 @Entity(tableName = "shop")

@@ -79,14 +79,14 @@ fun AnimatedParticleBackground(
             )
     ) {
         // Draw particles drifting upward
-        particles.forEach { (xRatio, yRatio, size) ->
+        particles.forEach { (xRatio, yRatio, particleScale) ->
             val drift = (particleOffset + yRatio) % 1f
             val x = xRatio * size.width
             val y = drift * size.height
             val alpha = (0.3f + 0.3f * sin(drift * Math.PI.toFloat() * 2)) * pulse
             drawCircle(
                 color = Color.White.copy(alpha = alpha * 0.5f),
-                radius = size * 6f,
+                radius = particleScale * 6f,
                 center = Offset(x, y)
             )
         }
