@@ -233,10 +233,10 @@ GRADLE_EXIT_CODE=$?
 cat "$TMP_LOG"
 
 if [ $GRADLE_EXIT_CODE -ne 0 ]; then
-    tail -n 30 "$TMP_LOG" | while IFS= read -r line; do
+    grep -E "e: |Caused by:|FAILURE:|What went wrong:|Exception:|error:|> Task :|cannot find|Unresolved|symbol" "$TMP_LOG" | head -n 40 | while IFS= read -r line; do
         if [ -n "$line" ]; then
             cleaned=$(echo "$line" | sed 's/[%#\r\n]/ /g')
-            echo "::error title=GradleLog::$cleaned"
+            echo "::error title=Compiler::$cleaned"
         fi
     done
 fi
