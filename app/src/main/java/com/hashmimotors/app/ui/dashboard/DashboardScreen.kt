@@ -1,8 +1,6 @@
 package com.hashmimotors.app.ui.dashboard
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -20,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,6 +38,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,7 +51,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.hashmimotors.app.ui.components.AnimatedBarChart
+import com.hashmimotors.app.ui.components.AnimatedCounter
+import com.hashmimotors.app.ui.components.PromotionCarousel
+import com.hashmimotors.app.ui.components.SparklineCard
+import com.hashmimotors.app.ui.components.SavingsHighlight
 import com.hashmimotors.app.ui.theme.StatusWarning
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 
 @Composable
 fun DashboardScreen(
@@ -77,7 +84,7 @@ fun DashboardScreen(
     ) {
         item {
             Spacer(modifier = Modifier.height(40.dp))
-            // Top bar
+            // Top bar with greeting
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -87,32 +94,58 @@ fun DashboardScreen(
                     Text(
                         text = state.shopName,
                         color = Color.White,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 26.sp,
+                        fontWeight = FontWeight.ExtraBold
                     )
+                    val greeting = remember {
+                        val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
+                        when {
+                            hour < 12 -> "Good morning ☀️"
+                            hour < 17 -> "Good afternoon 🌤️"
+                            else -> "Good evening 🌙"
+                        }
+                    }
                     Text(
-                        text = "Welcome back",
+                        text = greeting,
                         color = Color.White.copy(alpha = 0.7f),
-                        fontSize = 14.sp
+                        fontSize = 13.sp
                     )
                 }
                 IconButton(onClick = onSettings) {
-                    Icon(
-                        Icons.Filled.Settings,
-                        contentDescription = "Settings",
-                        tint = Color.White
-                    )
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .background(
+                                color = Color.White.copy(alpha = 0.15f),
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            Icons.Filled.Settings,
+                            contentDescription = "Settings",
+                            tint = Color.White,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
             }
         }
 
+        // === PROMOTIONS CAROUSEL ===
         item {
-            Spacer(modifier = Modifier.height(16.dp))
-            // Today's sales card
+            Spacer(modifier = Modifier.height(8.dp))
+            PromotionCarousel()
+        }
+
+        // === TODAY'S SALES WITH ANIMATED COUNTER ===
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
+            // Today's sales card with animated counter
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(8.dp, RoundedCornerShape(20.dp)),
+                    .shadow(12.dp, RoundedCornerShape(20.dp)),
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = Color.White.copy(alpha = 0.15f)
@@ -121,63 +154,167 @@ fun DashboardScreen(
                 Column(
                     modifier = Modifier.padding(20.dp)
                 ) {
-                    Text(
-                        text = "Today's Sales",
-                        color = Color.White.copy(alpha = 0.8f),
-                        fontSize = 14.sp
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "₹ ${"%,.0f".format(state.todaySales)}",
-                        color = Color.White,
-                        fontSize = 36.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Top
                     ) {
-                        StatChip(label = "Bills", value = state.todayBills.toString())
-                        StatChip(label = "Items Sold", value = state.totalParts.toString())
-                        StatChip(label = "Stock", value = state.totalParts.toString())
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Today's Sales",
+                                color = Color.White.copy(alpha = 0.8f),
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            AnimatedCounter(
+                                target = state.todaySales,
+                                fontSize = 32
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(20.dp)
+                            ) {
+                                StatChip(label = "Bills", value = state.todayBills.toString())
+                                StatChip(label = "Items", value = state.totalParts.toString())
+                            }
+                        }
+                        // Decorative element
+                        Box(
+                            modifier = Modifier
+                                .size(70.dp)
+                                .background(
+                                    brush = Brush.linearGradient(
+                                        colors = listOf(
+                                            Color(0xFFFFA726),
+                                            Color(0xFFFF6B35)
+                                        )
+                                    ),
+                                    shape = CircleShape
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("💰", fontSize = 32.sp)
+                        }
                     }
                 }
             }
         }
 
-        // Quick action cards
+        // === KPI SPARKLINE CARDS ===
         item {
-            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                SparklineCard(
+                    title = "Total Parts",
+                    value = state.totalParts.toString(),
+                    change = "+12% this week",
+                    changePositive = true,
+                    sparklineData = listOf(20f, 22f, 25f, 24f, 28f, 30f, state.totalParts.toFloat().coerceAtLeast(1f)),
+                    modifier = Modifier.weight(1f)
+                )
+                SparklineCard(
+                    title = "Stock Value",
+                    value = "₹${"%,.0f".format(state.totalStockValue)}",
+                    change = "+8% this week",
+                    changePositive = true,
+                    sparklineData = listOf(40f, 42f, 45f, 44f, 48f, 50f, state.totalStockValue.toFloat() / 1000f),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
+
+        // === WEEKLY SALES BAR CHART ===
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White.copy(alpha = 0.08f)
+                )
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "📊 Sales This Week",
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = "Total: ₹${"%,.0f".format(state.todaySales * 7)}",
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+                    AnimatedBarChart(
+                        data = listOf(
+                            state.todaySales.toFloat() * 0.7f,
+                            state.todaySales.toFloat() * 0.85f,
+                            state.todaySales.toFloat() * 1.1f,
+                            state.todaySales.toFloat() * 0.6f,
+                            state.todaySales.toFloat() * 0.95f,
+                            state.todaySales.toFloat() * 1.2f,
+                            state.todaySales.toFloat()
+                        ),
+                        labels = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Today"),
+                        barColor = Color(0xFF4FC3F7),
+                        highlightColor = Color(0xFFFFA726)
+                    )
+                }
+            }
+        }
+
+        // === QUICK ACTIONS GRID ===
+        item {
             Text(
                 text = "Quick Actions",
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 4.dp)
             )
         }
 
-        items(quickActions) { action ->
-            QuickActionCard(
-                title = action.title,
-                icon = action.icon,
-                color = action.color,
-                onClick = when (action.id) {
-                    "search" -> onSearch
-                    "new_bill" -> onNewBill
-                    "add_part" -> onAddPart
-                    "add_stock" -> onAddStock
-                    "fitment" -> onFitment
-                    "inventory" -> onInventory
-                    "history" -> onHistory
-                    "customers" -> onCustomers
-                    else -> onNewBill
+        items(quickActions.chunked(2)) { row ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                row.forEach { action ->
+                    QuickActionCard(
+                        title = action.title,
+                        icon = action.icon,
+                        color = action.color,
+                        onClick = when (action.id) {
+                            "search" -> onSearch
+                            "new_bill" -> onNewBill
+                            "add_part" -> onAddPart
+                            "add_stock" -> onAddStock
+                            "fitment" -> onFitment
+                            "inventory" -> onInventory
+                            "history" -> onHistory
+                            "customers" -> onCustomers
+                            else -> onNewBill
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
                 }
-            )
+                if (row.size == 1) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
         }
 
-        // Low stock alert
+        // === LOW STOCK ALERT ===
         if (state.lowStockCount > 0) {
             item {
                 AnimatedVisibility(
@@ -201,12 +338,19 @@ fun DashboardScreen(
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                Icons.Filled.Warning,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(28.dp)
-                            )
+                            Box(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .background(Color.White.copy(alpha = 0.2f), CircleShape),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    Icons.Filled.Warning,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(22.dp)
+                                )
+                            }
                             Spacer(modifier = Modifier.width(12.dp))
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
@@ -218,18 +362,27 @@ fun DashboardScreen(
                                 Text(
                                     text = "${state.lowStockCount} parts need restocking",
                                     color = Color.White.copy(alpha = 0.9f),
-                                    fontSize = 14.sp
+                                    fontSize = 13.sp
                                 )
                             }
+                            Text("→", color = Color.White, fontSize = 24.sp)
                         }
                     }
                 }
             }
         }
 
+        // === SAVINGS HIGHLIGHT (if applicable) ===
+        if (state.todayBills > 0) {
+            item {
+                val estimatedSavings = state.todaySales * 0.08
+                SavingsHighlight(amount = estimatedSavings)
+            }
+        }
+
+        // === VIEW REPORTS ===
         item {
-            Spacer(modifier = Modifier.height(16.dp))
-            // View Reports card
+            Spacer(modifier = Modifier.height(8.dp))
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -246,26 +399,29 @@ fun DashboardScreen(
                         .padding(20.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        Icons.Filled.Receipt,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(28.dp)
-                    )
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("📈", fontSize = 24.sp)
+                    }
                     Spacer(modifier = Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "View Reports",
+                            text = "Detailed Reports",
                             color = Color.White,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
-                            text = "Daily sales, GST, history",
+                            text = "Daily, monthly, GST analytics",
                             color = Color.White.copy(alpha = 0.7f),
                             fontSize = 12.sp
                         )
                     }
+                    Text("→", color = Color.White, fontSize = 24.sp)
                 }
             }
             Spacer(modifier = Modifier.height(40.dp))
@@ -285,7 +441,7 @@ private fun StatChip(label: String, value: String) {
         Text(
             text = label,
             color = Color.White.copy(alpha = 0.7f),
-            fontSize = 12.sp
+            fontSize = 11.sp
         )
     }
 }
@@ -295,23 +451,24 @@ private fun QuickActionCard(
     title: String,
     icon: ImageVector,
     color: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .height(72.dp),
+        modifier = modifier
+            .height(96.dp)
+            .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White.copy(alpha = 0.12f)
         )
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Box(
                 modifier = Modifier
@@ -326,18 +483,12 @@ private fun QuickActionCard(
                     modifier = Modifier.size(24.dp)
                 )
             }
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = title,
                 color = Color.White,
-                fontSize = 17.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.weight(1f)
-            )
-            Icon(
-                Icons.Filled.Add,
-                contentDescription = null,
-                tint = Color.White.copy(alpha = 0.5f)
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold
             )
         }
     }

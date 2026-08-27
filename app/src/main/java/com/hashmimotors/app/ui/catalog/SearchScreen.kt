@@ -305,11 +305,9 @@ fun PartListItem(
             }
             // Price and stock
             Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    text = "₹${"%,.0f".format(part.sellingPrice)}",
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                com.hashmimotors.app.ui.components.PriceWithDiscount(
+                    originalPrice = part.mrp,
+                    discountedPrice = part.sellingPrice
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Box(
