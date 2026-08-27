@@ -72,7 +72,7 @@ fun SettingsScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        HmTopBar(title = "Settings", subtitle = "Free · offline · no subscriptions", onBack = onBack)
+        HmTopBar(title = "Settings", subtitle = "100% free · no ads · no account", onBack = onBack)
         Column(Modifier.padding(horizontal = 16.dp)) {
             SettingsSection("Shop") {
                 SettingsRow("Shop profile") {
@@ -190,8 +190,9 @@ fun SettingsScreen(
             }
 
             SettingsSection("About") {
-                SettingsRow("Version", "1.3.0")
-                SettingsRow("Licence", "Personal use · all features included")
+                SettingsRow("Version", "1.3.1")
+                SettingsRow("Price", "Free forever — no ads, no IAP")
+                SettingsRow("Licence", "MIT · use and share freely")
                 SettingsRow("Data", "On this phone only")
                 SettingsRow("Accounts", "None required")
             }

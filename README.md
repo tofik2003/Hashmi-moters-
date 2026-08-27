@@ -1,8 +1,8 @@
 # Hashmi Motors — Spare Parts Manager
 
-**v1.3.0** — industry inventory: stock ledger, count/adjust, receive with cost & supplier, credit bills, void+restore, profit reports, CSV export. No plans or paywalls.
+**v1.3.1** — 100% free. No ads, no subscriptions, no in-app purchases. Every shop tool is included.
 
-A personal-use Android app for managing a spare parts shop. Built for shop owners and their staff (in this case: you and your father) to run the counter, manage inventory, and create GST-compliant bills.
+A free Android app for running a spare-parts counter: catalog, stock, GST bills, camera/QR, reports, and local backup.
 
 ## ✨ Features
 
@@ -132,4 +132,4 @@ This is an active build. The first build may have errors that we'll fix together
 
 ## 📄 License
 
-Personal use only. Not for distribution.
+MIT — free to use, copy, share, and modify. No fees, no ads, no paywalls.

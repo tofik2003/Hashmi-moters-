@@ -60,7 +60,7 @@ fun OnboardingScreen(onComplete: () -> Unit) {
     val pages = listOf(
         OnboardingPage(
             "Hashmi Motors",
-            "A complete spare-parts counter on this phone. Catalog, stock, GST bills — nothing locked behind a plan.",
+            "A complete spare-parts counter on this phone. Catalog, stock, GST bills — 100% free, no ads, no plans.",
             Icons.Filled.Storefront
         ),
         OnboardingPage(
@@ -75,7 +75,7 @@ fun OnboardingScreen(onComplete: () -> Unit) {
         ),
         OnboardingPage(
             "Yours, offline",
-            "Data stays on the device. Export a JSON backup whenever you like. No account, no fees.",
+            "Data stays on the device. Export a JSON backup whenever you like. No account, no fees, ever.",
             Icons.Filled.Inventory2
         )
     )

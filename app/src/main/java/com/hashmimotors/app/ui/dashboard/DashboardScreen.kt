@@ -168,7 +168,7 @@ fun DashboardScreen(
             item {
                 HmCard(modifier = Modifier.fillMaxWidth(), onClick = onNewBill) {
                     Text("No bills yet", color = Ivory, fontWeight = FontWeight.SemiBold)
-                    Text("Create a bill from the counter tab. All tools are included — nothing is locked.", color = IvoryMute, fontSize = 12.sp)
+                    Text("Create a bill from the counter tab. The whole shop is free — nothing is locked.", color = IvoryMute, fontSize = 12.sp)
                 }
             }
         } else {

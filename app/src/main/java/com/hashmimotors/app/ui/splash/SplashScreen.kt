@@ -113,7 +113,7 @@ fun SplashScreen(
             Spacer(Modifier.height(8.dp))
             Text("Spare parts atelier", color = Gold, fontSize = 13.sp, letterSpacing = 1.4.sp)
             Spacer(Modifier.height(6.dp))
-            Text("Every tool included", color = IvoryMute, fontSize = 12.sp)
+            Text("100% free · every tool included", color = IvoryMute, fontSize = 12.sp)
         }
     }
 }
