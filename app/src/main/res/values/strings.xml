@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hashmi Motors</string>
+    <string name="app_tagline">Spare Parts Manager</string>
+
+    <!-- Auth -->
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="enter_pin">Enter PIN</string>
+    <string name="create_pin">Create a 4-digit PIN</string>
+    <string name="confirm_pin">Confirm PIN</string>
+    <string name="biometric_title">Use your fingerprint</string>
+    <string name="biometric_subtitle">Touch the sensor to continue</string>
+
+    <!-- Shop setup -->
+    <string name="shop_setup_title">Shop Details</string>
+    <string name="shop_name">Shop Name</string>
+    <string name="shop_address">Address</string>
+    <string name="shop_city">City</string>
+    <string name="shop_state">State</string>
+    <string name="shop_pincode">PIN Code</string>
+    <string name="shop_phone">Phone</string>
+    <string name="shop_gstin">GSTIN</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard">Dashboard</string>
+    <string name="today_sales">Today\'s Sales</string>
+    <string name="bills_today">Bills Today</string>
+    <string name="items_sold">Items Sold</string>
+    <string name="low_stock">Low Stock</string>
+    <string name="search_parts">Search Parts</string>
+    <string name="find_by_vehicle">Find by Vehicle</string>
+    <string name="new_bill">New Bill</string>
+    <string name="add_stock">Add Stock</string>
+    <string name="view_reports">View Reports</string>
+
+    <!-- Catalog -->
+    <string name="add_part">Add Part</string>
+    <string name="part_name">Part Name</string>
+    <string name="oem_number">OEM Number</string>
+    <string name="brand">Brand</string>
+    <string name="category">Category</string>
+    <string name="mrp">MRP</string>
+    <string name="our_price">Our Price</string>
+    <string name="stock">Stock</string>
+    <string name="reorder_level">Reorder Level</string>
+    <string name="supplier">Supplier</string>
+    <string name="hsn_code">HSN Code</string>
+
+    <!-- Billing -->
+    <string name="create_bill">Create Bill</string>
+    <string name="customer_name">Customer Name</string>
+    <string name="customer_phone">Customer Phone</string>
+    <string name="add_customer">Add Customer</string>
+    <string name="add_items">Add Items</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="discount">Discount</string>
+    <string name="total">Total</string>
+    <string name="save_bill">Save Bill</string>
+    <string name="print_bill">Print Bill</string>
+    <string name="share_whatsapp">Share on WhatsApp</string>
+    <string name="share_sms">Share via SMS</string>
+    <string name="share_pdf">Share PDF</string>
+
+    <!-- Inventory -->
+    <string name="inventory">Inventory</string>
+    <string name="all_stock">All Stock</string>
+    <string name="low_stock_items">Low Stock Items</string>
+    <string name="out_of_stock">Out of Stock</string>
+    <string name="stock_value">Stock Value</string>
+
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="shop_details">Shop Details</string>
+    <string name="theme">Theme</string>
+    <string name="sounds">Sounds</string>
+    <string name="animations">Animations</string>
+    <string name="background_style">Background Style</string>
+    <string name="accent_color">Accent Color</string>
+    <string name="backup_restore">Backup &amp; Restore</string>
+    <string name="about">About</string>
+    <string name="logout">Logout</string>
+
+    <!-- Common -->
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="search">Search</string>
+    <string name="close">Close</string>
+    <string name="ok">OK</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="loading">Loading…</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="empty_parts">No parts yet. Add your first part to get started.</string>
+    <string name="empty_bills">No bills yet. Create your first bill.</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_1_title">Welcome to Hashmi Motors</string>
+    <string name="onboarding_1_desc">Manage your spare parts shop with ease</string>
+    <string name="onboarding_2_title">Find any part in seconds</string>
+    <string name="onboarding_2_desc">Search by name, OEM number, or vehicle</string>
+    <string name="onboarding_3_title">Create GST bills in 1 tap</string>
+    <string name="onboarding_3_desc">Share via PDF, WhatsApp, or SMS</string>
+    <string name="onboarding_4_title">Always in sync</string>
+    <string name="onboarding_4_desc">You and your father see the same data</string>
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
+    <string name="get_started">Get Started</string>
+</resources>
