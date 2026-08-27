@@ -1,22 +1,15 @@
 package com.hashmimotors.app.ui.reports
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashmimotors.app.data.repository.InvoiceRepository
 import com.hashmimotors.app.data.repository.PartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
-import java.util.Calendar
 import javax.inject.Inject
 
 data class ReportsUiState(
@@ -55,6 +48,3 @@ class ReportsViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ReportsUiState())
 }
-
-@Composable
-fun <T> StateFlow<T>.collectAsStateSafe(): State<T> = this.collectAsState()

@@ -149,20 +149,22 @@ class SoundManager @Inject constructor(
         val duration = 0.5f
         val samples = (SAMPLE_RATE * duration).toInt()
         val data = ShortArray(samples)
+        // Each note: (startTime, endTime, frequency)
         val notes = listOf(
-            0.0f to 0.05f to 1500.0,
-            0.05f to 0.1f to 1800.0,
-            0.1f to 0.15f to 2000.0,
-            0.15f to 0.4f to 2400.0
+            Triple(0.0f, 0.05f, 1500.0),
+            Triple(0.05f, 0.1f, 1800.0),
+            Triple(0.1f, 0.15f, 2000.0),
+            Triple(0.15f, 0.4f, 2400.0)
         )
         for (i in 0 until samples) {
             val t = i.toFloat() / SAMPLE_RATE
             var sum = 0.0
             for (note in notes) {
-                val ((start, end), freq) = note
+                val start = note.first
+                val end = note.second
+                val freq = note.third
                 if (t in start..end) {
                     val localT = t - start
-                    val noteDuration = end - start
                     val envelope = exp(-localT * 8f)
                     sum += sin(2.0 * PI * freq * localT) * envelope
                 }
