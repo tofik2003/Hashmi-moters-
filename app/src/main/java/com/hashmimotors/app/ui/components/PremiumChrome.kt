@@ -39,8 +39,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextFieldColors
 import com.hashmimotors.app.ui.theme.Glass
 import com.hashmimotors.app.ui.theme.Gold
+import com.hashmimotors.app.ui.theme.GoldDim
 import com.hashmimotors.app.ui.theme.GoldSoft
 import com.hashmimotors.app.ui.theme.HairlineGold
 import com.hashmimotors.app.ui.theme.Ink
@@ -188,6 +191,23 @@ private fun ScanTab(onClick: () -> Unit) {
         Icon(Icons.Filled.QrCodeScanner, "Scan", tint = Ink, modifier = Modifier.size(26.dp))
     }
 }
+
+@Composable
+fun hmFieldColors(): TextFieldColors = OutlinedTextFieldDefaults.colors(
+    focusedTextColor = Ivory,
+    unfocusedTextColor = Ivory,
+    focusedBorderColor = Gold,
+    unfocusedBorderColor = Ivory.copy(alpha = 0.28f),
+    focusedLabelColor = GoldSoft,
+    unfocusedLabelColor = IvoryMute,
+    cursorColor = Gold,
+    focusedPlaceholderColor = IvoryMute,
+    unfocusedPlaceholderColor = IvoryMute,
+    focusedTrailingIconColor = Gold,
+    unfocusedTrailingIconColor = IvoryMute,
+    focusedLeadingIconColor = GoldSoft,
+    unfocusedLeadingIconColor = IvoryMute
+)
 
 @Composable
 fun HmEmptyState(title: String, body: String, icon: ImageVector = Icons.Filled.Inventory2) {

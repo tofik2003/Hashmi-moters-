@@ -60,9 +60,13 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.hashmimotors.app.domain.model.Part
+import com.hashmimotors.app.ui.components.HmTopBar
+import com.hashmimotors.app.ui.components.hmFieldColors
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.Locale
+import com.hashmimotors.app.ui.theme.Ivory
+import com.hashmimotors.app.ui.theme.Gold
 
 @Composable
 fun SearchScreen(
@@ -98,27 +102,16 @@ fun SearchScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
-                }
-                Text(
-                    text = "Search Parts",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            Spacer(modifier = Modifier.height(12.dp))
+            HmTopBar(title = "Catalog", subtitle = "Search, scan, or add a part", onBack = onBack)
+            Spacer(modifier = Modifier.height(4.dp))
 
             OutlinedTextField(
                 value = state.searchQuery,
                 onValueChange = { viewModel.onSearchChange(it) },
                 placeholder = { Text("Name, OEM, brand, barcode…") },
-                leadingIcon = { Icon(Icons.Filled.Search, null, tint = Color.White.copy(alpha = 0.6f)) },
+                leadingIcon = { Icon(Icons.Filled.Search, null, tint = Ivory.copy(alpha = 0.6f)) },
                 trailingIcon = {
                     Row {
                         IconButton(onClick = {
@@ -135,10 +128,10 @@ fun SearchScreen(
                                     Toast.makeText(context, "Voice not available", Toast.LENGTH_SHORT).show()
                                 }
                         }) {
-                            Icon(Icons.Filled.Mic, "Voice", tint = Color.White)
+                            Icon(Icons.Filled.Mic, "Voice", tint = Ivory)
                         }
                         IconButton(onClick = onScanClick) {
-                            Icon(Icons.Filled.QrCodeScanner, "Scan", tint = Color(0xFFFFA726))
+                            Icon(Icons.Filled.QrCodeScanner, "Scan", tint = Gold)
                         }
                     }
                 },
@@ -146,7 +139,7 @@ fun SearchScreen(
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 shape = RoundedCornerShape(16.dp),
-                colors = fieldColors()
+                colors = hmFieldColors()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -182,20 +175,20 @@ fun SearchScreen(
                 Icon(
                     Icons.Filled.Warning,
                     contentDescription = null,
-                    tint = if (state.showLowStockOnly) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.6f),
+                    tint = if (state.showLowStockOnly) MaterialTheme.colorScheme.primary else Ivory.copy(alpha = 0.6f),
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "Show low stock only",
-                    color = Color.White,
+                    color = Ivory,
                     fontSize = 14.sp
                 )
             }
 
             Text(
                 text = "${state.parts.size} part${if (state.parts.size != 1) "s" else ""} found",
-                color = Color.White.copy(alpha = 0.6f),
+                color = Ivory.copy(alpha = 0.6f),
                 fontSize = 12.sp
             )
 
@@ -212,7 +205,7 @@ fun SearchScreen(
                         Icon(
                             Icons.Filled.Search,
                             contentDescription = null,
-                            tint = Color.White.copy(alpha = 0.3f),
+                            tint = Ivory.copy(alpha = 0.3f),
                             modifier = Modifier.size(72.dp)
                         )
                         Spacer(modifier = Modifier.height(12.dp))
@@ -220,20 +213,20 @@ fun SearchScreen(
                             text = if (state.searchQuery.isBlank() && state.selectedCategoryId == null)
                                 "Catalog is empty"
                             else "No parts match",
-                            color = Color.White,
+                            color = Ivory,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             "Scan a barcode, add a part, or load sample stock to try the app.",
-                            color = Color.White.copy(alpha = 0.65f),
+                            color = Ivory.copy(alpha = 0.65f),
                             fontSize = 13.sp
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(
                             onClick = onScanClick,
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE64A19))
+                            colors = ButtonDefaults.buttonColors(containerColor = Gold, contentColor = Color(0xFF07080C))
                         ) {
                             Icon(Icons.Filled.QrCodeScanner, null)
                             Spacer(Modifier.width(8.dp))
@@ -251,7 +244,7 @@ fun SearchScreen(
                                     ).show()
                                 }
                             },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(0.18f))
+                            colors = ButtonDefaults.buttonColors(containerColor = Ivory.copy(0.18f), contentColor = Ivory)
                         ) {
                             Text("Load sample catalog")
                         }
@@ -278,14 +271,14 @@ fun SearchScreen(
             Box(
                 modifier = Modifier
                     .size(64.dp)
-                    .background(Color(0xFFE64A19), CircleShape)
+                    .background(Gold, CircleShape)
                     .clickable { onAddPartClick() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     Icons.Filled.Add,
                     contentDescription = "Add Part",
-                    tint = Color.White,
+                    tint = Color(0xFF07080C),
                     modifier = Modifier.size(28.dp)
                 )
             }
@@ -303,15 +296,15 @@ fun CategoryChip(
         modifier = Modifier
             .clip(RoundedCornerShape(20.dp))
             .background(
-                if (selected) Color(0xFFE64A19)
-                else Color.White.copy(alpha = 0.1f)
+                if (selected) Gold
+                else Ivory.copy(alpha = 0.1f)
             )
             .clickable { onClick() }
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Text(
             text = name,
-            color = if (selected) Color.White else Color.White.copy(alpha = 0.8f),
+            color = if (selected) Color(0xFF07080C) else Ivory.copy(alpha = 0.8f),
             fontSize = 13.sp,
             fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
         )
@@ -333,7 +326,7 @@ fun PartListItem(
             .clickable { onClick() },
         shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White.copy(alpha = 0.1f)
+            containerColor = Ivory.copy(alpha = 0.1f)
         )
     ) {
         Row(
@@ -359,7 +352,7 @@ fun PartListItem(
                 } else {
                     Text(
                         text = part.name.take(2).uppercase(),
-                        color = Color.White,
+                        color = Ivory,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -369,7 +362,7 @@ fun PartListItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = part.name,
-                    color = Color.White,
+                    color = Ivory,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1
@@ -377,7 +370,7 @@ fun PartListItem(
                 if (part.oemNumbers.isNotEmpty()) {
                     Text(
                         text = "OEM: ${part.oemNumbers.first()}",
-                        color = Color.White.copy(alpha = 0.6f),
+                        color = Ivory.copy(alpha = 0.6f),
                         fontSize = 12.sp,
                         maxLines = 1
                     )
@@ -386,7 +379,7 @@ fun PartListItem(
                 if (meta.isNotEmpty()) {
                     Text(
                         text = meta.joinToString(" · "),
-                        color = Color.White.copy(alpha = 0.6f),
+                        color = Ivory.copy(alpha = 0.6f),
                         fontSize = 12.sp
                     )
                 }
@@ -411,7 +404,7 @@ fun PartListItem(
                 ) {
                     Text(
                         text = if (isOutOfStock) "OUT" else "Stock: ${part.stockQty}",
-                        color = Color.White,
+                        color = Ivory,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -421,15 +414,3 @@ fun PartListItem(
     }
 }
 
-@Composable
-fun fieldColors() = OutlinedTextFieldDefaults.colors(
-    focusedTextColor = Color.White,
-    unfocusedTextColor = Color.White,
-    focusedBorderColor = Color(0xFFFFA726),
-    unfocusedBorderColor = Color.White.copy(0.35f),
-    focusedLabelColor = Color(0xFFFFA726),
-    unfocusedLabelColor = Color.White.copy(0.7f),
-    cursorColor = Color(0xFFFFA726),
-    focusedPlaceholderColor = Color.White.copy(0.45f),
-    unfocusedPlaceholderColor = Color.White.copy(0.45f)
-)

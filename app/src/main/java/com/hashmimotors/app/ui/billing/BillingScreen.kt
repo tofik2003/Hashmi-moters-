@@ -51,6 +51,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.InvoiceLine
 import com.hashmimotors.app.ui.catalog.CatalogViewModel
 import com.hashmimotors.app.ui.catalog.PartListItem
+import com.hashmimotors.app.ui.components.HmTopBar
+import com.hashmimotors.app.ui.components.hmFieldColors
+import com.hashmimotors.app.ui.theme.Ivory
+import com.hashmimotors.app.ui.theme.Gold
 
 @Composable
 fun BillingScreen(
@@ -92,38 +96,34 @@ fun BillingScreen(
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Column(modifier = Modifier.fillMaxSize()) {
-            Spacer(modifier = Modifier.height(24.dp))
-            // Top bar
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
-                }
-                Text(
-                    text = "New Bill",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            HmTopBar(title = "New Bill", subtitle = "Scan or add parts, then save", onBack = onBack)
+            Spacer(modifier = Modifier.height(8.dp))
+            if (!scanMessage.isNullOrBlank()) {
+                Text(scanMessage ?: "", color = Gold, fontSize = 13.sp)
+                Spacer(modifier = Modifier.height(8.dp))
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            if (!state.error.isNullOrBlank()) {
+                Text(state.error ?: "", color = Color(0xFFFF6B6B), fontSize = 13.sp)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
 
             // Customer section
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f))
+                colors = CardDefaults.cardColors(containerColor = Ivory.copy(alpha = 0.08f))
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             Icons.Filled.Person,
                             contentDescription = null,
-                            tint = Color.White.copy(alpha = 0.6f)
+                            tint = Ivory.copy(alpha = 0.6f)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "Customer",
-                            color = Color.White,
+                            color = Ivory,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -134,8 +134,9 @@ fun BillingScreen(
                         onValueChange = { customerName = it },
                         placeholder = { Text("Customer name") },
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
-                    )
+                        singleLine = true,
+                colors = hmFieldColors()
+            )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = customerPhone,
@@ -143,8 +144,9 @@ fun BillingScreen(
                         placeholder = { Text("Phone (optional)") },
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                        singleLine = true
-                    )
+                        singleLine = true,
+                colors = hmFieldColors()
+            )
                 }
             }
 
@@ -158,13 +160,13 @@ fun BillingScreen(
             ) {
                 Text(
                     text = "Items (${state.totalItems})",
-                    color = Color.White,
+                    color = Ivory,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
                 )
                 Row {
                     TextButton(onClick = onScanItem) {
-                        Text("Scan", color = Color(0xFFFFA726))
+                        Text("Scan", color = Gold)
                     }
                     TextButton(onClick = { showPartPicker = true }) {
                         Icon(
@@ -188,14 +190,14 @@ fun BillingScreen(
                         .fillMaxWidth()
                         .height(120.dp)
                         .background(
-                            color = Color.White.copy(alpha = 0.05f),
+                            color = Ivory.copy(alpha = 0.05f),
                             shape = RoundedCornerShape(12.dp)
                         ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "No items added yet",
-                        color = Color.White.copy(alpha = 0.5f)
+                        color = Ivory.copy(alpha = 0.5f)
                     )
                 }
             } else {
@@ -230,7 +232,8 @@ fun BillingScreen(
                 label = { Text("Bill Discount %") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
@@ -241,7 +244,8 @@ fun BillingScreen(
                 },
                 label = { Text("Notes (optional)") },
                 modifier = Modifier.fillMaxWidth(),
-                minLines = 1
+                minLines = 1,
+                colors = hmFieldColors()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -272,7 +276,11 @@ fun BillingScreen(
                 icon = Icons.Filled.Save,
                 enabled = !state.isSaving && state.lines.isNotEmpty(),
                 onClick = {
-                    billingViewModel.saveBill(userId = "default-user")
+                    billingViewModel.saveBill(
+                        userId = "default-user",
+                        walkInName = customerName,
+                        walkInPhone = customerPhone
+                    )
                 }
             )
 
@@ -314,13 +322,13 @@ private fun BillLineItem(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f))
+        colors = CardDefaults.cardColors(containerColor = Ivory.copy(alpha = 0.08f))
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "${index + 1}. ${line.partSnapshot.name}",
-                    color = Color.White,
+                    color = Ivory,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.weight(1f),
@@ -337,7 +345,7 @@ private fun BillLineItem(
             if (line.partSnapshot.oemNumbers.isNotEmpty()) {
                 Text(
                     text = "OEM: ${line.partSnapshot.oemNumbers.first()}",
-                    color = Color.White.copy(alpha = 0.6f),
+                    color = Ivory.copy(alpha = 0.6f),
                     fontSize = 11.sp
                 )
             }
@@ -356,8 +364,9 @@ private fun BillLineItem(
                     label = { Text("Qty") },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
-                )
+                    singleLine = true,
+                colors = hmFieldColors()
+            )
                 // Rate
                 OutlinedTextField(
                     value = rateText,
@@ -368,18 +377,19 @@ private fun BillLineItem(
                     label = { Text("Rate") },
                     modifier = Modifier.weight(1.5f),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    singleLine = true
-                )
+                    singleLine = true,
+                colors = hmFieldColors()
+            )
                 // Line total
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = "Total",
-                        color = Color.White.copy(alpha = 0.6f),
+                        color = Ivory.copy(alpha = 0.6f),
                         fontSize = 10.sp
                     )
                     Text(
                         text = "₹${"%,.0f".format(line.lineTotal)}",
-                        color = Color.White,
+                        color = Ivory,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -393,7 +403,7 @@ private fun BillLineItem(
 private fun TotalRow(
     label: String,
     value: Double,
-    color: Color = Color.White,
+    color: Color = Ivory,
     bold: Boolean = false,
     big: Boolean = false
 ) {
@@ -405,7 +415,7 @@ private fun TotalRow(
     ) {
         Text(
             text = label,
-            color = Color.White.copy(alpha = 0.8f),
+            color = Ivory.copy(alpha = 0.8f),
             fontSize = if (big) 18.sp else 14.sp,
             fontWeight = if (bold) FontWeight.Bold else FontWeight.Normal
         )
@@ -424,7 +434,7 @@ private fun HorizontalDivider() {
         modifier = Modifier
             .fillMaxWidth()
             .height(1.dp)
-            .background(Color.White.copy(alpha = 0.2f))
+            .background(Ivory.copy(alpha = 0.2f))
     )
 }
 
@@ -444,7 +454,7 @@ fun PartPickerSheet(
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
             Text(
                 text = "Add Item to Bill",
-                color = Color.White,
+                color = Ivory,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -454,10 +464,11 @@ fun PartPickerSheet(
                 onValueChange = onSearchChange,
                 placeholder = { Text("Search parts...") },
                 leadingIcon = {
-                    Icon(Icons.Filled.Add, null, tint = Color.White.copy(alpha = 0.6f))
+                    Icon(Icons.Filled.Add, null, tint = Ivory.copy(alpha = 0.6f))
                 },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(8.dp))
             if (parts.isEmpty()) {
@@ -467,7 +478,7 @@ fun PartPickerSheet(
                 ) {
                     Text(
                         text = "No parts. Add some in Catalog first.",
-                        color = Color.White.copy(alpha = 0.6f)
+                        color = Ivory.copy(alpha = 0.6f)
                     )
                 }
             } else {

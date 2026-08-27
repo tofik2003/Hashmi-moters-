@@ -62,6 +62,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import com.hashmimotors.app.ui.theme.Gold
+import com.hashmimotors.app.ui.theme.Ink
+import com.hashmimotors.app.ui.theme.Ivory
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
@@ -129,7 +132,7 @@ fun ScannerScreen(
                 .background(Color.Black),
             contentAlignment = Alignment.Center
         ) {
-            Text("Requesting camera…", color = Color.White)
+            Text("Requesting camera…", color = Ivory)
         }
     }
 }
@@ -150,7 +153,7 @@ private fun PermissionDenied(onClose: () -> Unit) {
         Spacer(Modifier.height(16.dp))
         Text(
             "Camera permission needed",
-            color = Color.White,
+            color = Ivory,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
@@ -158,7 +161,7 @@ private fun PermissionDenied(onClose: () -> Unit) {
         Spacer(Modifier.height(8.dp))
         Text(
             "Enable camera in Settings so you can scan QR codes, barcodes, and take part photos.",
-            color = Color.White.copy(0.7f),
+            color = Ivory.copy(0.7f),
             textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(24.dp))
@@ -169,9 +172,9 @@ private fun PermissionDenied(onClose: () -> Unit) {
                 }
                 context.startActivity(intent)
             },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE64A19))
+            colors = ButtonDefaults.buttonColors(containerColor = Gold, contentColor = Ink)
         ) { Text("Open Settings") }
-        TextButton(onClick = onClose) { Text("Go back", color = Color.White) }
+        TextButton(onClick = onClose) { Text("Go back", color = Ivory) }
     }
 }
 
@@ -289,7 +292,7 @@ private fun CameraBody(
                         Modifier.size(40.dp).background(Color.Black.copy(0.45f), CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(Icons.Filled.Close, "Close", tint = Color.White)
+                        Icon(Icons.Filled.Close, "Close", tint = Ivory)
                     }
                 }
                 Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -299,11 +302,11 @@ private fun CameraBody(
                             ScannerMode.PHOTO -> "Part photo"
                             ScannerMode.OCR -> "Scan text (OCR)"
                         },
-                        color = Color.White,
+                        color = Ivory,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
-                    Text(status, color = Color.White.copy(0.75f), fontSize = 12.sp)
+                    Text(status, color = Ivory.copy(0.75f), fontSize = 12.sp)
                 }
                 IconButton(onClick = {
                     torchOn = !torchOn
@@ -312,11 +315,11 @@ private fun CameraBody(
                     Icon(
                         if (torchOn) Icons.Filled.FlashOn else Icons.Filled.FlashOff,
                         "Torch",
-                        tint = Color.White
+                        tint = Ivory
                     )
                 }
                 IconButton(onClick = { useFront = !useFront }) {
-                    Icon(Icons.Filled.Cameraswitch, "Flip", tint = Color.White)
+                    Icon(Icons.Filled.Cameraswitch, "Flip", tint = Ivory)
                 }
             }
 
@@ -325,7 +328,7 @@ private fun CameraBody(
                     Box(
                         Modifier
                             .size(240.dp)
-                            .border(3.dp, Color(0xFFFFA726), RoundedCornerShape(24.dp))
+                            .border(3.dp, Gold, RoundedCornerShape(24.dp))
                     )
                 }
             }
@@ -341,7 +344,7 @@ private fun CameraBody(
                 ) {
                     Text(
                         ocrPreview.take(400),
-                        color = Color.White,
+                        color = Ivory,
                         fontSize = 13.sp,
                         modifier = Modifier
                             .height(96.dp)
@@ -351,7 +354,7 @@ private fun CameraBody(
                     Button(
                         onClick = { onOcr(ocrPreview) },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE64A19))
+                        colors = ButtonDefaults.buttonColors(containerColor = Gold, contentColor = Ink)
                     ) {
                         Icon(Icons.Filled.Check, null)
                         Spacer(Modifier.width(8.dp))
@@ -388,12 +391,12 @@ private fun CameraBody(
                         },
                         modifier = Modifier
                             .size(78.dp)
-                            .background(Color.White, CircleShape)
+                            .background(Ivory, CircleShape)
                     ) {
                         Icon(
                             Icons.Filled.PhotoCamera,
                             "Capture",
-                            tint = Color(0xFFE64A19),
+                            tint = Ink,
                             modifier = Modifier.size(36.dp)
                         )
                     }

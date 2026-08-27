@@ -51,6 +51,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.ui.components.AnimatedBigButton
+import com.hashmimotors.app.ui.components.HmTopBar
+import com.hashmimotors.app.ui.components.hmFieldColors
+import com.hashmimotors.app.ui.theme.Ivory
+import com.hashmimotors.app.ui.theme.Gold
 
 @Composable
 fun AddPartScreen(
@@ -122,33 +126,25 @@ fun AddPartScreen(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize().statusBarsPadding().padding(16.dp)) {
+    Box(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
-            // Top bar
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
-                }
-                Text(
-                    text = if (partId == null) "Add Part" else "Edit Part",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
+            HmTopBar(
+                title = if (partId == null) "Add Part" else "Edit Part",
+                subtitle = "Name, price, stock, barcode, photo",
+                onBack = onBack
+            )
+            Spacer(modifier = Modifier.height(8.dp))
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(180.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(color = Color.White.copy(alpha = 0.1f))
+                    .background(color = Ivory.copy(alpha = 0.1f))
                     .clickable { onTakePhoto() },
                 contentAlignment = Alignment.Center
             ) {
@@ -164,19 +160,19 @@ fun AddPartScreen(
                         Icon(
                             Icons.Filled.PhotoCamera,
                             contentDescription = null,
-                            tint = Color.White,
+                            tint = Ivory,
                             modifier = Modifier.size(40.dp)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Tap to open camera",
-                            color = Color.White.copy(alpha = 0.85f),
+                            color = Ivory.copy(alpha = 0.85f),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
                             text = "Live preview — not just a button",
-                            color = Color.White.copy(alpha = 0.55f),
+                            color = Ivory.copy(alpha = 0.55f),
                             fontSize = 12.sp
                         )
                     }
@@ -190,7 +186,8 @@ fun AddPartScreen(
                 onValueChange = { name = it },
                 label = { Text("Part Name *") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -200,7 +197,8 @@ fun AddPartScreen(
                 onValueChange = { sku = it },
                 label = { Text("SKU / Part Code") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -211,7 +209,8 @@ fun AddPartScreen(
                 label = { Text("OEM Numbers (comma separated)") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = false,
-                minLines = 1
+                minLines = 1,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -221,7 +220,8 @@ fun AddPartScreen(
                 onValueChange = { brand = it },
                 label = { Text("Brand") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -229,7 +229,7 @@ fun AddPartScreen(
             if (state.categories.isNotEmpty()) {
                 Text(
                     text = "Category",
-                    color = Color.White,
+                    color = Ivory,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -252,16 +252,18 @@ fun AddPartScreen(
                     label = { Text("MRP *") },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    singleLine = true
-                )
+                    singleLine = true,
+                colors = hmFieldColors()
+            )
                 OutlinedTextField(
                     value = sellingPrice,
                     onValueChange = { sellingPrice = it },
                     label = { Text("Our Price *") },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    singleLine = true
-                )
+                    singleLine = true,
+                colors = hmFieldColors()
+            )
             }
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -275,16 +277,18 @@ fun AddPartScreen(
                     label = { Text("Stock Qty") },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
-                )
+                    singleLine = true,
+                colors = hmFieldColors()
+            )
                 OutlinedTextField(
                     value = reorderLevel,
                     onValueChange = { reorderLevel = it.filter { c -> c.isDigit() } },
                     label = { Text("Reorder Level") },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
-                )
+                    singleLine = true,
+                colors = hmFieldColors()
+            )
             }
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -294,7 +298,8 @@ fun AddPartScreen(
                 onValueChange = { hsnCode = it },
                 label = { Text("HSN Code (for GST)") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -306,9 +311,10 @@ fun AddPartScreen(
                 singleLine = true,
                 trailingIcon = {
                     IconButton(onClick = onScanBarcode) {
-                        Icon(Icons.Filled.QrCodeScanner, "Scan", tint = Color(0xFFFFA726))
+                        Icon(Icons.Filled.QrCodeScanner, "Scan", tint = Gold)
                     }
-                }
+                },
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -318,7 +324,8 @@ fun AddPartScreen(
                 onValueChange = { notes = it },
                 label = { Text("Notes (optional)") },
                 modifier = Modifier.fillMaxWidth(),
-                minLines = 2
+                minLines = 2,
+                colors = hmFieldColors()
             )
 
             // Error

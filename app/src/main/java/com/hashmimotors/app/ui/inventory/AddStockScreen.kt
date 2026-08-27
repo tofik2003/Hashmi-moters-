@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -41,6 +42,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.ui.catalog.CatalogViewModel
 import com.hashmimotors.app.ui.components.AnimatedBigButton
+import com.hashmimotors.app.ui.components.HmTopBar
+import com.hashmimotors.app.ui.theme.Gold
+import com.hashmimotors.app.ui.theme.Ivory
+import com.hashmimotors.app.ui.components.hmFieldColors
 
 @Composable
 fun AddStockScreen(
@@ -71,21 +76,18 @@ fun AddStockScreen(
         onIncomingConsumed()
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Spacer(modifier = Modifier.height(24.dp))
-        // Top bar
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onBack) {
-                Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
+    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+        HmTopBar(
+            title = "Add Stock",
+            subtitle = "Scan a barcode or pick a part",
+            onBack = onBack,
+            trailing = {
+                IconButton(onClick = onScan) {
+                    Icon(Icons.Filled.QrCodeScanner, "Scan", tint = Gold)
+                }
             }
-            Text(
-                text = "Add Stock",
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
+        )
+        Spacer(modifier = Modifier.height(8.dp))
 
         if (selectedPart == null) {
             // Search + list
@@ -94,7 +96,8 @@ fun AddStockScreen(
                 onValueChange = { catalogViewModel.onSearchChange(it) },
                 placeholder = { Text("Search part to add stock...") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -104,13 +107,13 @@ fun AddStockScreen(
                             .fillMaxWidth()
                             .clickable { selectedPartId = part.id },
                         shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f))
+                        colors = CardDefaults.cardColors(containerColor = Ivory.copy(alpha = 0.08f))
                     ) {
                         Column(modifier = Modifier.padding(12.dp)) {
-                            Text(part.name, color = Color.White, fontWeight = FontWeight.SemiBold)
+                            Text(part.name, color = Ivory, fontWeight = FontWeight.SemiBold)
                             Text(
                                 "Current: ${part.stockQty} | MRP ₹${"%,.0f".format(part.mrp)}",
-                                color = Color.White.copy(alpha = 0.6f),
+                                color = Ivory.copy(alpha = 0.6f),
                                 fontSize = 12.sp
                             )
                         }
@@ -127,9 +130,9 @@ fun AddStockScreen(
                 )
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Selected Part", color = Color.White.copy(alpha = 0.6f), fontSize = 12.sp)
-                    Text(selectedPart.name, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                    Text("Current stock: ${selectedPart.stockQty}", color = Color.White, fontSize = 14.sp)
+                    Text("Selected Part", color = Ivory.copy(alpha = 0.6f), fontSize = 12.sp)
+                    Text(selectedPart.name, color = Ivory, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    Text("Current stock: ${selectedPart.stockQty}", color = Ivory, fontSize = 14.sp)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -139,12 +142,13 @@ fun AddStockScreen(
                 label = { Text("Quantity to add *") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
 
             if (invState.suppliers.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
-                Text("Supplier (optional)", color = Color.White, fontSize = 14.sp)
+                Text("Supplier (optional)", color = Ivory, fontSize = 14.sp)
                 Spacer(modifier = Modifier.height(4.dp))
                 invState.suppliers.forEach { sup ->
                     Card(
@@ -155,14 +159,14 @@ fun AddStockScreen(
                         shape = RoundedCornerShape(8.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = if (supplierId == sup.id) MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
-                            else Color.White.copy(alpha = 0.05f)
+                            else Ivory.copy(alpha = 0.05f)
                         )
                     ) {
                         Row(
                             modifier = Modifier.padding(12.dp).fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(sup.name, color = Color.White, modifier = Modifier.weight(1f))
+                            Text(sup.name, color = Ivory, modifier = Modifier.weight(1f))
                             if (supplierId == sup.id) {
                                 Icon(Icons.Filled.Check, null, tint = MaterialTheme.colorScheme.primary)
                             }

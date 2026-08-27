@@ -112,7 +112,7 @@ fun SettingsScreen(
                                     .background(viewModel.getAccentColor(color), CircleShape)
                                     .border(
                                         width = if (isSelected) 3.dp else 0.dp,
-                                        color = Color.White,
+                                        color = Ivory,
                                         shape = CircleShape
                                     )
                                     .clickable { viewModel.setAccentColor(color) }

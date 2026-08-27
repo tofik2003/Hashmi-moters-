@@ -38,6 +38,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.hashmimotors.app.ui.components.HmTopBar
+import com.hashmimotors.app.ui.theme.Ivory
+import com.hashmimotors.app.ui.theme.Gold
 
 @Composable
 fun FitmentScreen(
@@ -54,23 +57,16 @@ fun FitmentScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = {
+        HmTopBar(
+            title = "Find parts by vehicle",
+            subtitle = "Brand → model → compatible SKUs",
+            onBack = {
                 if (step == 0) onBack()
                 else viewModel.reset()
-            }) {
-                Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
             }
-            Text(
-                text = "Find Parts by Vehicle",
-                color = Color.White,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
         Row(
@@ -83,8 +79,8 @@ fun FitmentScreen(
                         .weight(1f)
                         .height(4.dp)
                         .background(
-                            color = if (step >= idx) Color(0xFFFFA726)
-                            else Color.White.copy(alpha = 0.2f),
+                            color = if (step >= idx) Gold
+                            else Ivory.copy(alpha = 0.2f),
                             shape = RoundedCornerShape(2.dp)
                         )
                 )
@@ -94,10 +90,10 @@ fun FitmentScreen(
 
         when (step) {
             0 -> {
-                Text("Step 1: Select brand", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                Text("Step 1: Select brand", color = Ivory, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(12.dp))
                 if (state.allMakes.isEmpty()) {
-                    Text("Loading brands…", color = Color.White.copy(alpha = 0.6f))
+                    Text("Loading brands…", color = Ivory.copy(alpha = 0.6f))
                 } else {
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(3),
@@ -111,16 +107,16 @@ fun FitmentScreen(
                                     .height(80.dp)
                                     .clickable { viewModel.selectMake(make) },
                                 shape = RoundedCornerShape(12.dp),
-                                colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.1f))
+                                colors = CardDefaults.cardColors(containerColor = Ivory.copy(alpha = 0.1f))
                             ) {
                                 Column(
                                     modifier = Modifier.fillMaxSize().padding(8.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Center
                                 ) {
-                                    Icon(Icons.Filled.DirectionsCar, null, tint = Color(0xFFFFA726))
+                                    Icon(Icons.Filled.DirectionsCar, null, tint = Gold)
                                     Spacer(modifier = Modifier.height(4.dp))
-                                    Text(make, color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                                    Text(make, color = Ivory, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                                 }
                             }
                         }
@@ -130,7 +126,7 @@ fun FitmentScreen(
             1 -> {
                 Text(
                     "Step 2: Select ${state.selectedMake} model",
-                    color = Color.White,
+                    color = Ivory,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -142,7 +138,7 @@ fun FitmentScreen(
                                 .fillMaxWidth()
                                 .clickable { viewModel.selectVehicle(vehicle.id) },
                             shape = RoundedCornerShape(12.dp),
-                            colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.1f))
+                            colors = CardDefaults.cardColors(containerColor = Ivory.copy(alpha = 0.1f))
                         ) {
                             Row(
                                 modifier = Modifier.padding(16.dp).fillMaxWidth(),
@@ -150,14 +146,14 @@ fun FitmentScreen(
                             ) {
                                 Text(
                                     vehicle.model,
-                                    color = Color.White,
+                                    color = Ivory,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.SemiBold,
                                     modifier = Modifier.weight(1f)
                                 )
                                 Text(
                                     "${vehicle.yearFrom}-${vehicle.yearTo}",
-                                    color = Color.White.copy(alpha = 0.6f),
+                                    color = Ivory.copy(alpha = 0.6f),
                                     fontSize = 12.sp
                                 )
                             }
@@ -171,13 +167,13 @@ fun FitmentScreen(
                     item {
                         Text(
                             "${vehicle?.make.orEmpty()} ${vehicle?.model.orEmpty()}",
-                            color = Color.White,
+                            color = Ivory,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             "Years ${vehicle?.yearFrom}-${vehicle?.yearTo} · ${vehicle?.fuelTypes?.joinToString().orEmpty()}",
-                            color = Color.White.copy(0.7f),
+                            color = Ivory.copy(0.7f),
                             fontSize = 12.sp
                         )
                     }
@@ -185,7 +181,7 @@ fun FitmentScreen(
                         Text(
                             if (state.compatibleParts.isEmpty()) "No linked parts yet — tap Link below"
                             else "${state.compatibleParts.size} compatible parts",
-                            color = Color.White,
+                            color = Ivory,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.padding(top = 8.dp)
                         )
@@ -194,13 +190,13 @@ fun FitmentScreen(
                         Card(
                             modifier = Modifier.fillMaxWidth().clickable { onPartClick(part.id) },
                             shape = RoundedCornerShape(12.dp),
-                            colors = CardDefaults.cardColors(containerColor = Color.White.copy(0.1f))
+                            colors = CardDefaults.cardColors(containerColor = Ivory.copy(0.1f))
                         ) {
                             Column(Modifier.padding(12.dp)) {
-                                Text(part.name, color = Color.White, fontWeight = FontWeight.SemiBold)
+                                Text(part.name, color = Ivory, fontWeight = FontWeight.SemiBold)
                                 Text(
                                     "₹${"%,.0f".format(part.sellingPrice)}  ·  Stock ${part.stockQty}",
-                                    color = Color.White.copy(0.7f),
+                                    color = Ivory.copy(0.7f),
                                     fontSize = 12.sp
                                 )
                             }
@@ -209,7 +205,7 @@ fun FitmentScreen(
                     item {
                         Text(
                             "Catalog — tap to link to this vehicle",
-                            color = Color.White.copy(0.7f),
+                            color = Ivory.copy(0.7f),
                             fontSize = 12.sp,
                             modifier = Modifier.padding(top = 12.dp)
                         )
@@ -226,15 +222,15 @@ fun FitmentScreen(
                             shape = RoundedCornerShape(10.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = if (linked) Color(0xFF2E7D32).copy(0.35f)
-                                else Color.White.copy(0.06f)
+                                else Ivory.copy(0.06f)
                             )
                         ) {
                             Row(
                                 Modifier.padding(12.dp).fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(part.name, color = Color.White, modifier = Modifier.weight(1f), fontSize = 13.sp)
-                                Text(if (linked) "Linked" else "Link", color = Color(0xFFFFA726), fontSize = 12.sp)
+                                Text(part.name, color = Ivory, modifier = Modifier.weight(1f), fontSize = 13.sp)
+                                Text(if (linked) "Linked" else "Link", color = Gold, fontSize = 12.sp)
                             }
                         }
                     }

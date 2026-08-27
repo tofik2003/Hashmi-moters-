@@ -33,6 +33,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hashmimotors.app.domain.model.Shop
 import com.hashmimotors.app.ui.components.AnimatedBigButton
+import com.hashmimotors.app.ui.components.HmTopBar
+import com.hashmimotors.app.ui.theme.Ivory
+import com.hashmimotors.app.ui.components.hmFieldColors
 
 @Composable
 fun ShopSetupScreen(
@@ -72,27 +75,19 @@ fun ShopSetupScreen(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.Start
         ) {
-            Spacer(modifier = Modifier.height(48.dp))
-            Text(
-                text = "Shop Details",
-                color = Color.White,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold
+            HmTopBar(
+                title = "Shop Details",
+                subtitle = "Printed on every bill. Edit anytime in Settings."
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "This information will appear on your bills. You can edit later in Settings.",
-                color = Color.White.copy(alpha = 0.7f),
-                fontSize = 14.sp
-            )
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
                 label = { Text("Shop Name") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedTextField(
@@ -100,7 +95,8 @@ fun ShopSetupScreen(
                 onValueChange = { address = it },
                 label = { Text("Street Address") },
                 modifier = Modifier.fillMaxWidth(),
-                minLines = 2
+                minLines = 2,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedTextField(
@@ -108,7 +104,8 @@ fun ShopSetupScreen(
                 onValueChange = { city = it },
                 label = { Text("City") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedTextField(
@@ -119,7 +116,8 @@ fun ShopSetupScreen(
                 },
                 label = { Text("State (e.g. Maharashtra)") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedTextField(
@@ -128,7 +126,8 @@ fun ShopSetupScreen(
                 label = { Text("PIN Code") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedTextField(
@@ -137,7 +136,8 @@ fun ShopSetupScreen(
                 label = { Text("Phone Number") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedTextField(
@@ -145,7 +145,8 @@ fun ShopSetupScreen(
                 onValueChange = { gstin = it.uppercase() },
                 label = { Text("GSTIN (optional)") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedTextField(
@@ -154,7 +155,8 @@ fun ShopSetupScreen(
                 label = { Text("Email (optional)") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
 
             Spacer(modifier = Modifier.height(40.dp))

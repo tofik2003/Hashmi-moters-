@@ -46,6 +46,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.ui.catalog.PartListItem
+import com.hashmimotors.app.ui.components.HmTopBar
+import com.hashmimotors.app.ui.theme.Ivory
+import com.hashmimotors.app.ui.components.hmFieldColors
 
 @Composable
 fun InventoryScreen(
@@ -57,34 +60,19 @@ fun InventoryScreen(
     var selectedTab by remember { mutableIntStateOf(0) }
     var searchQuery by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Spacer(modifier = Modifier.height(24.dp))
-        // Top bar
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onBack) {
-                Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "Inventory",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Stock value: ₹${"%,.0f".format(state.totalValue)}",
-                    color = Color.White.copy(alpha = 0.7f),
-                    fontSize = 12.sp
-                )
-            }
-        }
-        Spacer(modifier = Modifier.height(12.dp))
+    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+        HmTopBar(
+            title = "Inventory",
+            subtitle = "Stock value: ₹${"%,.0f".format(state.totalValue)}",
+            onBack = onBack
+        )
+        Spacer(modifier = Modifier.height(8.dp))
 
         // Tabs
         TabRow(
             selectedTabIndex = selectedTab,
             containerColor = Color.Transparent,
-            contentColor = Color.White
+            contentColor = Ivory
         ) {
             Tab(
                 selected = selectedTab == 0,
@@ -105,10 +93,11 @@ fun InventoryScreen(
             value = searchQuery,
             onValueChange = { searchQuery = it },
             placeholder = { Text("Search by name, OEM...") },
-            leadingIcon = { Icon(Icons.Filled.Search, null, tint = Color.White.copy(alpha = 0.6f)) },
+            leadingIcon = { Icon(Icons.Filled.Search, null, tint = Ivory.copy(alpha = 0.6f)) },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
-        )
+            singleLine = true,
+                colors = hmFieldColors()
+            )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -129,7 +118,7 @@ fun InventoryScreen(
             ) {
                 Text(
                     text = if (selectedTab == 1) "No low stock items! 🎉" else "No parts yet",
-                    color = Color.White.copy(alpha = 0.6f)
+                    color = Ivory.copy(alpha = 0.6f)
                 )
             }
         } else {

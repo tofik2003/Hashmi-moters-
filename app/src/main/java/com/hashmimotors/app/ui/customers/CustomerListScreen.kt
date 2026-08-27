@@ -56,6 +56,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.hashmimotors.app.ui.components.HmTopBar
+import com.hashmimotors.app.ui.theme.Ivory
+import com.hashmimotors.app.ui.components.hmFieldColors
 
 @HiltViewModel
 class CustomerListViewModel @Inject constructor(
@@ -94,26 +97,16 @@ fun CustomerListScreen(
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Column(modifier = Modifier.fillMaxSize()) {
-            Spacer(modifier = Modifier.height(24.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
-                }
-                Text(
-                    text = "Customers (${customers.size})",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            Spacer(modifier = Modifier.height(12.dp))
+            HmTopBar(title = "Customers", subtitle = "${customers.size} on file", onBack = onBack)
+            Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
                 placeholder = { Text("Search by name or phone") },
-                leadingIcon = { Icon(Icons.Filled.Search, null, tint = Color.White.copy(alpha = 0.6f)) },
+                leadingIcon = { Icon(Icons.Filled.Search, null, tint = Ivory.copy(alpha = 0.6f)) },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = hmFieldColors()
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -126,11 +119,11 @@ fun CustomerListScreen(
                         Icon(
                             Icons.Filled.Person,
                             contentDescription = null,
-                            tint = Color.White.copy(alpha = 0.3f),
+                            tint = Ivory.copy(alpha = 0.3f),
                             modifier = Modifier.size(64.dp)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text("No customers yet", color = Color.White.copy(alpha = 0.6f))
+                        Text("No customers yet", color = Ivory.copy(alpha = 0.6f))
                     }
                 }
             } else {
@@ -142,7 +135,7 @@ fun CustomerListScreen(
                                 .clickable { onCustomerSelected(customer.id) },
                             shape = RoundedCornerShape(12.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = Color.White.copy(alpha = 0.08f)
+                                containerColor = Ivory.copy(alpha = 0.08f)
                             )
                         ) {
                             Row(
@@ -160,7 +153,7 @@ fun CustomerListScreen(
                                 ) {
                                     Text(
                                         text = customer.name.take(1).uppercase(),
-                                        color = Color.White,
+                                        color = Ivory,
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
@@ -168,13 +161,13 @@ fun CustomerListScreen(
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         customer.name,
-                                        color = Color.White,
+                                        color = Ivory,
                                         fontWeight = FontWeight.SemiBold
                                     )
                                     if (customer.phone.isNotBlank()) {
                                         Text(
                                             customer.phone,
-                                            color = Color.White.copy(alpha = 0.6f),
+                                            color = Ivory.copy(alpha = 0.6f),
                                             fontSize = 12.sp
                                         )
                                     }
@@ -201,7 +194,7 @@ fun CustomerListScreen(
                 .padding(16.dp),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
-            Icon(Icons.Filled.Add, "Add Customer", tint = Color.White)
+            Icon(Icons.Filled.Add, "Add Customer", tint = Ivory)
         }
     }
 
@@ -216,8 +209,9 @@ fun CustomerListScreen(
                         onValueChange = { newName = it },
                         label = { Text("Name *") },
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
-                    )
+                        singleLine = true,
+                colors = hmFieldColors()
+            )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = newPhone,
@@ -225,8 +219,9 @@ fun CustomerListScreen(
                         label = { Text("Phone") },
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                        singleLine = true
-                    )
+                        singleLine = true,
+                colors = hmFieldColors()
+            )
                 }
             },
             confirmButton = {

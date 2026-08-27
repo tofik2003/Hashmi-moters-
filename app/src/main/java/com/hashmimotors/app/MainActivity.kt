@@ -22,7 +22,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             HashmiMotorsTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    color = com.hashmimotors.app.ui.theme.Ink
                 ) {
                     HashmiMotorsMainScreen()
                 }

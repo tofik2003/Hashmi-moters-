@@ -49,6 +49,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
+import com.hashmimotors.app.ui.components.HmEmptyState
+import com.hashmimotors.app.ui.components.HmTopBar
+import com.hashmimotors.app.ui.theme.Ivory
+import com.hashmimotors.app.ui.components.hmFieldColors
 
 @HiltViewModel
 class InvoiceHistoryViewModel @Inject constructor(
@@ -70,46 +74,26 @@ fun InvoiceHistoryScreen(
         it.invoiceNo.contains(query, true) || it.customerSnapshot.name.contains(query, true)
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Spacer(modifier = Modifier.height(24.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onBack) {
-                Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
-            }
-            Text(
-                text = "Invoice History",
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        Spacer(modifier = Modifier.height(12.dp))
+    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+        HmTopBar(title = "Invoice History", subtitle = "Search by number or customer", onBack = onBack)
+        Spacer(modifier = Modifier.height(8.dp))
 
         androidx.compose.material3.OutlinedTextField(
             value = query,
             onValueChange = { query = it },
             placeholder = { Text("Search number or customer") },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
-        )
+            singleLine = true,
+                colors = hmFieldColors()
+            )
         Spacer(modifier = Modifier.height(12.dp))
 
         if (filtered.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        Icons.Filled.Receipt,
-                        contentDescription = null,
-                        tint = Color.White.copy(alpha = 0.3f),
-                        modifier = Modifier
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("No bills yet", color = Color.White.copy(alpha = 0.6f))
-                }
-            }
+            HmEmptyState(
+                title = if (query.isBlank()) "No bills yet" else "No matching bills",
+                body = "Save a bill from the counter to see it here.",
+                icon = Icons.Filled.Receipt
+            )
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(filtered, key = { it.id }) { invoice ->
@@ -118,7 +102,7 @@ fun InvoiceHistoryScreen(
                             .fillMaxWidth()
                             .clickable { onInvoiceClick(invoice.id) },
                         shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f))
+                        colors = CardDefaults.cardColors(containerColor = Ivory.copy(alpha = 0.08f))
                     ) {
                         Row(
                             modifier = Modifier.padding(12.dp).fillMaxWidth(),
@@ -133,24 +117,24 @@ fun InvoiceHistoryScreen(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     invoice.invoiceNo,
-                                    color = Color.White,
+                                    color = Ivory,
                                     fontWeight = FontWeight.SemiBold
                                 )
                                 Text(
                                     invoice.customerSnapshot.name,
-                                    color = Color.White.copy(alpha = 0.7f),
+                                    color = Ivory.copy(alpha = 0.7f),
                                     fontSize = 12.sp
                                 )
                                 Text(
                                     SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
                                         .format(Date(invoice.date)),
-                                    color = Color.White.copy(alpha = 0.5f),
+                                    color = Ivory.copy(alpha = 0.5f),
                                     fontSize = 11.sp
                                 )
                             }
                             Text(
                                 "₹${"%,.0f".format(invoice.grandTotal)}",
-                                color = Color.White,
+                                color = Ivory,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold
                             )

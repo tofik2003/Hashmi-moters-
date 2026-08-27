@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.hashmimotors.app.ui.theme.Ivory
 
 @Composable
 fun ReportsScreen(
@@ -90,7 +91,7 @@ private fun ReportCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f))
+        colors = CardDefaults.cardColors(containerColor = Ivory.copy(alpha = 0.08f))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -105,8 +106,8 @@ private fun ReportCard(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(label, color = Color.White.copy(alpha = 0.7f), fontSize = 14.sp)
-                    Text(value, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                    Text(label, color = Ivory.copy(alpha = 0.7f), fontSize = 14.sp)
+                    Text(value, color = Ivory, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                 }
             }
         }

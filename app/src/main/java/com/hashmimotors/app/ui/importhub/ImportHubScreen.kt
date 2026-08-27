@@ -54,6 +54,9 @@ import com.hashmimotors.app.ui.catalog.CatalogViewModel
 import com.hashmimotors.app.util.CsvImporter
 import kotlinx.coroutines.launch
 import java.util.Locale
+import com.hashmimotors.app.ui.components.HmTopBar
+import com.hashmimotors.app.ui.theme.Ivory
+import com.hashmimotors.app.ui.theme.Gold
 
 @Composable
 fun ImportHubScreen(
@@ -101,28 +104,15 @@ fun ImportHubScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onBack) {
-                Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
-            }
-            Text(
-                "Add parts",
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        Spacer(Modifier.height(8.dp))
-        Text(
-            "Every method is live — camera, QR, CSV, voice, and sample catalog.",
-            color = Color.White.copy(0.7f),
-            fontSize = 14.sp
+        HmTopBar(
+            title = "Add parts",
+            subtitle = "Camera, QR, CSV, voice, or sample catalog",
+            onBack = onBack
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(12.dp))
 
         ImportCard(
             title = "Scan barcode / QR",
@@ -142,7 +132,7 @@ fun ImportHubScreen(
             title = "Manual entry",
             subtitle = "Type name, price, stock, and photo",
             icon = Icons.Filled.CameraAlt,
-            color = Color(0xFFFFA726),
+            color = Gold,
             onClick = onManual
         )
         ImportCard(
@@ -208,7 +198,7 @@ private fun ImportCard(
             .padding(vertical = 6.dp)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.1f))
+        colors = CardDefaults.cardColors(containerColor = Ivory.copy(alpha = 0.1f))
     ) {
         Row(
             Modifier.padding(16.dp),
@@ -220,12 +210,12 @@ private fun ImportCard(
                     .background(color.copy(alpha = 0.28f), RoundedCornerShape(14.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(icon, null, tint = Color.White, modifier = Modifier.size(26.dp))
+                Icon(icon, null, tint = Ivory, modifier = Modifier.size(26.dp))
             }
             Spacer(Modifier.width(14.dp))
             Column {
-                Text(title, color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
-                Text(subtitle, color = Color.White.copy(0.65f), fontSize = 12.sp)
+                Text(title, color = Ivory, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                Text(subtitle, color = Ivory.copy(0.65f), fontSize = 12.sp)
             }
         }
     }
