@@ -76,6 +76,7 @@ fun SearchScreen(
     onPartClick: (String) -> Unit,
     onAddPartClick: () -> Unit,
     onScanClick: () -> Unit,
+    onAddToBill: (String) -> Unit = {},
     onBack: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -256,7 +257,11 @@ fun SearchScreen(
                     modifier = Modifier.padding(bottom = 120.dp)
                 ) {
                     items(state.parts, key = { it.id }) { part ->
-                        PartListItem(part = part, onClick = { onPartClick(part.id) })
+                        PartListItem(
+                            part = part,
+                            onClick = { onPartClick(part.id) },
+                            onBillClick = { onAddToBill(part.id) }
+                        )
                     }
                 }
             }
@@ -314,7 +319,8 @@ fun CategoryChip(
 @Composable
 fun PartListItem(
     part: Part,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onBillClick: (() -> Unit)? = null
 ) {
     val isLowStock = part.stockQty <= part.reorderLevel
     val isOutOfStock = part.stockQty == 0

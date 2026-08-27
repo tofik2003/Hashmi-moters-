@@ -14,6 +14,8 @@ import com.hashmimotors.app.domain.model.InvoiceStatus
 import com.hashmimotors.app.domain.model.InvoiceType
 import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.domain.model.PartSnapshot
+import com.hashmimotors.app.ui.sound.SoundEffect
+import com.hashmimotors.app.ui.sound.SoundManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -50,7 +52,8 @@ class BillingViewModel @Inject constructor(
     private val partRepo: PartRepository,
     private val customerRepo: CustomerRepository,
     private val invoiceRepo: InvoiceRepository,
-    private val shopRepo: ShopRepository
+    private val shopRepo: ShopRepository,
+    private val soundManager: SoundManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BillingUiState())
@@ -251,8 +254,10 @@ class BillingViewModel @Inject constructor(
                     )
                 }
 
+                soundManager.play(SoundEffect.BILL_SAVED)
                 _state.value = BillingUiState(savedInvoice = invoice, customers = current.customers)
             } catch (e: Exception) {
+                soundManager.play(SoundEffect.ERROR)
                 _state.update { it.copy(isSaving = false, error = e.message ?: "Failed to save bill") }
             }
         }

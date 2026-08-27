@@ -85,6 +85,10 @@ class CatalogViewModel @Inject constructor(
         }
     }
 
+    suspend fun savePartNow(part: Part) {
+        partRepo.savePart(part)
+    }
+
     fun deletePart(part: Part) {
         viewModelScope.launch {
             partRepo.deletePart(part)

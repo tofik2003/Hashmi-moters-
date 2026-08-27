@@ -53,14 +53,21 @@ import com.hashmimotors.app.ui.catalog.CatalogViewModel
 import com.hashmimotors.app.ui.catalog.PartListItem
 import com.hashmimotors.app.ui.components.HmTopBar
 import com.hashmimotors.app.ui.components.hmFieldColors
+import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.ui.theme.Ivory
+import com.hashmimotors.app.ui.theme.IvoryMute
 import com.hashmimotors.app.ui.theme.Gold
+
+private fun stockHint(part: Part): String =
+    if (part.stockQty <= 0) "Added ${part.name} — 0 in stock"
+    else "Added ${part.name} · ${part.stockQty} in stock"
 
 @Composable
 fun BillingScreen(
     billingViewModel: BillingViewModel = hiltViewModel(),
     catalogViewModel: CatalogViewModel = hiltViewModel(),
     incomingBarcode: String = "",
+    incomingPartId: String = "",
     onIncomingConsumed: () -> Unit = {},
     onBack: () -> Unit,
     onSaved: (String) -> Unit,
@@ -85,11 +92,24 @@ fun BillingScreen(
         }
         if (match != null) {
             billingViewModel.addPart(match, qty = 1)
-            scanMessage = "Added ${match.name}"
+            scanMessage = stockHint(match)
         } else {
             catalogViewModel.onSearchChange(incomingBarcode)
             showPartPicker = true
             scanMessage = "No exact match for $incomingBarcode — pick a part"
+        }
+        onIncomingConsumed()
+    }
+
+    androidx.compose.runtime.LaunchedEffect(incomingPartId, catalogState.parts) {
+        if (incomingPartId.isBlank()) return@LaunchedEffect
+        if (catalogState.parts.isEmpty()) return@LaunchedEffect
+        val match = catalogState.parts.find { it.id == incomingPartId }
+        if (match != null) {
+            billingViewModel.addPart(match, qty = 1)
+            scanMessage = stockHint(match)
+        } else {
+            scanMessage = "That part is not in the catalog"
         }
         onIncomingConsumed()
     }
@@ -332,6 +352,7 @@ fun BillingScreen(
             onSearchChange = { catalogViewModel.onSearchChange(it) },
             onPartClick = { part ->
                 billingViewModel.addPart(part, qty = 1)
+                scanMessage = stockHint(part)
                 showPartPicker = false
             },
             onDismiss = { showPartPicker = false }

@@ -1,6 +1,6 @@
 # Hashmi Motors — Spare Parts Manager
 
-**v1.3.1** — 100% free. No ads, no subscriptions, no in-app purchases. Every shop tool is included.
+**v1.4.0** — 100% free. Home shortcuts, bill-from-catalog, unique barcodes, invoice filters, cost price saved on add-part.
 
 A free Android app for running a spare-parts counter: catalog, stock, GST bills, camera/QR, reports, and local backup.
 

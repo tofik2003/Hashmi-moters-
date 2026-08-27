@@ -49,7 +49,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.runtime.rememberCoroutineScope
 import com.hashmimotors.app.domain.model.Part
+import kotlinx.coroutines.launch
 import com.hashmimotors.app.ui.components.AnimatedBigButton
 import com.hashmimotors.app.ui.components.HmTopBar
 import com.hashmimotors.app.ui.components.hmFieldColors
@@ -87,6 +89,7 @@ fun AddPartScreen(
     var error by remember { mutableStateOf<String?>(null) }
 
     val state by viewModel.uiState.collectAsState()
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(partId, state.parts) {
         partId?.let { id ->
@@ -373,26 +376,43 @@ fun AddPartScreen(
                     val oemList = oemNumbersText.split(",")
                         .map { it.trim() }
                         .filter { it.isNotBlank() }
-                    viewModel.savePart(
-                        Part(
-                            id = partId ?: java.util.UUID.randomUUID().toString(),
-                            sku = sku.trim(),
-                            name = name.trim(),
-                            oemNumbers = oemList,
-                            brand = brand.ifBlank { null },
-                            categoryId = categoryId,
-                            mrp = mrpVal,
-                            sellingPrice = priceVal,
-                            gstPercent = 0.0, // Composition scheme
-                            hsnCode = hsnCode.ifBlank { null },
-                            stockQty = stockQty.toIntOrNull() ?: 0,
-                            reorderLevel = reorderLevel.toIntOrNull() ?: 5,
-                            barcode = barcode.ifBlank { null },
-                            notes = notes.ifBlank { null },
-                            photoPaths = listOfNotNull(photoPath.ifBlank { null })
+                    val code = barcode.trim()
+                    scope.launch {
+                        try {
+                        if (code.isNotBlank()) {
+                            val existing = viewModel.findByBarcode(code)
+                            if (existing != null && existing.id != partId) {
+                                error = "Barcode already on “${existing.name}”"
+                                saving = false
+                                return@launch
+                            }
+                        }
+                        viewModel.savePartNow(
+                            Part(
+                                id = partId ?: java.util.UUID.randomUUID().toString(),
+                                sku = sku.trim(),
+                                name = name.trim(),
+                                oemNumbers = oemList,
+                                brand = brand.ifBlank { null },
+                                categoryId = categoryId,
+                                mrp = mrpVal,
+                                sellingPrice = priceVal,
+                                costPrice = costPrice.toDoubleOrNull(),
+                                gstPercent = 0.0,
+                                hsnCode = hsnCode.ifBlank { null },
+                                stockQty = stockQty.toIntOrNull() ?: 0,
+                                reorderLevel = reorderLevel.toIntOrNull() ?: 5,
+                                barcode = code.ifBlank { null },
+                                notes = notes.ifBlank { null },
+                                photoPaths = listOfNotNull(photoPath.ifBlank { null })
+                            )
                         )
-                    )
-                    onSaved()
+                        onSaved()
+                        } catch (e: Exception) {
+                            error = e.message ?: "Could not save part"
+                            saving = false
+                        }
+                    }
                 }
             )
             if (partId != null) {

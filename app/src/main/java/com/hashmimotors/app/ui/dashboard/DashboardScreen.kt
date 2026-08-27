@@ -1,5 +1,6 @@
 package com.hashmimotors.app.ui.dashboard
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.ReceiptLong
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
@@ -121,6 +126,18 @@ fun DashboardScreen(
 
         item {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                QuickAction("New bill", Icons.Filled.ReceiptLong, Modifier.weight(1f), onNewBill)
+                QuickAction("Catalog", Icons.Filled.Search, Modifier.weight(1f), onSearch)
+            }
+            Spacer(Modifier.height(10.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                QuickAction("Receive", Icons.Filled.Inventory, Modifier.weight(1f), onAddStock)
+                QuickAction("Add part", Icons.Filled.Add, Modifier.weight(1f), onAddPart)
+            }
+        }
+
+        item {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 HmCard(modifier = Modifier.weight(1f), onClick = onInventory) {
                     Text("Stock value", color = IvoryMute, fontSize = 11.sp)
                     Text("₹${"%,.0f".format(state.totalStockValue)}", color = Ivory, fontSize = 18.sp, fontWeight = FontWeight.Bold)
@@ -161,7 +178,14 @@ fun DashboardScreen(
         }
 
         item {
-            Text("Recent bills", color = Ivory, fontWeight = FontWeight.SemiBold, fontSize = 16.sp, modifier = Modifier.padding(top = 4.dp))
+            Row(
+                Modifier.fillMaxWidth().padding(top = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Recent bills", color = Ivory, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                Text("See all", color = Gold, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.clickable { onHistory() })
+            }
         }
 
         if (state.recentInvoices.isEmpty()) {
@@ -198,5 +222,21 @@ private fun MiniStat(label: String, value: String) {
     Column {
         Text(value, color = Ivory, fontSize = 18.sp, fontWeight = FontWeight.Bold)
         Text(label, color = IvoryMute, fontSize = 11.sp)
+    }
+}
+
+@Composable
+private fun QuickAction(
+    label: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    HmCard(modifier = modifier, onClick = onClick) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            HmIconWell(icon, size = 36)
+            Spacer(Modifier.padding(6.dp))
+            Text(label, color = Ivory, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+        }
     }
 }

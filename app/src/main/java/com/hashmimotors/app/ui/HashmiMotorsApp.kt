@@ -179,7 +179,7 @@ fun HashmiMotorsMainScreen(
                     onSearch = { navController.navigate(Routes.SEARCH) },
                     onNewBill = { navController.navigate(Routes.NEW_BILL) },
                     onAddStock = { navController.navigate(Routes.ADD_STOCK) },
-                    onAddPart = { navController.navigate(Routes.IMPORT_HUB) },
+                    onAddPart = { navController.navigate(Routes.ADD_PART) },
                     onFitment = { navController.navigate(Routes.FITMENT_WIZARD) },
                     onInventory = { navController.navigate(Routes.INVENTORY) },
                     onReports = { navController.navigate(Routes.REPORTS) },
@@ -227,6 +227,13 @@ fun HashmiMotorsMainScreen(
                     onPartClick = { id -> navController.navigate(Routes.editPart(id)) },
                     onAddPartClick = { navController.navigate(Routes.ADD_PART) },
                     onScanClick = { navController.navigate(Routes.scanner("search")) },
+                    onAddToBill = { partId ->
+                        navController.navigate(Routes.NEW_BILL)
+                        runCatching {
+                            navController.getBackStackEntry(Routes.NEW_BILL)
+                                .savedStateHandle["add_part_id"] = partId
+                        }
+                    },
                     onBack = { navController.popBackStack() }
                 )
             }
@@ -286,9 +293,16 @@ fun HashmiMotorsMainScreen(
                 val barcode by entry.savedStateHandle
                     .getStateFlow("scan_barcode", "")
                     .collectAsStateWithLifecycle()
+                val addPartId by entry.savedStateHandle
+                    .getStateFlow("add_part_id", "")
+                    .collectAsStateWithLifecycle()
                 BillingScreen(
                     incomingBarcode = barcode,
-                    onIncomingConsumed = { entry.savedStateHandle["scan_barcode"] = "" },
+                    incomingPartId = addPartId,
+                    onIncomingConsumed = {
+                        entry.savedStateHandle["scan_barcode"] = ""
+                        entry.savedStateHandle["add_part_id"] = ""
+                    },
                     onBack = { navController.popBackStack() },
                     onSaved = { invoiceId ->
                         navController.navigate(Routes.invoicePreview(invoiceId)) {
