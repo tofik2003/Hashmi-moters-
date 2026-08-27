@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spacing -->
+    <dimen name="spacing_xxs">2dp</dimen>
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_s">8dp</dimen>
+    <dimen name="spacing_m">16dp</dimen>
+    <dimen name="spacing_l">24dp</dimen>
+    <dimen name="spacing_xl">32dp</dimen>
+    <dimen name="spacing_xxl">48dp</dimen>
+
+    <!-- Button heights (big buttons for easy tap) -->
+    <dimen name="button_height">56dp</dimen>
+    <dimen name="button_height_large">72dp</dimen>
+    <dimen name="min_touch_target">48dp</dimen>
+
+    <!-- Corner radius -->
+    <dimen name="corner_radius_s">8dp</dimen>
+    <dimen name="corner_radius_m">12dp</dimen>
+    <dimen name="corner_radius_l">16dp</dimen>
+    <dimen name="corner_radius_xl">24dp</dimen>
+
+    <!-- Card elevation -->
+    <dimen name="card_elevation_low">2dp</dimen>
+    <dimen name="card_elevation_high">8dp</dimen>
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <!-- Starburst background -->
+    <path
+        android:fillColor="#FF6B35"
+        android:pathData="M50,2 L57,18 L74,12 L73,30 L91,32 L82,47 L96,57 L80,63 L83,80 L66,76 L60,93 L50,80 L40,93 L34,76 L17,80 L20,63 L4,57 L18,47 L9,32 L27,30 L26,12 L43,18 Z" />
+    <!-- Inner circle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,30 m-18,0 a18,18 0 1,0 36,0 a18,18 0 1,0 -36,0" />
+    <!-- Sale text representation (% off) -->
+    <path
+        android:fillColor="#FF6B35"
+        android:pathData="M50,22 L50,28 M50,32 L50,38"
+        android:strokeColor="#FF6B35"
+        android:strokeWidth="3" />
+</vector>

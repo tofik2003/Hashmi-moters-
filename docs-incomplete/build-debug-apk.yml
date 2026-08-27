@@ -1,0 +1,88 @@
+name: Build Debug APK
+
+on:
+  push:
+    branches: [ arena/01a04216-hashmi-moters, main, develop ]
+  pull_request:
+    branches: [ arena/01a04216-hashmi-moters, main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Debug APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: 🔑 Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/arena/01a04216-hashmi-moters' }}
+
+      - name: 🛠️ Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: 🏗️ Build Debug APK
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        env:
+          # Firebase requires google-services.json. If the file is missing, the build will fail.
+          # To fix: Add your google-services.json to app/ folder and commit it (or add as secret).
+          GOOGLE_SERVICES_ENABLED: false
+
+      - name: 📦 Upload APK as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hashmi-motors-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: 📊 Upload build report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-report
+          path: |
+            app/build/reports/lint-results-*.xml
+            app/build/reports/tests/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: 🔑 Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: 🧪 Run tests
+        run: ./gradlew testDebugUnitTest --no-daemon
+
+      - name: 📊 Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: app/build/reports/tests/
+          retention-days: 7

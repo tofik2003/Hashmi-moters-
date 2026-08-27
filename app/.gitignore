@@ -1,0 +1,20 @@
+# Important: do not commit the real google-services.json with real API keys
+google-services.json
+
+# Build outputs
+build/
+.gradle/
+local.properties
+*.iml
+.idea/
+
+# Captures
+captures/
+
+# Generated files
+.cxx/
+
+# Keystore files - never commit
+*.jks
+*.keystore
+release.keystore
