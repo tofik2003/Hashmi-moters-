@@ -16,6 +16,15 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
+    <queries>
+        <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" />
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="application/pdf" />
+        </intent>
+    </queries>
+
     <application
         android:name=".HashmiMotorsApp"
         android:allowBackup="true"
@@ -49,15 +58,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <queries>
-            <package android:name="com.whatsapp" />
-            <package android:name="com.whatsapp.w4b" />
-            <intent>
-                <action android:name="android.intent.action.SEND" />
-                <data android:mimeType="application/pdf" />
-            </intent>
-        </queries>
 
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
