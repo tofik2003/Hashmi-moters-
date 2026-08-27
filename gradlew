@@ -232,15 +232,13 @@ TMP_LOG=$(mktemp 2>/dev/null || echo "/tmp/gradle_build.log")
 GRADLE_EXIT_CODE=${PIPESTATUS[0]}
 
 if [ $GRADLE_EXIT_CODE -ne 0 ]; then
-    if [ -n "$GITHUB_ACTIONS" ]; then
-        git config user.name "Build Logger"
-        git config user.email "bot@hashmimotors.app"
-        git checkout -B build-error-log
-        cp "$TMP_LOG" build-failure.txt
-        git add build-failure.txt
-        git commit -m "Build error log [skip ci]"
-        git push -f origin build-error-log || true
-    fi
+    tail -n 40 "$TMP_LOG" | while IFS= read -r line; do
+        if [ -n "$line" ]; then
+            # Clean special characters if needed
+            cleaned_line=$(echo "$line" | tr -d '\r\n')
+            echo "::error title=Gradle::$cleaned_line"
+        fi
+    done
 fi
 
 rm -f "$TMP_LOG"
