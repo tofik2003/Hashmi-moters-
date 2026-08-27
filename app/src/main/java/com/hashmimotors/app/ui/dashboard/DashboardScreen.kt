@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hashmimotors.app.ui.theme.AccentAmber
+import com.hashmimotors.app.ui.theme.StatusWarning
 
 @Composable
 fun DashboardScreen(
@@ -188,7 +188,7 @@ fun DashboardScreen(
                             .padding(vertical = 4.dp),
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = AccentAmber.copy(alpha = 0.95f)
+                            containerColor = StatusWarning.copy(alpha = 0.95f)
                         )
                     ) {
                         Row(

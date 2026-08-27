@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.hashmimotors.app.ui.theme.GradientEnd
 import com.hashmimotors.app.ui.theme.GradientStart
 
@@ -108,11 +109,9 @@ fun AnimatedBigButton(
             Text(
                 text = text,
                 color = Color.White,
-                fontSize = 18.sp.let { androidx.compose.ui.unit.TextUnit(it.value, it.type) },
+                fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
             )
         }
     }
 }
-
-private val Int.sp get() = androidx.compose.ui.unit.TextUnit(toFloat(), androidx.compose.ui.unit.TextUnitType.Sp)

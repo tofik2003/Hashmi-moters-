@@ -9,27 +9,40 @@ import androidx.compose.animation.slideOutOfContainer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.hashmimotors.app.data.repository.CategoryRepository
 import com.hashmimotors.app.data.repository.SettingsRepository
 import com.hashmimotors.app.domain.model.AppSettings
 import com.hashmimotors.app.domain.model.BackgroundStyle
+import com.hashmimotors.app.ui.billing.BillingScreen
+import com.hashmimotors.app.ui.billing.InvoiceHistoryScreen
+import com.hashmimotors.app.ui.billing.InvoicePreviewScreen
+import com.hashmimotors.app.ui.catalog.AddPartScreen
+import com.hashmimotors.app.ui.catalog.SearchScreen
 import com.hashmimotors.app.ui.components.AnimatedParticleBackground
 import com.hashmimotors.app.ui.dashboard.DashboardScreen
+import com.hashmimotors.app.ui.fitment.FitmentScreen
+import com.hashmimotors.app.ui.inventory.AddStockScreen
+import com.hashmimotors.app.ui.inventory.InventoryScreen
 import com.hashmimotors.app.ui.onboarding.OnboardingScreen
+import com.hashmimotors.app.ui.reports.ReportsScreen
 import com.hashmimotors.app.ui.settings.SettingsScreen
 import com.hashmimotors.app.ui.shop.ShopSetupScreen
 import com.hashmimotors.app.ui.splash.SplashScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 object Routes {
@@ -38,10 +51,9 @@ object Routes {
     const val SHOP_SETUP = "shop_setup"
     const val DASHBOARD = "dashboard"
     const val SETTINGS = "settings"
-    const val CATALOG = "catalog"
     const val SEARCH = "search"
     const val ADD_PART = "add_part"
-    const val PART_DETAIL = "part_detail/{partId}"
+    const val EDIT_PART = "edit_part/{partId}"
     const val FITMENT_WIZARD = "fitment_wizard"
     const val NEW_BILL = "new_bill"
     const val INVOICE_PREVIEW = "invoice_preview/{invoiceId}"
@@ -53,9 +65,16 @@ object Routes {
 
 @HiltViewModel
 class AppShellViewModel @Inject constructor(
-    settingsRepository: SettingsRepository
-) : androidx.lifecycle.ViewModel() {
+    settingsRepository: SettingsRepository,
+    categoryRepository: CategoryRepository
+) : ViewModel() {
     val settings = settingsRepository.getSettings()
+
+    init {
+        viewModelScope.launch {
+            categoryRepository.ensureSeeded()
+        }
+    }
 }
 
 @Composable
@@ -66,11 +85,8 @@ fun HashmiMotorsApp(
     val settings by viewModel.settings.collectAsStateWithLifecycle(initialValue = AppSettings())
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Background layer
         if (settings.backgroundStyle == BackgroundStyle.GRADIENT_PARTICLES && settings.animationsEnabled) {
-            AnimatedParticleBackground(
-                modifier = Modifier.fillMaxSize()
-            )
+            AnimatedParticleBackground(modifier = Modifier.fillMaxSize())
         } else {
             Box(
                 modifier = Modifier
@@ -92,28 +108,16 @@ fun HashmiMotorsApp(
             startDestination = Routes.SPLASH,
             modifier = Modifier.fillMaxSize(),
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    tween(300)
-                ) + fadeIn(tween(300))
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(300)) + fadeIn(tween(300))
             },
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    tween(300)
-                ) + fadeOut(tween(300))
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(300)) + fadeOut(tween(300))
             },
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    tween(300)
-                ) + fadeIn(tween(300))
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(300)) + fadeIn(tween(300))
             },
             popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    tween(300)
-                ) + fadeOut(tween(300))
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(300)) + fadeOut(tween(300))
             }
         ) {
             composable(Routes.SPLASH) {
@@ -159,7 +163,82 @@ fun HashmiMotorsApp(
             composable(Routes.SETTINGS) {
                 SettingsScreen(onBack = { navController.popBackStack() })
             }
-            // Other routes are added by individual screens
+            composable(Routes.SEARCH) {
+                SearchScreen(
+                    onPartClick = { id -> navController.navigate("edit_part/$id") },
+                    onAddPartClick = { navController.navigate(Routes.ADD_PART) },
+                    onScanClick = { },
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.ADD_PART) {
+                AddPartScreen(
+                    partId = null,
+                    onBack = { navController.popBackStack() },
+                    onSaved = { navController.popBackStack() }
+                )
+            }
+            composable(
+                Routes.EDIT_PART,
+                arguments = listOf(navArgument("partId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val partId = backStackEntry.arguments?.getString("partId")
+                AddPartScreen(
+                    partId = partId,
+                    onBack = { navController.popBackStack() },
+                    onSaved = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.NEW_BILL) {
+                BillingScreen(
+                    onBack = { navController.popBackStack() },
+                    onSaved = { invoiceId ->
+                        navController.navigate("invoice_preview/$invoiceId") {
+                            popUpTo(Routes.NEW_BILL) { inclusive = true }
+                        }
+                    },
+                    onAddItem = { }
+                )
+            }
+            composable(
+                Routes.INVOICE_PREVIEW,
+                arguments = listOf(navArgument("invoiceId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val invoiceId = backStackEntry.arguments?.getString("invoiceId") ?: ""
+                InvoicePreviewScreen(
+                    invoiceId = invoiceId,
+                    onBack = {
+                        navController.popBackStack(Routes.DASHBOARD, inclusive = false)
+                    }
+                )
+            }
+            composable(Routes.INVOICE_HISTORY) {
+                InvoiceHistoryScreen(
+                    onBack = { navController.popBackStack() },
+                    onInvoiceClick = { id -> navController.navigate("invoice_preview/$id") }
+                )
+            }
+            composable(Routes.INVENTORY) {
+                InventoryScreen(
+                    onBack = { navController.popBackStack() },
+                    onPartClick = { id -> navController.navigate("edit_part/$id") }
+                )
+            }
+            composable(Routes.ADD_STOCK) {
+                AddStockScreen(
+                    onBack = { navController.popBackStack() },
+                    onSaved = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.FITMENT_WIZARD) {
+                FitmentScreen(
+                    onBack = { navController.popBackStack() },
+                    onVehicleSelected = { }
+                )
+            }
+            composable(Routes.REPORTS) {
+                ReportsScreen(onBack = { navController.popBackStack() })
+            }
         }
     }
 }

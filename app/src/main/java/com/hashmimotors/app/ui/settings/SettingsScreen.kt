@@ -1,5 +1,8 @@
 package com.hashmimotors.app.ui.settings
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,7 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -33,6 +39,9 @@ import com.hashmimotors.app.domain.model.AccentColorType
 import com.hashmimotors.app.domain.model.AnimationSpeed
 import com.hashmimotors.app.domain.model.BackgroundStyle
 import com.hashmimotors.app.domain.model.ThemeMode
+import com.hashmimotors.app.ui.components.SegmentedControl
+import com.hashmimotors.app.ui.components.SettingsRow
+import com.hashmimotors.app.ui.components.SettingsSection
 
 @Composable
 fun SettingsScreen(
@@ -48,12 +57,11 @@ fun SettingsScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(24.dp))
-            // Top bar
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = onBack) {
                     Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "Settings",
                     color = Color.White,
@@ -61,20 +69,26 @@ fun SettingsScreen(
                     fontWeight = FontWeight.Bold
                 )
             }
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            // Theme
             SettingsSection("Appearance") {
                 SettingsRow("Theme") {
                     SegmentedControl(
-                        options = listOf("Light" to ThemeMode.LIGHT, "Dark" to ThemeMode.DARK, "Auto" to ThemeMode.AUTO),
+                        options = listOf(
+                            "Light" to ThemeMode.LIGHT,
+                            "Dark" to ThemeMode.DARK,
+                            "Auto" to ThemeMode.AUTO
+                        ),
                         selected = settings.themeMode,
                         onSelect = { viewModel.setThemeMode(it) }
                     )
                 }
                 SettingsRow("Background") {
                     SegmentedControl(
-                        options = listOf("Gradient" to BackgroundStyle.GRADIENT_PARTICLES, "Solid" to BackgroundStyle.SOLID),
+                        options = listOf(
+                            "Gradient" to BackgroundStyle.GRADIENT_PARTICLES,
+                            "Solid" to BackgroundStyle.SOLID
+                        ),
                         selected = settings.backgroundStyle,
                         onSelect = { viewModel.setBackgroundStyle(it) }
                     )
@@ -85,27 +99,23 @@ fun SettingsScreen(
                             val isSelected = settings.accentColor == color
                             Box(
                                 modifier = Modifier
-                                    .height(40.dp)
-                                    .padding(2.dp)
+                                    .size(40.dp)
                                     .background(
                                         color = viewModel.getAccentColor(color),
-                                        shape = androidx.compose.foundation.shape.CircleShape
+                                        shape = CircleShape
                                     )
                                     .border(
                                         width = if (isSelected) 3.dp else 0.dp,
                                         color = Color.White,
-                                        shape = androidx.compose.foundation.shape.CircleShape
+                                        shape = CircleShape
                                     )
                                     .clickable { viewModel.setAccentColor(color) }
-                            ) {
-                                Box(modifier = Modifier.fillMaxSize())
-                            }
+                            )
                         }
                     }
                 }
             }
 
-            // Animations & Sounds
             SettingsSection("Animations & Sound") {
                 SettingsRow("Enable Animations") {
                     Switch(
@@ -115,7 +125,10 @@ fun SettingsScreen(
                 }
                 SettingsRow("Animation Speed") {
                     SegmentedControl(
-                        options = listOf("Normal" to AnimationSpeed.NORMAL, "Reduced" to AnimationSpeed.REDUCED),
+                        options = listOf(
+                            "Normal" to AnimationSpeed.NORMAL,
+                            "Reduced" to AnimationSpeed.REDUCED
+                        ),
                         selected = settings.animationSpeed,
                         onSelect = { viewModel.setAnimationSpeed(it) }
                     )
@@ -137,13 +150,14 @@ fun SettingsScreen(
                 }
             }
 
-            // About
             SettingsSection("About") {
                 SettingsRow("Version", "1.0.0")
                 SettingsRow("Build", "1")
                 SettingsRow("Database", "Local (encrypted)")
-                SettingsRow("Sync", "Firebase (when online)")
+                SettingsRow("Sync", "Firebase (optional)")
             }
+
+            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }
