@@ -3,8 +3,20 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
-    id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.plugin.serialization")
+    // Note: com.google.gms.google-services is intentionally NOT applied by default
+    // because it requires google-services.json. To enable Firebase:
+    // 1. Create a Firebase project at https://console.firebase.google.com
+    // 2. Add Android app with package name: com.hashmimotors.app
+    // 3. Download google-services.json to app/google-services.json
+    // 4. Uncomment: id("com.google.gms.google-services") above
+    // 5. Add to gradle.properties: firebase.enabled=true
+}
+
+// Conditionally apply google-services plugin if enabled
+val firebaseEnabled = project.findProperty("firebase.enabled")?.toString()?.toBoolean() ?: false
+if (firebaseEnabled) {
+    apply(plugin = "com.google.gms.google-services")
 }
 
 android {
@@ -92,14 +104,13 @@ dependencies {
     // Security (for encrypted DB)
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
-    // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-storage-ktx")
-
-    // Google Sign-In
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    // Firebase (optional - only included if firebase.enabled=true)
+    // Uncomment these when you have set up Firebase and added google-services.json
+    // implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    // implementation("com.google.firebase:firebase-auth-ktx")
+    // implementation("com.google.firebase:firebase-firestore-ktx")
+    // implementation("com.google.firebase:firebase-storage-ktx")
+    // implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // ML Kit (OCR & Barcode)
     implementation("com.google.mlkit:text-recognition:16.0.0")
