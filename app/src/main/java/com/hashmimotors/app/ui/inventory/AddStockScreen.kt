@@ -46,6 +46,9 @@ import com.hashmimotors.app.ui.components.AnimatedBigButton
 fun AddStockScreen(
     inventoryViewModel: InventoryViewModel = hiltViewModel(),
     catalogViewModel: CatalogViewModel = hiltViewModel(),
+    incomingBarcode: String = "",
+    onIncomingConsumed: () -> Unit = {},
+    onScan: () -> Unit = {},
     onBack: () -> Unit,
     onSaved: () -> Unit
 ) {
@@ -56,6 +59,17 @@ fun AddStockScreen(
     var supplierId by remember { mutableStateOf<String?>(null) }
 
     val selectedPart = state.parts.find { it.id == selectedPartId }
+
+    androidx.compose.runtime.LaunchedEffect(incomingBarcode, state.parts) {
+        if (incomingBarcode.isBlank()) return@LaunchedEffect
+        val match = state.parts.firstOrNull {
+            it.barcode.equals(incomingBarcode, ignoreCase = true) ||
+                it.sku.equals(incomingBarcode, ignoreCase = true)
+        }
+        if (match != null) selectedPartId = match.id
+        else catalogViewModel.onSearchChange(incomingBarcode)
+        onIncomingConsumed()
+    }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Spacer(modifier = Modifier.height(24.dp))

@@ -17,9 +17,9 @@ val AccentGreen = Color(0xFF388E3C)
 val AccentOrange = Color(0xFFE64A19)
 
 // Gradient colors for background
-val GradientStart = Color(0xFF1A237E)
-val GradientMiddle = Color(0xFF000000)
-val GradientEnd = Color(0xFF4A148C)
+val GradientStart = Color(0xFF1A1040)
+val GradientMiddle = Color(0xFF0B0B12)
+val GradientEnd = Color(0xFF3D1408)
 
 // Confetti colors
 val ConfettiColors = listOf(

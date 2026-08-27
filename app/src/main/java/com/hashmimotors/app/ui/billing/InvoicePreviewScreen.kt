@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -50,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.Invoice
+import com.hashmimotors.app.util.QrEncoder
 import com.hashmimotors.app.ui.components.AnimatedBigButton
 import java.io.File
 import java.io.FileOutputStream
@@ -294,6 +297,39 @@ fun InvoicePreviewScreen(
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
+                            }
+                        }
+                    }
+
+                    item {
+                        val qrPayload = buildString {
+                            append("HASHMI|")
+                            append(inv.invoiceNo)
+                            append("|")
+                            append("%.0f".format(inv.grandTotal))
+                            append("|")
+                            append(inv.customerSnapshot.name)
+                        }
+                        val qr = remember(qrPayload) { QrEncoder.encode(qrPayload, 512) }
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White)
+                        ) {
+                            Column(
+                                Modifier.padding(16.dp).fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text("Scan to recall this bill", color = Color(0xFF1A1A2E), fontWeight = FontWeight.SemiBold)
+                                Spacer(Modifier.height(8.dp))
+                                if (qr != null) {
+                                    Image(
+                                        bitmap = qr.asImageBitmap(),
+                                        contentDescription = "Invoice QR",
+                                        modifier = Modifier.size(180.dp)
+                                    )
+                                }
+                                Text(inv.invoiceNo, color = Color(0xFF1A1A2E), fontSize = 12.sp)
                             }
                         }
                     }

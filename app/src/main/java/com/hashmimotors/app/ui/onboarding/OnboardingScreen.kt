@@ -64,8 +64,8 @@ fun OnboardingScreen(
             icon = Icons.Filled.Build
         ),
         OnboardingPage(
-            title = "Find Any Part in Seconds",
-            description = "Search by name, OEM number, brand, or even by vehicle. Get results instantly.",
+            title = "Camera, QR & barcode",
+            description = "Open a live camera preview to scan QR codes, barcodes, part photos, and labels — not empty buttons.",
             icon = Icons.Filled.Search
         ),
         OnboardingPage(

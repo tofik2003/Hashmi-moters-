@@ -72,9 +72,9 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun HashmiMotorsTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
-    accentColor: Color = AccentIndigo,
+    darkTheme: Boolean = true,
+    dynamicColor: Boolean = false,
+    accentColor: Color = AccentOrange,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

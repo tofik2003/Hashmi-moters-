@@ -1,5 +1,7 @@
 # Hashmi Motors — Spare Parts Manager
 
+**v1.1.0** — live camera / QR / barcode scanner, OCR, photos, CSV import, and a working shop counter.
+
 A personal-use Android app for managing a spare parts shop. Built for shop owners and their staff (in this case: you and your father) to run the counter, manage inventory, and create GST-compliant bills.
 
 ## ✨ Features
@@ -36,22 +38,13 @@ A personal-use Android app for managing a spare parts shop. Built for shop owner
 | Navigation | 🟡 Basic | 1 | ~150 |
 | GitHub Actions CI | ✅ Complete | 1 | ~80 |
 
-**What's working:**
-- App opens, shows splash, onboarding, dashboard, shop setup, settings
-- Local database creates and persists
-- Hilt DI is fully wired
-- Theme & animations are functional
-- Build pipeline is configured
-
-**What's still needed (to be added in future iterations):**
-- Search Parts screen
-- Add Part form
-- Billing/Cart screen
-- Invoice Preview with PDF/WhatsApp
-- Inventory management screen
-- Fitment wizard
-- Web enrichment (Firebase Cloud Functions)
-- Release signing config
+**What's working in v1.1:**
+- Live CameraX preview for QR / barcode (ML Kit)
+- Part photo capture and OCR label scan
+- Search, voice search, CSV import, sample catalog
+- Billing with scan-to-add, customer name on bills, invoice QR
+- Fitment wizard that lists and links compatible parts
+- Inventory, stock in, reports, customers, PDF / WhatsApp share
 
 ## 🚀 Quick Start
 

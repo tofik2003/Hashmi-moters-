@@ -27,8 +27,8 @@ android {
         applicationId = "com.hashmimotors.app"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -121,6 +121,12 @@ dependencies {
     implementation("androidx.camera:camera-camera2:1.3.1")
     implementation("androidx.camera:camera-lifecycle:1.3.1")
     implementation("androidx.camera:camera-view:1.3.1")
+
+    // QR code generation (scanning uses ML Kit)
+    implementation("com.google.zxing:core:3.5.3")
+
+    // Guava (ML Kit / CameraX futures)
+    implementation("com.google.guava:guava:31.1-android")
 
     // Lottie animations
     implementation("com.airbnb.android:lottie-compose:6.3.0")

@@ -160,7 +160,11 @@ class BillingViewModel @Inject constructor(
     /**
      * Save the current cart as an invoice. Decrements stock for each line.
      */
-    fun saveBill(userId: String) {
+    fun saveBill(
+        userId: String,
+        walkInName: String = "Walk-in Customer",
+        walkInPhone: String = ""
+    ) {
         val current = _state.value
         if (current.lines.isEmpty()) {
             _state.update { it.copy(error = "Cart is empty") }
@@ -181,7 +185,21 @@ class BillingViewModel @Inject constructor(
                         gstin = customer.gstin
                     )
                 } else {
-                    CustomerSnapshot(name = "Walk-in Customer", phone = "", address = null, gstin = null)
+                    CustomerSnapshot(
+                        name = walkInName.ifBlank { "Walk-in Customer" },
+                        phone = walkInPhone,
+                        address = null,
+                        gstin = null
+                    )
+                }
+
+                if (customer == null && walkInName.isNotBlank() && walkInName != "Walk-in Customer") {
+                    customerRepo.saveCustomer(
+                        Customer(
+                            name = walkInName.trim(),
+                            phone = walkInPhone.trim()
+                        )
+                    )
                 }
 
                 val invoice = Invoice(

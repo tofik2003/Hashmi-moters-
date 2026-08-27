@@ -56,9 +56,12 @@ import com.hashmimotors.app.ui.catalog.PartListItem
 fun BillingScreen(
     billingViewModel: BillingViewModel = hiltViewModel(),
     catalogViewModel: CatalogViewModel = hiltViewModel(),
+    incomingBarcode: String = "",
+    onIncomingConsumed: () -> Unit = {},
     onBack: () -> Unit,
     onSaved: (String) -> Unit,
-    onAddItem: () -> Unit
+    onScanItem: () -> Unit = {},
+    onAddItem: () -> Unit = {}
 ) {
     val state by billingViewModel.state.collectAsState()
     val catalogState by catalogViewModel.uiState.collectAsState()
@@ -67,6 +70,25 @@ fun BillingScreen(
     var billDiscountText by remember { mutableStateOf("0") }
     var notes by remember { mutableStateOf("") }
     var showPartPicker by remember { mutableStateOf(false) }
+    var scanMessage by remember { mutableStateOf<String?>(null) }
+
+    androidx.compose.runtime.LaunchedEffect(incomingBarcode, catalogState.parts) {
+        if (incomingBarcode.isBlank()) return@LaunchedEffect
+        val match = catalogState.parts.firstOrNull {
+            it.barcode.equals(incomingBarcode, ignoreCase = true) ||
+                it.sku.equals(incomingBarcode, ignoreCase = true) ||
+                it.oemNumbers.any { oem -> oem.equals(incomingBarcode, ignoreCase = true) }
+        }
+        if (match != null) {
+            billingViewModel.addPart(match, qty = 1)
+            scanMessage = "Added ${match.name}"
+        } else {
+            catalogViewModel.onSearchChange(incomingBarcode)
+            showPartPicker = true
+            scanMessage = "No exact match for $incomingBarcode — pick a part"
+        }
+        onIncomingConsumed()
+    }
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -140,17 +162,22 @@ fun BillingScreen(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-                TextButton(onClick = { showPartPicker = true }) {
-                    Icon(
-                        Icons.Filled.Add,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "Add Item",
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                Row {
+                    TextButton(onClick = onScanItem) {
+                        Text("Scan", color = Color(0xFFFFA726))
+                    }
+                    TextButton(onClick = { showPartPicker = true }) {
+                        Icon(
+                            Icons.Filled.Add,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Add Item",
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
 

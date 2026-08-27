@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,10 +27,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -72,13 +75,16 @@ fun DashboardScreen(
     onReports: () -> Unit,
     onHistory: () -> Unit,
     onSettings: () -> Unit,
-    onCustomers: () -> Unit = {}
+    onCustomers: () -> Unit = {},
+    onScan: () -> Unit = {},
+    onImport: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -132,9 +138,38 @@ fun DashboardScreen(
             }
         }
 
-        // === PROMOTIONS CAROUSEL ===
         item {
             Spacer(modifier = Modifier.height(8.dp))
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onScan() },
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFE64A19))
+            ) {
+                Row(
+                    Modifier.padding(18.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        Modifier
+                            .size(56.dp)
+                            .background(Color.White.copy(0.18f), CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("📷", fontSize = 26.sp)
+                    }
+                    Spacer(Modifier.width(14.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text("Scan QR / barcode", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                        Text("Opens the camera — not a dead button", color = Color.White.copy(0.9f), fontSize = 12.sp)
+                    }
+                    Text("▶", color = Color.White, fontSize = 20.sp)
+                }
+            }
+        }
+
+        item {
             PromotionCarousel()
         }
 
@@ -307,6 +342,8 @@ fun DashboardScreen(
                             "inventory" -> onInventory
                             "history" -> onHistory
                             "customers" -> onCustomers
+                            "scan" -> onScan
+                            "import" -> onImport
                             else -> onNewBill
                         },
                         modifier = Modifier.weight(1f)
@@ -506,10 +543,12 @@ data class QuickAction(
 )
 
 private val quickActions = listOf(
+    QuickAction("scan", "Scan QR", Icons.Filled.QrCodeScanner, Color(0xFFE64A19)),
     QuickAction("search", "Search Parts", Icons.Filled.Search, Color(0xFF4FC3F7)),
     QuickAction("new_bill", "New Bill", Icons.Filled.Receipt, Color(0xFF66BB6A)),
-    QuickAction("add_part", "Add Part", Icons.Filled.Add, Color(0xFFFFA726)),
+    QuickAction("import", "Add / Import", Icons.Filled.UploadFile, Color(0xFFFFA726)),
     QuickAction("add_stock", "Add Stock", Icons.Filled.Inventory, Color(0xFFAB47BC)),
+    QuickAction("inventory", "Inventory", Icons.Filled.Inventory, Color(0xFF26C6DA)),
     QuickAction("fitment", "Find by Vehicle", Icons.Filled.ShoppingCart, Color(0xFFEC407A)),
     QuickAction("history", "Bill History", Icons.Filled.Receipt, Color(0xFF7E57C2)),
     QuickAction("customers", "Customers", Icons.Filled.Person, Color(0xFF26A69A))

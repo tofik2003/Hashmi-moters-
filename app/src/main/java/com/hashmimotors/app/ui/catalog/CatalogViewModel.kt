@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashmimotors.app.data.repository.CategoryRepository
 import com.hashmimotors.app.data.repository.PartRepository
+import com.hashmimotors.app.data.seed.DemoCatalogSeeder
 import com.hashmimotors.app.domain.model.Category
 import com.hashmimotors.app.domain.model.Part
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,7 +12,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -31,7 +31,8 @@ data class CatalogUiState(
 @HiltViewModel
 class CatalogViewModel @Inject constructor(
     private val partRepo: PartRepository,
-    private val categoryRepo: CategoryRepository
+    private val categoryRepo: CategoryRepository,
+    private val demoSeeder: DemoCatalogSeeder
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -89,4 +90,12 @@ class CatalogViewModel @Inject constructor(
             partRepo.deletePart(part)
         }
     }
+
+    suspend fun findByBarcode(barcode: String): Part? = partRepo.getPartByBarcode(barcode)
+
+    fun importParts(parts: List<Part>) {
+        viewModelScope.launch { partRepo.saveAllParts(parts) }
+    }
+
+    suspend fun seedDemoCatalog(): Int = demoSeeder.seedIfEmpty()
 }

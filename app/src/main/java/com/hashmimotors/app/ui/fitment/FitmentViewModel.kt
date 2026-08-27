@@ -2,7 +2,10 @@ package com.hashmimotors.app.ui.fitment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hashmimotors.app.data.repository.PartRepository
 import com.hashmimotors.app.data.repository.VehicleRepository
+import com.hashmimotors.app.domain.model.Fitment
+import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.domain.model.Vehicle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -11,21 +14,26 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 data class FitmentUiState(
     val allMakes: List<String> = emptyList(),
     val selectedMake: String? = null,
     val models: List<Vehicle> = emptyList(),
-    val selectedVehicleId: String? = null
+    val selectedVehicleId: String? = null,
+    val compatibleParts: List<Part> = emptyList(),
+    val catalogParts: List<Part> = emptyList()
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class FitmentViewModel @Inject constructor(
-    private val vehicleRepository: VehicleRepository
+    private val vehicleRepository: VehicleRepository,
+    private val partRepository: PartRepository
 ) : ViewModel() {
 
     private val _selectedMake = MutableStateFlow<String?>(null)
@@ -39,16 +47,28 @@ class FitmentViewModel @Inject constructor(
             all to selectedMake
         },
         _selectedMake.flatMapLatest { make ->
-            if (make == null) kotlinx.coroutines.flow.flowOf(emptyList())
+            if (make == null) flowOf(emptyList())
             else vehicleRepository.getByMake(make)
         },
-        _selectedVehicleId
-    ) { (all, selectedMake), models, selectedVehicleId ->
+        combine(
+            _selectedVehicleId.flatMapLatest { id ->
+                if (id == null) flowOf(emptyList())
+                else vehicleRepository.getFitmentsForVehicle(id)
+            },
+            partRepository.getAllParts(),
+            _selectedVehicleId
+        ) { fitments, parts, vehicleId ->
+            Triple(fitments, parts, vehicleId)
+        }
+    ) { (all, selectedMake), models, (fitments, parts, selectedVehicleId) ->
+        val ids = fitments.map { it.partId }.toSet()
         FitmentUiState(
             allMakes = all.map { it.make }.distinct().sorted(),
             selectedMake = selectedMake,
             models = models,
-            selectedVehicleId = selectedVehicleId
+            selectedVehicleId = selectedVehicleId,
+            compatibleParts = parts.filter { it.id in ids },
+            catalogParts = parts
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), FitmentUiState())
 
@@ -65,8 +85,24 @@ class FitmentViewModel @Inject constructor(
         _selectedVehicleId.value = id
     }
 
+    fun linkPart(partId: String) {
+        val vehicleId = _selectedVehicleId.value ?: return
+        viewModelScope.launch {
+            vehicleRepository.addFitment(
+                Fitment(
+                    id = UUID.randomUUID().toString(),
+                    partId = partId,
+                    vehicleId = vehicleId
+                )
+            )
+        }
+    }
+
     fun reset() {
-        _selectedMake.value = null
-        _selectedVehicleId.value = null
+        if (_selectedVehicleId.value != null) {
+            _selectedVehicleId.value = null
+        } else {
+            _selectedMake.value = null
+        }
     }
 }

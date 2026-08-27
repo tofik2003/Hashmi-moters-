@@ -1,5 +1,10 @@
 package com.hashmimotors.app.ui.catalog
 
+import android.content.Intent
+import android.speech.RecognizerIntent
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,192 +28,267 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.hashmimotors.app.domain.model.Part
+import kotlinx.coroutines.launch
+import java.io.File
+import java.util.Locale
 
 @Composable
 fun SearchScreen(
     viewModel: CatalogViewModel = hiltViewModel(),
+    incomingQuery: String = "",
+    onIncomingConsumed: () -> Unit = {},
     onPartClick: (String) -> Unit,
     onAddPartClick: () -> Unit,
     onScanClick: () -> Unit,
     onBack: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Spacer(modifier = Modifier.height(24.dp))
-        // Top bar
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onBack) {
-                Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
-            }
-            Text(
-                text = "Search Parts",
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Search bar
-        OutlinedTextField(
-            value = state.searchQuery,
-            onValueChange = { viewModel.onSearchChange(it) },
-            placeholder = { Text("Search by name, OEM, brand...") },
-            leadingIcon = { Icon(Icons.Filled.Search, null, tint = Color.White.copy(alpha = 0.6f)) },
-            trailingIcon = {
-                IconButton(onClick = onScanClick) {
-                    Icon(Icons.Filled.QrCodeScanner, "Scan", tint = Color.White)
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            shape = RoundedCornerShape(16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Category chips
-        if (state.categories.isNotEmpty()) {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                item {
-                    CategoryChip(
-                        name = "All",
-                        selected = state.selectedCategoryId == null,
-                        onClick = { viewModel.onCategorySelect(null) }
-                    )
-                }
-                items(state.categories) { cat ->
-                    CategoryChip(
-                        name = cat.name,
-                        selected = state.selectedCategoryId == cat.id,
-                        onClick = { viewModel.onCategorySelect(cat.id) }
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Low stock toggle
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { viewModel.toggleLowStockOnly() }
-                .padding(vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                Icons.Filled.Warning,
-                contentDescription = null,
-                tint = if (state.showLowStockOnly) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.6f),
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Show low stock only",
-                color = Color.White,
-                fontSize = 14.sp
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Results count
-        Text(
-            text = "${state.parts.size} part${if (state.parts.size != 1) "s" else ""} found",
-            color = Color.White.copy(alpha = 0.6f),
-            fontSize = 12.sp
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Results list
-        if (state.parts.isEmpty()) {
-            // Empty state
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(32.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        Icons.Filled.Search,
-                        contentDescription = null,
-                        tint = Color.White.copy(alpha = 0.3f),
-                        modifier = Modifier.size(80.dp)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = if (state.searchQuery.isBlank() && state.selectedCategoryId == null)
-                            "No parts yet"
-                        else "No parts match your search",
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Tap the + button to add your first part",
-                        color = Color.White.copy(alpha = 0.6f),
-                        fontSize = 14.sp
-                    )
-                }
-            }
-        } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(state.parts, key = { it.id }) { part ->
-                    PartListItem(
-                        part = part,
-                        onClick = { onPartClick(part.id) }
-                    )
-                }
-            }
+    LaunchedEffect(incomingQuery) {
+        if (incomingQuery.isNotBlank()) {
+            viewModel.onSearchChange(incomingQuery)
+            onIncomingConsumed()
         }
     }
 
-    // Floating add button
-    Box(modifier = Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.BottomEnd) {
+    val voiceLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val spoken = result.data
+            ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            ?.firstOrNull()
+        if (!spoken.isNullOrBlank()) viewModel.onSearchChange(spoken)
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .padding(16.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = onBack) {
+                    Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
+                }
+                Text(
+                    text = "Search Parts",
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedTextField(
+                value = state.searchQuery,
+                onValueChange = { viewModel.onSearchChange(it) },
+                placeholder = { Text("Name, OEM, brand, barcode…") },
+                leadingIcon = { Icon(Icons.Filled.Search, null, tint = Color.White.copy(alpha = 0.6f)) },
+                trailingIcon = {
+                    Row {
+                        IconButton(onClick = {
+                            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                                putExtra(
+                                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                                )
+                                putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+                                putExtra(RecognizerIntent.EXTRA_PROMPT, "Say a part name")
+                            }
+                            runCatching { voiceLauncher.launch(intent) }
+                                .onFailure {
+                                    Toast.makeText(context, "Voice not available", Toast.LENGTH_SHORT).show()
+                                }
+                        }) {
+                            Icon(Icons.Filled.Mic, "Voice", tint = Color.White)
+                        }
+                        IconButton(onClick = onScanClick) {
+                            Icon(Icons.Filled.QrCodeScanner, "Scan", tint = Color(0xFFFFA726))
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                shape = RoundedCornerShape(16.dp),
+                colors = fieldColors()
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            if (state.categories.isNotEmpty()) {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    item {
+                        CategoryChip(
+                            name = "All",
+                            selected = state.selectedCategoryId == null,
+                            onClick = { viewModel.onCategorySelect(null) }
+                        )
+                    }
+                    items(state.categories) { cat ->
+                        CategoryChip(
+                            name = cat.name,
+                            selected = state.selectedCategoryId == cat.id,
+                            onClick = { viewModel.onCategorySelect(cat.id) }
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { viewModel.toggleLowStockOnly() }
+                    .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Filled.Warning,
+                    contentDescription = null,
+                    tint = if (state.showLowStockOnly) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.6f),
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Show low stock only",
+                    color = Color.White,
+                    fontSize = 14.sp
+                )
+            }
+
+            Text(
+                text = "${state.parts.size} part${if (state.parts.size != 1) "s" else ""} found",
+                color = Color.White.copy(alpha = 0.6f),
+                fontSize = 12.sp
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (state.parts.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            Icons.Filled.Search,
+                            contentDescription = null,
+                            tint = Color.White.copy(alpha = 0.3f),
+                            modifier = Modifier.size(72.dp)
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = if (state.searchQuery.isBlank() && state.selectedCategoryId == null)
+                                "Catalog is empty"
+                            else "No parts match",
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            "Scan a barcode, add a part, or load sample stock to try the app.",
+                            color = Color.White.copy(alpha = 0.65f),
+                            fontSize = 13.sp
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = onScanClick,
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE64A19))
+                        ) {
+                            Icon(Icons.Filled.QrCodeScanner, null)
+                            Spacer(Modifier.width(8.dp))
+                            Text("Open camera scanner")
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(
+                            onClick = {
+                                scope.launch {
+                                    val n = viewModel.seedDemoCatalog()
+                                    Toast.makeText(
+                                        context,
+                                        if (n == 0) "Already has parts" else "Loaded $n sample parts",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(0.18f))
+                        ) {
+                            Text("Load sample catalog")
+                        }
+                    }
+                }
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(bottom = 80.dp)
+                ) {
+                    items(state.parts, key = { it.id }) { part ->
+                        PartListItem(part = part, onClick = { onPartClick(part.id) })
+                    }
+                }
+            }
+        }
+
         Box(
             modifier = Modifier
-                .size(64.dp)
-                .background(MaterialTheme.colorScheme.primary, CircleShape)
-                .clickable { onAddPartClick() },
-            contentAlignment = Alignment.Center
+                .fillMaxSize()
+                .padding(24.dp),
+            contentAlignment = Alignment.BottomEnd
         ) {
-            Icon(
-                Icons.Filled.Add,
-                contentDescription = "Add Part",
-                tint = Color.White,
-                modifier = Modifier.size(28.dp)
-            )
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .background(Color(0xFFE64A19), CircleShape)
+                    .clickable { onAddPartClick() },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    Icons.Filled.Add,
+                    contentDescription = "Add Part",
+                    tint = Color.White,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
         }
     }
 }
@@ -222,7 +303,7 @@ fun CategoryChip(
         modifier = Modifier
             .clip(RoundedCornerShape(20.dp))
             .background(
-                if (selected) MaterialTheme.colorScheme.primary
+                if (selected) Color(0xFFE64A19)
                 else Color.White.copy(alpha = 0.1f)
             )
             .clickable { onClick() }
@@ -244,14 +325,15 @@ fun PartListItem(
 ) {
     val isLowStock = part.stockQty <= part.reorderLevel
     val isOutOfStock = part.stockQty == 0
+    val photo = part.photoPaths.firstOrNull()
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White.copy(alpha = 0.08f)
+            containerColor = Color.White.copy(alpha = 0.1f)
         )
     ) {
         Row(
@@ -260,25 +342,30 @@ fun PartListItem(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Photo placeholder
             Box(
                 modifier = Modifier
                     .size(56.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
-                        shape = RoundedCornerShape(8.dp)
-                    ),
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = part.name.take(2).uppercase(),
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                if (photo != null) {
+                    AsyncImage(
+                        model = File(photo),
+                        contentDescription = part.name,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Text(
+                        text = part.name.take(2).uppercase(),
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
             Spacer(modifier = Modifier.width(12.dp))
-            // Part info
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = part.name,
@@ -295,15 +382,15 @@ fun PartListItem(
                         maxLines = 1
                     )
                 }
-                if (part.brand != null) {
+                val meta = listOfNotNull(part.brand, part.barcode?.let { "QR $it" })
+                if (meta.isNotEmpty()) {
                     Text(
-                        text = part.brand,
+                        text = meta.joinToString(" · "),
                         color = Color.White.copy(alpha = 0.6f),
                         fontSize = 12.sp
                     )
                 }
             }
-            // Price and stock
             Column(horizontalAlignment = Alignment.End) {
                 com.hashmimotors.app.ui.components.PriceWithDiscount(
                     originalPrice = part.mrp,
@@ -333,3 +420,16 @@ fun PartListItem(
         }
     }
 }
+
+@Composable
+fun fieldColors() = OutlinedTextFieldDefaults.colors(
+    focusedTextColor = Color.White,
+    unfocusedTextColor = Color.White,
+    focusedBorderColor = Color(0xFFFFA726),
+    unfocusedBorderColor = Color.White.copy(0.35f),
+    focusedLabelColor = Color(0xFFFFA726),
+    unfocusedLabelColor = Color.White.copy(0.7f),
+    cursorColor = Color(0xFFFFA726),
+    focusedPlaceholderColor = Color.White.copy(0.45f),
+    unfocusedPlaceholderColor = Color.White.copy(0.45f)
+)

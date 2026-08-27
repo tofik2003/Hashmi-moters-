@@ -12,12 +12,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -33,7 +33,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,15 +43,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun FitmentScreen(
     viewModel: FitmentViewModel = hiltViewModel(),
     onBack: () -> Unit,
-    onVehicleSelected: (String) -> Unit
+    onPartClick: (String) -> Unit = {},
+    onVehicleSelected: (String) -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
     val step = if (state.selectedMake == null) 0
                else if (state.selectedVehicleId == null) 1
                else 2
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Spacer(modifier = Modifier.height(24.dp))
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .padding(16.dp)
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = {
                 if (step == 0) onBack()
@@ -69,38 +73,31 @@ fun FitmentScreen(
         }
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Step indicator
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            listOf("Brand", "Model", "Result").forEachIndexed { idx, label ->
+            listOf("Brand", "Model", "Parts").forEachIndexed { idx, _ ->
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .height(4.dp)
                         .background(
-                            color = if (step >= idx) MaterialTheme.colorScheme.primary
+                            color = if (step >= idx) Color(0xFFFFA726)
                             else Color.White.copy(alpha = 0.2f),
                             shape = RoundedCornerShape(2.dp)
                         )
                 )
-                if (idx < 2) Spacer(modifier = Modifier.size(0.dp))
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
 
         when (step) {
             0 -> {
-                Text(
-                    text = "Step 1: Select Brand",
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Text("Step 1: Select brand", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(12.dp))
                 if (state.allMakes.isEmpty()) {
-                    Text("Loading brands...", color = Color.White.copy(alpha = 0.6f))
+                    Text("Loading brands…", color = Color.White.copy(alpha = 0.6f))
                 } else {
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(3),
@@ -114,27 +111,16 @@ fun FitmentScreen(
                                     .height(80.dp)
                                     .clickable { viewModel.selectMake(make) },
                                 shape = RoundedCornerShape(12.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color.White.copy(alpha = 0.1f)
-                                )
+                                colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.1f))
                             ) {
                                 Column(
                                     modifier = Modifier.fillMaxSize().padding(8.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Center
                                 ) {
-                                    Icon(
-                                        Icons.Filled.DirectionsCar,
-                                        null,
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
+                                    Icon(Icons.Filled.DirectionsCar, null, tint = Color(0xFFFFA726))
                                     Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        make,
-                                        color = Color.White,
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
+                                    Text(make, color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                                 }
                             }
                         }
@@ -143,99 +129,116 @@ fun FitmentScreen(
             }
             1 -> {
                 Text(
-                    text = "Step 2: Select ${state.selectedMake} Model",
+                    "Step 2: Select ${state.selectedMake} model",
                     color = Color.White,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                if (state.models.isEmpty()) {
-                    Text("No models for this brand", color = Color.White.copy(alpha = 0.6f))
-                } else {
-                    LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        items(state.models, key = { it.id }) { vehicle ->
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { viewModel.selectVehicle(vehicle.id) },
-                                shape = RoundedCornerShape(12.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color.White.copy(alpha = 0.1f)
-                                )
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(state.models, key = { it.id }) { vehicle ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { viewModel.selectVehicle(vehicle.id) },
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.1f))
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Row(
-                                    modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        vehicle.model,
-                                        color = Color.White,
-                                        fontSize = 16.sp,
-                                        fontWeight = FontWeight.SemiBold,
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    Text(
-                                        "${vehicle.yearFrom}-${vehicle.yearTo}",
-                                        color = Color.White.copy(alpha = 0.6f),
-                                        fontSize = 12.sp
-                                    )
-                                }
+                                Text(
+                                    vehicle.model,
+                                    color = Color.White,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Text(
+                                    "${vehicle.yearFrom}-${vehicle.yearTo}",
+                                    color = Color.White.copy(alpha = 0.6f),
+                                    fontSize = 12.sp
+                                )
                             }
                         }
                     }
                 }
             }
-            2 -> {
+            else -> {
                 val vehicle = state.models.find { it.id == state.selectedVehicleId }
-                if (vehicle != null) {
-                    Text(
-                        text = "${vehicle.make} ${vehicle.model}",
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "Variants: ${vehicle.variants.joinToString(", ")}",
-                        color = Color.White.copy(alpha = 0.7f),
-                        fontSize = 12.sp
-                    )
-                    Text(
-                        text = "Years: ${vehicle.yearFrom}-${vehicle.yearTo}",
-                        color = Color.White.copy(alpha = 0.7f),
-                        fontSize = 12.sp
-                    )
-                    Text(
-                        text = "Fuel: ${vehicle.fuelTypes.joinToString(", ")}",
-                        color = Color.White.copy(alpha = 0.7f),
-                        fontSize = 12.sp
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onVehicleSelected(vehicle.id) },
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    item {
+                        Text(
+                            "${vehicle?.make.orEmpty()} ${vehicle?.model.orEmpty()}",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
                         )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(20.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        Text(
+                            "Years ${vehicle?.yearFrom}-${vehicle?.yearTo} · ${vehicle?.fuelTypes?.joinToString().orEmpty()}",
+                            color = Color.White.copy(0.7f),
+                            fontSize = 12.sp
+                        )
+                    }
+                    item {
+                        Text(
+                            if (state.compatibleParts.isEmpty()) "No linked parts yet — tap Link below"
+                            else "${state.compatibleParts.size} compatible parts",
+                            color = Color.White,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                    items(state.compatibleParts, key = { it.id }) { part ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth().clickable { onPartClick(part.id) },
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White.copy(0.1f))
                         ) {
-                            Text(
-                                "Browse Compatible Parts",
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                            Text(
-                                "Search parts compatible with this vehicle",
-                                color = Color.White.copy(alpha = 0.8f),
-                                fontSize = 12.sp
-                            )
+                            Column(Modifier.padding(12.dp)) {
+                                Text(part.name, color = Color.White, fontWeight = FontWeight.SemiBold)
+                                Text(
+                                    "₹${"%,.0f".format(part.sellingPrice)}  ·  Stock ${part.stockQty}",
+                                    color = Color.White.copy(0.7f),
+                                    fontSize = 12.sp
+                                )
+                            }
                         }
                     }
+                    item {
+                        Text(
+                            "Catalog — tap to link to this vehicle",
+                            color = Color.White.copy(0.7f),
+                            fontSize = 12.sp,
+                            modifier = Modifier.padding(top = 12.dp)
+                        )
+                    }
+                    items(state.catalogParts, key = { "c-${it.id}" }) { part ->
+                        val linked = state.compatibleParts.any { it.id == part.id }
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    if (!linked) viewModel.linkPart(part.id)
+                                    vehicle?.id?.let(onVehicleSelected)
+                                },
+                            shape = RoundedCornerShape(10.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = if (linked) Color(0xFF2E7D32).copy(0.35f)
+                                else Color.White.copy(0.06f)
+                            )
+                        ) {
+                            Row(
+                                Modifier.padding(12.dp).fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(part.name, color = Color.White, modifier = Modifier.weight(1f), fontSize = 13.sp)
+                                Text(if (linked) "Linked" else "Link", color = Color(0xFFFFA726), fontSize = 12.sp)
+                            }
+                        }
+                    }
+                    item { Spacer(Modifier.height(24.dp)) }
                 }
             }
         }

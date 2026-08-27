@@ -18,9 +18,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
+import java.io.File
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -47,6 +54,12 @@ import com.hashmimotors.app.ui.components.AnimatedBigButton
 @Composable
 fun AddPartScreen(
     partId: String? = null,
+    incomingBarcode: String = "",
+    incomingPhoto: String = "",
+    incomingOcr: String = "",
+    onIncomingConsumed: () -> Unit = {},
+    onScanBarcode: () -> Unit = {},
+    onTakePhoto: () -> Unit = {},
     viewModel: CatalogViewModel = hiltViewModel(),
     onBack: () -> Unit,
     onSaved: () -> Unit
@@ -63,6 +76,7 @@ fun AddPartScreen(
     var hsnCode by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
     var barcode by remember { mutableStateOf("") }
+    var photoPath by remember { mutableStateOf("") }
     var saving by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
 
@@ -83,11 +97,31 @@ fun AddPartScreen(
                 hsnCode = part.hsnCode ?: ""
                 notes = part.notes ?: ""
                 barcode = part.barcode ?: ""
+                photoPath = part.photoPaths.firstOrNull().orEmpty()
             }
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    LaunchedEffect(incomingBarcode, incomingPhoto, incomingOcr) {
+        if (incomingBarcode.isNotBlank()) barcode = incomingBarcode
+        if (incomingPhoto.isNotBlank()) photoPath = incomingPhoto
+        if (incomingOcr.isNotBlank()) {
+            val lines = incomingOcr.lines().map { it.trim() }.filter { it.isNotBlank() }
+            if (name.isBlank()) name = lines.firstOrNull().orEmpty().take(80)
+            if (notes.isBlank()) notes = incomingOcr.take(400)
+            val price = Regex("""(?:₹|Rs\.?)\s*([0-9]+(?:\.[0-9]+)?|[0-9]{2,})""")
+                .find(incomingOcr)?.groupValues?.getOrNull(1)?.toDoubleOrNull()
+            if (price != null && mrp.isBlank()) {
+                mrp = price.toString()
+                if (sellingPrice.isBlank()) sellingPrice = price.toString()
+            }
+        }
+        if (incomingBarcode.isNotBlank() || incomingPhoto.isNotBlank() || incomingOcr.isNotBlank()) {
+            onIncomingConsumed()
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize().statusBarsPadding().padding(16.dp)) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -108,31 +142,43 @@ fun AddPartScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Photo placeholder
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(160.dp)
-                    .background(
-                        color = Color.White.copy(alpha = 0.1f),
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                    .clickable { /* TODO: open camera/gallery */ },
+                    .height(180.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(color = Color.White.copy(alpha = 0.1f))
+                    .clickable { onTakePhoto() },
                 contentAlignment = Alignment.Center
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        Icons.Filled.PhotoCamera,
-                        contentDescription = null,
-                        tint = Color.White.copy(alpha = 0.5f),
-                        modifier = Modifier
+                if (photoPath.isNotBlank()) {
+                    AsyncImage(
+                        model = File(photoPath),
+                        contentDescription = "Part photo",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Tap to add photo",
-                        color = Color.White.copy(alpha = 0.5f),
-                        fontSize = 12.sp
-                    )
+                } else {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            Icons.Filled.PhotoCamera,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(40.dp)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Tap to open camera",
+                            color = Color.White.copy(alpha = 0.85f),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = "Live preview — not just a button",
+                            color = Color.White.copy(alpha = 0.55f),
+                            fontSize = 12.sp
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -251,13 +297,17 @@ fun AddPartScreen(
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Barcode
             OutlinedTextField(
                 value = barcode,
                 onValueChange = { barcode = it },
-                label = { Text("Barcode (EAN/UPC/Code-128)") },
+                label = { Text("Barcode / QR") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                trailingIcon = {
+                    IconButton(onClick = onScanBarcode) {
+                        Icon(Icons.Filled.QrCodeScanner, "Scan", tint = Color(0xFFFFA726))
+                    }
+                }
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -318,7 +368,8 @@ fun AddPartScreen(
                             stockQty = stockQty.toIntOrNull() ?: 0,
                             reorderLevel = reorderLevel.toIntOrNull() ?: 5,
                             barcode = barcode.ifBlank { null },
-                            notes = notes.ifBlank { null }
+                            notes = notes.ifBlank { null },
+                            photoPaths = listOfNotNull(photoPath.ifBlank { null })
                         )
                     )
                     onSaved()
