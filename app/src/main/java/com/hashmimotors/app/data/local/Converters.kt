@@ -29,6 +29,22 @@ class Converters {
         }
     }
 
+    // InvoiceLineEmbedded list
+    @TypeConverter
+    fun fromInvoiceLineList(value: List<InvoiceLineEmbedded>?): String {
+        return if (value == null) "" else json.encodeToString(ListSerializer(InvoiceLineEmbedded.serializer()), value)
+    }
+
+    @TypeConverter
+    fun toInvoiceLineList(value: String?): List<InvoiceLineEmbedded> {
+        if (value.isNullOrEmpty()) return emptyList()
+        return try {
+            json.decodeFromString(ListSerializer(InvoiceLineEmbedded.serializer()), value)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
     // Generic JSON string
     @TypeConverter
     fun fromJsonString(value: String?): String = value ?: ""

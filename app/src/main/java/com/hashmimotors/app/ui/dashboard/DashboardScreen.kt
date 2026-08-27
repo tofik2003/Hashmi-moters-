@@ -145,7 +145,11 @@ fun DashboardScreen(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(12.dp, RoundedCornerShape(20.dp)),
+                    .shadow(
+                        elevation = 12.dp,
+                        shape = RoundedCornerShape(20.dp),
+                        clip = false
+                    ),
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = Color.White.copy(alpha = 0.15f)
