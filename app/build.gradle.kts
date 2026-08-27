@@ -74,7 +74,11 @@ android {
 // repository's GitHub App token is not allowed to edit .github/workflows/.
 // Gate the APK on the unit tests here instead, so a red test suite can never
 // produce a shippable artifact: `assembleDebug` fails if any test fails.
-tasks.named("assembleDebug") {
+//
+// matching/configureEach (not tasks.named) because AGP registers the assemble*
+// tasks during afterEvaluate, so a configuration-time named() lookup would fail
+// with UnknownTaskException.
+tasks.matching { it.name == "assembleDebug" }.configureEach {
     dependsOn("testDebugUnitTest")
 }
 

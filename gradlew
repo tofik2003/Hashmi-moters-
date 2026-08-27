@@ -206,5 +206,29 @@ eval "set -- $(
         tr '\n' ' '
     )" '"$@"'
 
-# Execute Gradle
-exec "$JAVACMD" "$@"
+# Execute Gradle.
+#
+# The full log is echoed to stdout for humans. On failure the interesting lines
+# are ALSO re-emitted as GitHub Actions error annotations, because CI log storage
+# is not always reachable over the API while check-run annotations always are.
+# The real Gradle exit status is preserved, so a failing build still fails the
+# job - nothing here can mask an error.
+TMP_LOG=$(mktemp 2>/dev/null || echo "/tmp/gradle_build.log")
+"$JAVACMD" "$@" > "$TMP_LOG" 2>&1
+GRADLE_EXIT_CODE=$?
+cat "$TMP_LOG"
+
+if [ "$GRADLE_EXIT_CODE" -ne 0 ]; then
+    grep -E "^e: |^w: |error:|FAILURE:|What went wrong|^Caused by|Execution failed for task|UnknownTaskException|Could not" "$TMP_LOG" |
+        head -n 80 |
+        while IFS= read -r line; do
+            # '%' must be escaped in workflow commands; strip it and CR to be safe.
+            cleaned=$(printf '%s' "$line" | sed 's/[%\r]/ /g')
+            if [ -n "$cleaned" ]; then
+                printf '::error title=GradleBuildFailure::%s\n' "$cleaned"
+            fi
+        done
+fi
+
+rm -f "$TMP_LOG"
+exit "$GRADLE_EXIT_CODE"
