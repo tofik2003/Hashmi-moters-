@@ -6,10 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.hashmimotors.app.ui.HashmiMotorsApp
+import com.hashmimotors.app.ui.HashmiMotorsMainScreen
 import com.hashmimotors.app.ui.theme.HashmiMotorsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,7 +24,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    HashmiMotorsApp()
+                    HashmiMotorsMainScreen()
                 }
             }
         }

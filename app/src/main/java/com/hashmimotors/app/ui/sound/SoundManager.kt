@@ -104,60 +104,60 @@ class SoundManager @Inject constructor(
 
     /** Soft tap - quick sine wave pulse */
     private fun generateTap(): ShortArray {
-        val duration = 0.05f
+        val duration = 0.05
         val samples = (SAMPLE_RATE * duration).toInt()
         val data = ShortArray(samples)
         for (i in 0 until samples) {
-            val t = i.toFloat() / SAMPLE_RATE
-            val envelope = exp(-t * 80f) // Fast decay
-            data[i] = (sin(2.0 * PI * 1200.0 * t) * envelope * 8000).toInt().toShort()
+            val t = i.toDouble() / SAMPLE_RATE
+            val envelope = exp(-t * 80.0) // Fast decay
+            data[i] = (sin(2.0 * PI * 1200.0 * t) * envelope * 8000.0).toInt().toShort()
         }
         return data
     }
 
     /** Success chime - ascending two-tone */
     private fun generateSuccess(): ShortArray {
-        val duration = 0.3f
+        val duration = 0.3
         val samples = (SAMPLE_RATE * duration).toInt()
         val data = ShortArray(samples)
         for (i in 0 until samples) {
-            val t = i.toFloat() / SAMPLE_RATE
+            val t = i.toDouble() / SAMPLE_RATE
             val freq = if (t < 0.1) 880.0 else 1320.0
-            val envelope = if (t < 0.1) (t / 0.1) else (1f - (t - 0.1f) / 0.2f)
-            data[i] = (sin(2.0 * PI * freq * t) * envelope * 10000).toInt().toShort()
+            val envelope = if (t < 0.1) (t / 0.1) else (1.0 - (t - 0.1) / 0.2)
+            data[i] = (sin(2.0 * PI * freq * t) * envelope * 10000.0).toInt().toShort()
         }
         return data
     }
 
     /** Error buzz - low frequency rough sound */
     private fun generateError(): ShortArray {
-        val duration = 0.25f
+        val duration = 0.25
         val samples = (SAMPLE_RATE * duration).toInt()
         val data = ShortArray(samples)
         for (i in 0 until samples) {
-            val t = i.toFloat() / SAMPLE_RATE
-            val envelope = exp(-t * 6f)
+            val t = i.toDouble() / SAMPLE_RATE
+            val envelope = exp(-t * 6.0)
             val freq = 200.0
             val noise = (Math.random() - 0.5) * 0.3
-            data[i] = ((sin(2.0 * PI * freq * t) + noise) * envelope * 12000).toInt().toShort()
+            data[i] = ((sin(2.0 * PI * freq * t) + noise) * envelope * 12000.0).toInt().toShort()
         }
         return data
     }
 
     /** Cha-ching - cash register / coin sound */
     private fun generateChaChing(): ShortArray {
-        val duration = 0.5f
+        val duration = 0.5
         val samples = (SAMPLE_RATE * duration).toInt()
         val data = ShortArray(samples)
         // Each note: (startTime, endTime, frequency)
         val notes = listOf(
-            Triple(0.0f, 0.05f, 1500.0),
-            Triple(0.05f, 0.1f, 1800.0),
-            Triple(0.1f, 0.15f, 2000.0),
-            Triple(0.15f, 0.4f, 2400.0)
+            Triple(0.0, 0.05, 1500.0),
+            Triple(0.05, 0.1, 1800.0),
+            Triple(0.1, 0.15, 2000.0),
+            Triple(0.15, 0.4, 2400.0)
         )
         for (i in 0 until samples) {
-            val t = i.toFloat() / SAMPLE_RATE
+            val t = i.toDouble() / SAMPLE_RATE
             var sum = 0.0
             for (note in notes) {
                 val start = note.first
@@ -165,54 +165,54 @@ class SoundManager @Inject constructor(
                 val freq = note.third
                 if (t in start..end) {
                     val localT = t - start
-                    val envelope = exp(-localT * 8f)
+                    val envelope = exp(-localT * 8.0)
                     sum += sin(2.0 * PI * freq * localT) * envelope
                 }
             }
-            data[i] = (sum * 8000).toInt().toShort()
+            data[i] = (sum * 8000.0).toInt().toShort()
         }
         return data
     }
 
     /** Alert ping - soft two-tone warning */
     private fun generateAlert(): ShortArray {
-        val duration = 0.4f
+        val duration = 0.4
         val samples = (SAMPLE_RATE * duration).toInt()
         val data = ShortArray(samples)
         for (i in 0 until samples) {
-            val t = i.toFloat() / SAMPLE_RATE
-            val cycle = (t / 0.15f).toInt()
-            val phase = (t % 0.15f) / 0.15f
-            val envelope = if (phase < 0.5f) phase * 2f else (1f - phase) * 2f
+            val t = i.toDouble() / SAMPLE_RATE
+            val cycle = (t / 0.15).toInt()
+            val phase = (t % 0.15) / 0.15
+            val envelope = if (phase < 0.5) phase * 2.0 else (1.0 - phase) * 2.0
             val freq = if (cycle % 2 == 0) 800.0 else 600.0
-            data[i] = (sin(2.0 * PI * freq * t) * envelope * 9000).toInt().toShort()
+            data[i] = (sin(2.0 * PI * freq * t) * envelope * 9000.0).toInt().toShort()
         }
         return data
     }
 
     /** Whoosh - sweeping frequency */
     private fun generateWhoosh(): ShortArray {
-        val duration = 0.3f
+        val duration = 0.3
         val samples = (SAMPLE_RATE * duration).toInt()
         val data = ShortArray(samples)
         for (i in 0 until samples) {
-            val t = i.toFloat() / SAMPLE_RATE
+            val t = i.toDouble() / SAMPLE_RATE
             val envelope = sin(PI * t / duration)
             val freq = 300.0 + 1500.0 * (t / duration)
-            data[i] = (sin(2.0 * PI * freq * t) * envelope * 6000).toInt().toShort()
+            data[i] = (sin(2.0 * PI * freq * t) * envelope * 6000.0).toInt().toShort()
         }
         return data
     }
 
     /** Notification - quick pleasant ping */
     private fun generateNotification(): ShortArray {
-        val duration = 0.2f
+        val duration = 0.2
         val samples = (SAMPLE_RATE * duration).toInt()
         val data = ShortArray(samples)
         for (i in 0 until samples) {
-            val t = i.toFloat() / SAMPLE_RATE
-            val envelope = exp(-t * 12f)
-            data[i] = (sin(2.0 * PI * 1000.0 * t) * envelope * 10000).toInt().toShort()
+            val t = i.toDouble() / SAMPLE_RATE
+            val envelope = exp(-t * 12.0)
+            data[i] = (sin(2.0 * PI * 1000.0 * t) * envelope * 10000.0).toInt().toShort()
         }
         return data
     }
