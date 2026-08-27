@@ -226,26 +226,5 @@ eval "set -- $(
         tr '\n' ' '
     )" '"$@"'
 
-# Execute Gradle and capture log on failure
-TMP_LOG=$(mktemp 2>/dev/null || echo "/tmp/gradle_build.log")
-"$JAVACMD" "$@" > "$TMP_LOG" 2>&1
-GRADLE_EXIT_CODE=$?
-cat "$TMP_LOG"
-
-if [ $GRADLE_EXIT_CODE -ne 0 ]; then
-    grep -E "\[ksp\]|e: |Caused by:|error:" "$TMP_LOG" | head -n 40 | while IFS= read -r line; do
-        if [ -n "$line" ]; then
-            cleaned=$(echo "$line" | sed 's/[%#\r\n]/ /g')
-            echo "::error title=KspError::$cleaned"
-        fi
-    done
-    sed -n '/What went wrong:/,$p' "$TMP_LOG" | head -n 35 | while IFS= read -r line; do
-        if [ -n "$line" ]; then
-            cleaned=$(echo "$line" | sed 's/[%#\r\n]/ /g')
-            echo "::error title=FailureCause::$cleaned"
-        fi
-    done
-fi
-
-rm -f "$TMP_LOG"
-exit $GRADLE_EXIT_CODE
+# Execute Gradle
+exec "$JAVACMD" "$@"
