@@ -80,7 +80,7 @@ class AppShellViewModel @Inject constructor(
 }
 
 @Composable
-fun HashmiMotorsApp(
+fun HashmiMotorsMainScreen(
     viewModel: AppShellViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
