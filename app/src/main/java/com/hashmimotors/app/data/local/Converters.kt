@@ -7,7 +7,7 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 
 /**
- * Room TypeConverters for complex types (lists, enums).
+ * Room TypeConverters for complex types (lists).
  */
 class Converters {
 
@@ -44,11 +44,4 @@ class Converters {
             emptyList()
         }
     }
-
-    // Generic JSON string
-    @TypeConverter
-    fun fromJsonString(value: String?): String = value ?: ""
-
-    @TypeConverter
-    fun toJsonString(value: String?): String = value ?: ""
 }
