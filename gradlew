@@ -233,6 +233,12 @@ GRADLE_EXIT_CODE=$?
 cat "$TMP_LOG"
 
 if [ $GRADLE_EXIT_CODE -ne 0 ]; then
+    grep -E "\[ksp\]|e: |Caused by:|error:" "$TMP_LOG" | head -n 40 | while IFS= read -r line; do
+        if [ -n "$line" ]; then
+            cleaned=$(echo "$line" | sed 's/[%#\r\n]/ /g')
+            echo "::error title=KspError::$cleaned"
+        fi
+    done
     sed -n '/What went wrong:/,$p' "$TMP_LOG" | head -n 35 | while IFS= read -r line; do
         if [ -n "$line" ]; then
             cleaned=$(echo "$line" | sed 's/[%#\r\n]/ /g')
