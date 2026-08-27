@@ -68,7 +68,11 @@ fun AnimatedBigButton(
             .fillMaxWidth()
             .height(64.dp)
             .scale(scale)
-            .shadow(elevation.dp, RoundedCornerShape(16.dp))
+            .shadow(
+                elevation = elevation.dp,
+                shape = RoundedCornerShape(16.dp),
+                clip = false
+            )
             .let {
                 if (gradient) {
                     it.background(
