@@ -19,6 +19,9 @@ interface PartDao {
     @Query("SELECT * FROM parts WHERE id = :id")
     suspend fun getByIdOnce(id: String): PartEntity?
 
+    @Query("SELECT * FROM parts WHERE barcode = :barcode AND active = 1 LIMIT 1")
+    suspend fun getByBarcode(barcode: String): PartEntity?
+
     @Query("""
         SELECT * FROM parts
         WHERE active = 1

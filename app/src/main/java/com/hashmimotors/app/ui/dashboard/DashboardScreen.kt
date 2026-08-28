@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -74,7 +75,8 @@ fun DashboardScreen(
     onHistory: () -> Unit,
     onSettings: () -> Unit,
     onCustomers: () -> Unit = {},
-    onImport: () -> Unit = {}
+    onImport: () -> Unit = {},
+    onScan: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -316,6 +318,7 @@ fun DashboardScreen(
                             "history" -> onHistory
                             "customers" -> onCustomers
                             "import" -> onImport
+                            "scan" -> onScan
                             else -> onNewBill
                         },
                         modifier = Modifier.weight(1f)
@@ -544,5 +547,6 @@ private val quickActions = listOf(
     QuickAction("fitment", "Find by Vehicle", Icons.Filled.ShoppingCart, Color(0xFFEC407A)),
     QuickAction("history", "Bill History", Icons.Filled.Receipt, Color(0xFF7E57C2)),
     QuickAction("customers", "Customers", Icons.Filled.Person, Color(0xFF26A69A)),
-    QuickAction("import", "Import", Icons.Filled.UploadFile, Color(0xFFFFC107))
+    QuickAction("import", "Import", Icons.Filled.UploadFile, Color(0xFFFFC107)),
+    QuickAction("scan", "Scan Barcode", Icons.Filled.QrCodeScanner, Color(0xFF4FC3F7))
 )

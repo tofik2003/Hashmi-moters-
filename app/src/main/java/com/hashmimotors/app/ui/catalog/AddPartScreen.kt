@@ -47,22 +47,28 @@ import com.hashmimotors.app.ui.components.AnimatedBigButton
 @Composable
 fun AddPartScreen(
     partId: String? = null,
+    initialBarcode: String? = null,
+    initialName: String? = null,
+    initialBrand: String? = null,
+    initialPrice: Double? = null,
     viewModel: CatalogViewModel = hiltViewModel(),
     onBack: () -> Unit,
     onSaved: () -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf(initialName ?: "") }
     var sku by remember { mutableStateOf("") }
     var oemNumbersText by remember { mutableStateOf("") }
-    var brand by remember { mutableStateOf("") }
+    var brand by remember { mutableStateOf(initialBrand ?: "") }
     var categoryId by remember { mutableStateOf<String?>(null) }
     var mrp by remember { mutableStateOf("") }
-    var sellingPrice by remember { mutableStateOf("") }
+    var sellingPrice by remember {
+        mutableStateOf(initialPrice?.let { if (it > 0) "%.0f".format(it) else "" } ?: "")
+    }
     var stockQty by remember { mutableStateOf("0") }
     var reorderLevel by remember { mutableStateOf("5") }
     var hsnCode by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
-    var barcode by remember { mutableStateOf("") }
+    var barcode by remember { mutableStateOf(initialBarcode ?: "") }
     var saving by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
 
