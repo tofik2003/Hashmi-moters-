@@ -66,7 +66,7 @@ object CsvParser {
     const val TEMPLATE_HEADER =
         "name,sku,oem,brand,category,mrp,selling_price,stock,reorder_level,hsn,barcode,notes"
 
-    const val SAMPLE_CSV = """$TEMPLATE_HEADER
+    val SAMPLE_CSV = """$TEMPLATE_HEADER
 Oil Filter - Maruti Swift,OF-SWIFT-01,16510M68K10,Bosch,Filters,220,185,40,10,8421,8901234567890,High moving
 Brake Pad Set - Front,BP-FR-02,55810-63J10,TVS Girling,Brakes,1650,1420,25,5,8708,8901234567891,
 Air Filter - Hyundai i20,AF-I20-03,28113-1R100,Mann,Filters,350,299,15,4,8421,8901234567892,Fast seller

@@ -374,7 +374,7 @@ private fun PreviewRowCard(row: ImportRow) {
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = "₹${\"%,.0f\".format(row.sellingPrice)}",
+                    text = "₹${"%,.0f".format(row.sellingPrice)}",
                     color = Color(0xFF66BB6A),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
