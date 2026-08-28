@@ -51,6 +51,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.InvoiceLine
 import com.hashmimotors.app.ui.catalog.CatalogViewModel
 import com.hashmimotors.app.ui.catalog.PartListItem
+import com.hashmimotors.app.ui.components.GlassTextField
 
 @Composable
 fun BillingScreen(
@@ -422,15 +423,13 @@ fun PartPickerSheet(
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(
+            GlassTextField(
                 value = searchQuery,
                 onValueChange = onSearchChange,
-                placeholder = { Text("Search parts...") },
-                leadingIcon = {
-                    Icon(Icons.Filled.Add, null, tint = Color.White.copy(alpha = 0.6f))
-                },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                label = "Search",
+                placeholder = "Search parts...",
+                leadingIcon = Icons.Filled.Add,
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
             if (parts.isEmpty()) {

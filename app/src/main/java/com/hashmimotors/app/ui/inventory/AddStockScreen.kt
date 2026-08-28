@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.ui.catalog.CatalogViewModel
 import com.hashmimotors.app.ui.components.AnimatedBigButton
+import com.hashmimotors.app.ui.components.GlassTextField
 
 @Composable
 fun AddStockScreen(
@@ -75,12 +76,12 @@ fun AddStockScreen(
 
         if (selectedPart == null) {
             // Search + list
-            OutlinedTextField(
+            GlassTextField(
                 value = state.searchQuery,
                 onValueChange = { catalogViewModel.onSearchChange(it) },
-                placeholder = { Text("Search part to add stock...") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                label = "Search",
+                placeholder = "Search part to add stock...",
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(12.dp))
             LazyColumn(

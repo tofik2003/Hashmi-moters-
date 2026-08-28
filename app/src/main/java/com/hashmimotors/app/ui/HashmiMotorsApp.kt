@@ -36,11 +36,9 @@ import com.hashmimotors.app.ui.dashboard.DashboardScreen
 import com.hashmimotors.app.ui.fitment.FitmentScreen
 import com.hashmimotors.app.ui.inventory.AddStockScreen
 import com.hashmimotors.app.ui.inventory.InventoryScreen
-import com.hashmimotors.app.ui.onboarding.OnboardingScreen
 import com.hashmimotors.app.ui.reports.ReportsScreen
 import com.hashmimotors.app.ui.scanner.BarcodeScannerScreen
 import com.hashmimotors.app.ui.settings.SettingsScreen
-import com.hashmimotors.app.ui.shop.ShopSetupScreen
 import com.hashmimotors.app.ui.splash.SplashScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -142,24 +140,6 @@ fun HashmiMotorsMainScreen(
                     onNavigate = { destination ->
                         navController.navigate(destination) {
                             popUpTo(Routes.SPLASH) { inclusive = true }
-                        }
-                    }
-                )
-            }
-            composable(Routes.ONBOARDING) {
-                OnboardingScreen(
-                    onComplete = {
-                        navController.navigate(Routes.SHOP_SETUP) {
-                            popUpTo(Routes.ONBOARDING) { inclusive = true }
-                        }
-                    }
-                )
-            }
-            composable(Routes.SHOP_SETUP) {
-                ShopSetupScreen(
-                    onComplete = {
-                        navController.navigate(Routes.DASHBOARD) {
-                            popUpTo(Routes.SHOP_SETUP) { inclusive = true }
                         }
                     }
                 )

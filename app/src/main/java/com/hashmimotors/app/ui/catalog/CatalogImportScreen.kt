@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.ui.components.AnimatedBigButton
+import com.hashmimotors.app.ui.components.GlassTextField
 import com.hashmimotors.app.util.CsvParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -209,14 +210,15 @@ fun CatalogImportScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Method 2: Paste CSV text
-        OutlinedTextField(
+        GlassTextField(
             value = csvText,
             onValueChange = { csvText = it },
-            label = { Text("Paste CSV content") },
-            placeholder = { Text("name,sku,mrp,selling_price,stock,...") },
+            label = "Paste CSV content",
+            placeholder = "name,sku,mrp,selling_price,stock,...",
             modifier = Modifier
                 .fillMaxWidth()
                 .height(140.dp),
+            singleLine = false,
             minLines = 4
         )
 

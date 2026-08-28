@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.Part
+import com.hashmimotors.app.ui.components.GlassTextField
 
 @Composable
 fun SearchScreen(
@@ -79,20 +80,19 @@ fun SearchScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Search bar
-        OutlinedTextField(
+        GlassTextField(
             value = state.searchQuery,
             onValueChange = { viewModel.onSearchChange(it) },
-            placeholder = { Text("Search by name, OEM, brand...") },
-            leadingIcon = { Icon(Icons.Filled.Search, null, tint = Color.White.copy(alpha = 0.6f)) },
+            label = "Search",
+            placeholder = "Search by name, OEM, brand...",
+            leadingIcon = Icons.Filled.Search,
             trailingIcon = {
                 IconButton(onClick = onScanClick) {
                     Icon(Icons.Filled.QrCodeScanner, "Scan", tint = Color.White)
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            shape = RoundedCornerShape(16.dp)
+            imeAction = ImeAction.Search
         )
 
         Spacer(modifier = Modifier.height(16.dp))

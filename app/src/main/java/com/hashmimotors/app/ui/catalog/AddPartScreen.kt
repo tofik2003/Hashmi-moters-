@@ -1,5 +1,10 @@
 package com.hashmimotors.app.ui.catalog
 
+import android.content.Context
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,20 +16,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,17 +37,28 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.ui.components.AnimatedBigButton
+import com.hashmimotors.app.ui.components.GlassTextField
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 
 @Composable
 fun AddPartScreen(
@@ -55,6 +71,9 @@ fun AddPartScreen(
     onBack: () -> Unit,
     onSaved: () -> Unit
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
     var name by remember { mutableStateOf(initialName ?: "") }
     var sku by remember { mutableStateOf("") }
     var oemNumbersText by remember { mutableStateOf("") }
@@ -69,8 +88,43 @@ fun AddPartScreen(
     var hsnCode by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
     var barcode by remember { mutableStateOf(initialBarcode ?: "") }
+    var photoPaths by remember { mutableStateOf(emptyList<String>()) }
     var saving by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
+
+    // Camera capture state
+    var currentPhotoFile by remember { mutableStateOf<File?>(null) }
+    val takePicture = rememberLauncherForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success) {
+            currentPhotoFile?.let { f ->
+                photoPaths = photoPaths + f.absolutePath
+            }
+        }
+    }
+    val pickImage = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        uri?.let { u ->
+            scope.launch {
+                val path = withContext(Dispatchers.IO) { copyImageToInternal(context, u) }
+                path?.let { photoPaths = photoPaths + it }
+            }
+        }
+    }
+
+    fun takePhoto() {
+        val dir = File(context.filesDir, "photos").apply { mkdirs() }
+        val file = File(dir, "part_${System.currentTimeMillis()}.jpg")
+        currentPhotoFile = file
+        val uri = FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.fileprovider",
+            file
+        )
+        takePicture.launch(uri)
+    }
 
     val state by viewModel.uiState.collectAsState()
 
@@ -89,6 +143,7 @@ fun AddPartScreen(
                 hsnCode = part.hsnCode ?: ""
                 notes = part.notes ?: ""
                 barcode = part.barcode ?: ""
+                photoPaths = part.photoPaths
             }
         }
     }
@@ -114,73 +169,131 @@ fun AddPartScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Photo placeholder
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp)
-                    .background(
-                        color = Color.White.copy(alpha = 0.1f),
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                    .clickable { /* TODO: open camera/gallery */ },
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        Icons.Filled.PhotoCamera,
-                        contentDescription = null,
-                        tint = Color.White.copy(alpha = 0.5f),
-                        modifier = Modifier
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Tap to add photo",
-                        color = Color.White.copy(alpha = 0.5f),
-                        fontSize = 12.sp
+            // === Photos ===
+            Text(
+                text = "Photos",
+                color = Color.White,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (photoPaths.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp)
+                        .background(
+                            color = Color.White.copy(alpha = 0.08f),
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .clickable { takePhoto() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            Icons.Filled.PhotoCamera,
+                            contentDescription = null,
+                            tint = Color.White.copy(alpha = 0.6f),
+                            modifier = Modifier.size(36.dp)
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = "Tap to take a photo",
+                            color = Color.White.copy(alpha = 0.7f),
+                            fontSize = 13.sp
+                        )
+                    }
+                }
+            } else {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    photoPaths.forEach { path ->
+                        Box(
+                            modifier = Modifier
+                                .size(84.dp)
+                                .clip(RoundedCornerShape(14.dp))
+                                .background(Color.White.copy(alpha = 0.1f))
+                        ) {
+                            AsyncImage(
+                                model = File(path),
+                                contentDescription = "Part photo",
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(RoundedCornerShape(14.dp)),
+                                contentScale = ContentScale.Crop
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .size(22.dp)
+                                    .background(Color.Black.copy(alpha = 0.6f), RoundedCornerShape(11.dp))
+                                    .clickable { photoPaths = photoPaths - path },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    Icons.Filled.Close,
+                                    contentDescription = "Remove",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(14.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Photo action buttons
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                PhotoActionButton("📷 Camera", Modifier.weight(1f)) { takePhoto() }
+                PhotoActionButton(
+                    "🖼️ Gallery",
+                    Modifier.weight(1f)
+                ) {
+                    pickImage.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
 
-            // Name
-            OutlinedTextField(
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // === Fields ===
+            GlassTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Part Name *") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                label = "Part Name *",
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            // SKU
-            OutlinedTextField(
+            GlassTextField(
                 value = sku,
                 onValueChange = { sku = it },
-                label = { Text("SKU / Part Code") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                label = "SKU / Part Code",
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            // OEM Numbers
-            OutlinedTextField(
+            GlassTextField(
                 value = oemNumbersText,
                 onValueChange = { oemNumbersText = it },
-                label = { Text("OEM Numbers (comma separated)") },
+                label = "OEM Numbers (comma separated)",
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = false,
                 minLines = 1
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Brand
-            OutlinedTextField(
+            GlassTextField(
                 value = brand,
                 onValueChange = { brand = it },
-                label = { Text("Brand") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                label = "Brand",
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -202,77 +315,65 @@ fun AddPartScreen(
             }
 
             // Prices row
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                OutlinedTextField(
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                GlassTextField(
                     value = mrp,
                     onValueChange = { mrp = it },
-                    label = { Text("MRP *") },
+                    label = "MRP *",
                     modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    singleLine = true
+                    keyboardType = KeyboardType.Decimal
                 )
-                OutlinedTextField(
+                GlassTextField(
                     value = sellingPrice,
                     onValueChange = { sellingPrice = it },
-                    label = { Text("Our Price *") },
+                    label = "Our Price *",
                     modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    singleLine = true
+                    keyboardType = KeyboardType.Decimal
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
 
             // Stock row
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                OutlinedTextField(
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                GlassTextField(
                     value = stockQty,
                     onValueChange = { stockQty = it.filter { c -> c.isDigit() } },
-                    label = { Text("Stock Qty") },
+                    label = "Stock Qty",
                     modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
+                    keyboardType = KeyboardType.Number
                 )
-                OutlinedTextField(
+                GlassTextField(
                     value = reorderLevel,
                     onValueChange = { reorderLevel = it.filter { c -> c.isDigit() } },
-                    label = { Text("Reorder Level") },
+                    label = "Reorder Level",
                     modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
+                    keyboardType = KeyboardType.Number
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
 
-            // HSN Code
-            OutlinedTextField(
+            GlassTextField(
                 value = hsnCode,
                 onValueChange = { hsnCode = it },
-                label = { Text("HSN Code (for GST)") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                label = "HSN Code (for GST)",
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Barcode
-            OutlinedTextField(
+            GlassTextField(
                 value = barcode,
                 onValueChange = { barcode = it },
-                label = { Text("Barcode (EAN/UPC/Code-128)") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                label = "Barcode (EAN/UPC/Code-128)",
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Notes
-            OutlinedTextField(
+            GlassTextField(
                 value = notes,
                 onValueChange = { notes = it },
-                label = { Text("Notes (optional)") },
+                label = "Notes (optional)",
                 modifier = Modifier.fillMaxWidth(),
+                singleLine = false,
                 minLines = 2
             )
 
@@ -324,6 +425,7 @@ fun AddPartScreen(
                             stockQty = stockQty.toIntOrNull() ?: 0,
                             reorderLevel = reorderLevel.toIntOrNull() ?: 5,
                             barcode = barcode.ifBlank { null },
+                            photoPaths = photoPaths,
                             notes = notes.ifBlank { null }
                         )
                     )
@@ -332,6 +434,20 @@ fun AddPartScreen(
             )
             Spacer(modifier = Modifier.height(40.dp))
         }
+    }
+}
+
+@Composable
+private fun PhotoActionButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Box(
+        modifier = modifier
+            .height(48.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color.White.copy(alpha = 0.12f))
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
     }
 }
 
@@ -353,4 +469,15 @@ private fun CategorySelector(
             )
         }
     }
+}
+
+private fun copyImageToInternal(context: Context, uri: Uri): String? {
+    return runCatching {
+        val dir = File(context.filesDir, "photos").apply { mkdirs() }
+        val dest = File(dir, "part_${System.currentTimeMillis()}.jpg")
+        context.contentResolver.openInputStream(uri)?.use { input ->
+            dest.outputStream().use { output -> input.copyTo(output) }
+        }
+        dest.absolutePath
+    }.getOrNull()
 }

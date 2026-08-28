@@ -13,11 +13,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.data.repository.ShopRepository
+import com.hashmimotors.app.domain.model.Shop
 import com.hashmimotors.app.ui.Routes
 import com.hashmimotors.app.ui.theme.GradientEnd
 import com.hashmimotors.app.ui.theme.GradientStart
@@ -41,22 +40,21 @@ import kotlinx.coroutines.delay
 import javax.inject.Inject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val shopRepository: ShopRepository
 ) : ViewModel() {
-    private val _isShopSetup = MutableStateFlow<Boolean?>(null)
-    val isShopSetup: StateFlow<Boolean?> = _isShopSetup.asStateFlow()
 
     init {
         viewModelScope.launch {
-            val shop = shopRepository.getShopOnce()
-            _isShopSetup.value = shop?.isSetupComplete == true
+            // Ensure a default shop exists so the app never blocks on setup.
+            if (shopRepository.getShopOnce() == null) {
+                shopRepository.saveShop(
+                    Shop(name = "Hashmi Motors Premium", isSetupComplete = true)
+                )
+            }
         }
     }
 }
@@ -78,14 +76,11 @@ fun SplashScreen(
         label = "alpha"
     )
 
-    val isSetup = viewModel.isShopSetup.collectAsState().value
-
-    LaunchedEffect(isSetup) {
+    LaunchedEffect(Unit) {
         startAnimation = true
         delay(1800)
-        // Navigate based on setup state
-        val destination = if (isSetup == true) Routes.DASHBOARD else Routes.ONBOARDING
-        onNavigate(destination)
+        // Straight to the dashboard — no onboarding or setup blocking.
+        onNavigate(Routes.DASHBOARD)
     }
 
     Box(

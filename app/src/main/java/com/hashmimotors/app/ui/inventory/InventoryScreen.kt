@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.ui.catalog.PartListItem
+import com.hashmimotors.app.ui.components.GlassTextField
 
 @Composable
 fun InventoryScreen(
@@ -101,13 +102,13 @@ fun InventoryScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         // Search
-        OutlinedTextField(
+        GlassTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
-            placeholder = { Text("Search by name, OEM...") },
-            leadingIcon = { Icon(Icons.Filled.Search, null, tint = Color.White.copy(alpha = 0.6f)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            label = "Search",
+            placeholder = "Search by name, OEM...",
+            leadingIcon = Icons.Filled.Search,
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(12.dp))
