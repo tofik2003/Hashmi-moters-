@@ -24,6 +24,11 @@ class PartRepository @Inject constructor(
         list.map { it.toDomain() }
     }
 
+    suspend fun getAllPartsOnce(): List<Part> = partDao.getAllOnce().map { it.toDomain() }
+
+    suspend fun getPartByBarcode(barcode: String): Part? =
+        partDao.getByBarcode(barcode)?.toDomain()
+
     fun getPartById(id: String): Flow<Part?> = partDao.getById(id).map { it?.toDomain() }
 
     suspend fun getPartByIdOnce(id: String): Part? = partDao.getByIdOnce(id)?.toDomain()

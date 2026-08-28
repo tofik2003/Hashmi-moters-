@@ -13,6 +13,12 @@ interface PartDao {
     @Query("SELECT * FROM parts WHERE active = 1 ORDER BY name ASC")
     fun getAll(): Flow<List<PartEntity>>
 
+    @Query("SELECT * FROM parts WHERE active = 1 ORDER BY name ASC")
+    suspend fun getAllOnce(): List<PartEntity>
+
+    @Query("SELECT * FROM parts WHERE barcode = :barcode AND active = 1 LIMIT 1")
+    suspend fun getByBarcode(barcode: String): PartEntity?
+
     @Query("SELECT * FROM parts WHERE id = :id")
     fun getById(id: String): Flow<PartEntity?>
 
@@ -162,6 +168,9 @@ interface FitmentDao {
 interface InvoiceDao {
     @Query("SELECT * FROM invoices ORDER BY date DESC")
     fun getAll(): Flow<List<InvoiceEntity>>
+
+    @Query("SELECT * FROM invoices ORDER BY date DESC LIMIT 1")
+    suspend fun getLatest(): InvoiceEntity?
 
     @Query("SELECT * FROM invoices WHERE date >= :startOfDay AND date < :endOfDay ORDER BY date DESC")
     fun getForDay(startOfDay: Long, endOfDay: Long): Flow<List<InvoiceEntity>>

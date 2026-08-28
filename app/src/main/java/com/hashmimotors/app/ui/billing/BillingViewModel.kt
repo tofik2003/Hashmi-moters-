@@ -16,9 +16,11 @@ import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.domain.model.PartSnapshot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,7 +28,10 @@ import javax.inject.Inject
 data class BillingUiState(
     val lines: List<InvoiceLine> = emptyList(),
     val customer: Customer? = null,
+    val customerName: String = "Walk-in Customer",
+    val customerPhone: String = "",
     val billDiscountPct: Double = 0.0,
+    val discountText: String = "0",
     val notes: String = "",
     val isSaving: Boolean = false,
     val savedInvoice: Invoice? = null,
@@ -54,8 +59,43 @@ class BillingViewModel @Inject constructor(
     private val _state = MutableStateFlow(BillingUiState())
     val state: StateFlow<BillingUiState> = _state.asStateFlow()
 
+    /** Saved customers, used for quick name/phone autofill on the bill. */
+    val customers: StateFlow<List<Customer>> = customerRepo.getAllCustomers()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    private val _quickParts = MutableStateFlow<List<Part>>(emptyList())
+    val quickParts: StateFlow<List<Part>> = _quickParts.asStateFlow()
+
+    init {
+        refreshQuickParts()
+    }
+
+    /**
+     * Parts most often billed — shown as one-tap "Quick Add" tiles.
+     * Falls back to recently added parts when there is no bill history yet.
+     */
+    fun refreshQuickParts() {
+        viewModelScope.launch {
+            val invoices = invoiceRepo.getAllInvoices().first()
+            val parts = partRepo.getAllPartsOnce()
+            val counts = HashMap<String, Int>()
+            invoices.forEach { inv ->
+                inv.lines.forEach { line ->
+                    counts[line.partId] = (counts[line.partId] ?: 0) + line.qty
+                }
+            }
+            val top = counts.entries
+                .sortedByDescending { it.value }
+                .mapNotNull { (id, _) -> parts.find { it.id == id } }
+                .take(12)
+            _quickParts.value = if (top.isNotEmpty()) top
+            else parts.sortedByDescending { it.createdAt }.take(8)
+        }
+    }
+
     fun addPart(part: Part, qty: Int = 1) {
         if (qty <= 0) return
+        _state.update { it.copy(error = null) }
         val snapshot = PartSnapshot(
             name = part.name,
             oemNumbers = part.oemNumbers,
@@ -145,12 +185,72 @@ class BillingViewModel @Inject constructor(
         _state.update { it.copy(customer = customer) }
     }
 
+    fun setCustomerName(name: String) {
+        _state.update { it.copy(customerName = name) }
+    }
+
+    fun setCustomerPhone(phone: String) {
+        _state.update { it.copy(customerPhone = phone) }
+    }
+
     fun setBillDiscount(pct: Double) {
         _state.update { it.copy(billDiscountPct = pct.coerceIn(0.0, 100.0)) }
     }
 
+    fun setDiscountText(text: String) {
+        val clean = text.filter { c -> c.isDigit() || c == '.' }.take(6)
+        val pct = clean.toDoubleOrNull() ?: 0.0
+        _state.update {
+            it.copy(discountText = clean, billDiscountPct = pct.coerceIn(0.0, 100.0))
+        }
+    }
+
     fun setNotes(notes: String) {
         _state.update { it.copy(notes = notes) }
+    }
+
+    /** Scan a barcode and add the matching part straight to the cart. */
+    fun addPartByBarcode(barcode: String) {
+        val code = barcode.trim()
+        if (code.isEmpty()) return
+        viewModelScope.launch {
+            val part = partRepo.getPartByBarcode(code)
+            if (part != null) {
+                addPart(part, qty = 1)
+            } else {
+                _state.update { it.copy(error = "No part found for barcode $code") }
+            }
+        }
+    }
+
+    /** Clone the most recent bill into the cart. */
+    fun repeatLastBill() {
+        viewModelScope.launch {
+            val latest = invoiceRepo.getLatestInvoice()
+            if (latest == null) {
+                _state.update { it.copy(error = "No previous bill to repeat") }
+                return@launch
+            }
+            // Bill-level discount = total discount minus any per-line discounts
+            val lineDiscounts = latest.lines.sumOf {
+                it.qty * it.rate * (it.discountPct / 100.0)
+            }
+            val billDiscount = (latest.totalDiscount - lineDiscounts).coerceAtLeast(0.0)
+            val pct = if (latest.subtotal > 0) billDiscount / latest.subtotal * 100.0 else 0.0
+
+            _state.update { current ->
+                current.copy(
+                    lines = latest.lines,
+                    customer = null,
+                    customerName = latest.customerSnapshot.name.ifBlank { "Walk-in Customer" },
+                    customerPhone = latest.customerSnapshot.phone,
+                    billDiscountPct = pct.coerceIn(0.0, 100.0),
+                    discountText = if (pct > 0) "%.2f".format(pct) else "0",
+                    notes = latest.notes ?: "",
+                    error = null
+                )
+            }
+        }
     }
 
     fun clearCart() {
@@ -181,7 +281,13 @@ class BillingViewModel @Inject constructor(
                         gstin = customer.gstin
                     )
                 } else {
-                    CustomerSnapshot(name = "Walk-in Customer", phone = "", address = null, gstin = null)
+                    // Typed-in customer details (the common counter case)
+                    CustomerSnapshot(
+                        name = current.customerName.ifBlank { "Walk-in Customer" },
+                        phone = current.customerPhone,
+                        address = null,
+                        gstin = null
+                    )
                 }
 
                 val invoice = Invoice(

@@ -47,13 +47,13 @@ class CatalogViewModel @Inject constructor(
     }.flatMapLatest { (q, catId, lowOnly) ->
         val partsFlow = when {
             lowOnly -> partRepo.getLowStock()
-            q.isNotBlank() -> partRepo.searchParts(q)
             else -> partRepo.getAllParts()
         }
         combine(partsFlow, categoryRepo.getAllCategories()) { parts, categories ->
             val filtered = if (catId != null) parts.filter { it.categoryId == catId } else parts
+            val ranked = if (!lowOnly && q.isNotBlank()) FuzzySearch.rank(filtered, q) else filtered
             CatalogUiState(
-                parts = filtered,
+                parts = ranked,
                 categories = categories,
                 selectedCategoryId = catId,
                 searchQuery = q,
@@ -77,6 +77,10 @@ class CatalogViewModel @Inject constructor(
     fun toggleLowStockOnly() {
         _showLowStockOnly.value = !_showLowStockOnly.value
     }
+
+    /** Look up a part by its barcode (used after scanning). */
+    suspend fun findPartByBarcode(barcode: String): Part? =
+        partRepo.getPartByBarcode(barcode.trim())
 
     fun savePart(part: Part) {
         viewModelScope.launch {

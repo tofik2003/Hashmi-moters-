@@ -36,16 +36,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.Part
+import com.hashmimotors.app.ui.theme.BrandGold
+import kotlinx.coroutines.launch
 
 @Composable
 fun SearchScreen(
@@ -56,6 +63,10 @@ fun SearchScreen(
     onBack: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    var showBarcodeDialog by remember { mutableStateOf(false) }
+    var barcodeText by remember { mutableStateOf("") }
+    var barcodeError by remember { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Spacer(modifier = Modifier.height(24.dp))
@@ -80,8 +91,8 @@ fun SearchScreen(
             placeholder = { Text("Search by name, OEM, brand...") },
             leadingIcon = { Icon(Icons.Filled.Search, null, tint = Color.White.copy(alpha = 0.6f)) },
             trailingIcon = {
-                IconButton(onClick = onScanClick) {
-                    Icon(Icons.Filled.QrCodeScanner, "Scan", tint = Color.White)
+                IconButton(onClick = { showBarcodeDialog = true }) {
+                    Icon(Icons.Filled.QrCodeScanner, "Scan", tint = BrandGold)
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -222,6 +233,60 @@ fun SearchScreen(
                 modifier = Modifier.size(28.dp)
             )
         }
+    }
+
+    if (showBarcodeDialog) {
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { showBarcodeDialog = false },
+            title = { Text("Scan / enter barcode") },
+            text = {
+                Column {
+                    OutlinedTextField(
+                        value = barcodeText,
+                        onValueChange = {
+                            barcodeText = it
+                            barcodeError = null
+                        },
+                        placeholder = { Text("Barcode number") },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true
+                    )
+                    if (barcodeError != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = barcodeError ?: "",
+                            color = Color(0xFFFF6B6B),
+                            fontSize = 13.sp
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = barcodeText.isNotBlank(),
+                    onClick = {
+                        scope.launch {
+                            val part = viewModel.findPartByBarcode(barcodeText)
+                            if (part != null) {
+                                showBarcodeDialog = false
+                                barcodeText = ""
+                                onPartClick(part.id)
+                            } else {
+                                barcodeError = "No part found for this barcode"
+                            }
+                        }
+                    }
+                ) {
+                    Text("Find", color = BrandGold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showBarcodeDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }
 

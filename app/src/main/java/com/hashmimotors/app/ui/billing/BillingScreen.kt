@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +24,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,9 +35,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -50,8 +57,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.InvoiceLine
+import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.ui.catalog.CatalogViewModel
 import com.hashmimotors.app.ui.catalog.PartListItem
+import com.hashmimotors.app.ui.theme.BrandGold
 
 @Composable
 fun BillingScreen(
@@ -63,11 +72,21 @@ fun BillingScreen(
 ) {
     val state by billingViewModel.state.collectAsState()
     val catalogState by catalogViewModel.uiState.collectAsState()
-    var customerName by remember { mutableStateOf("Walk-in Customer") }
-    var customerPhone by remember { mutableStateOf("") }
-    var billDiscountText by remember { mutableStateOf("0") }
-    var notes by remember { mutableStateOf("") }
+    val customers by billingViewModel.customers.collectAsState()
+    val quickParts by billingViewModel.quickParts.collectAsState()
     var showPartPicker by remember { mutableStateOf(false) }
+    var showBarcodeDialog by remember { mutableStateOf(false) }
+    var barcodeText by remember { mutableStateOf("") }
+    var showCustomerSuggestions by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Show transient errors (e.g. barcode not found) as a snackbar
+    LaunchedEffect(state.error) {
+        state.error?.let { msg ->
+            snackbarHostState.showSnackbar(msg)
+            billingViewModel.clearError()
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         LazyColumn(
@@ -87,8 +106,23 @@ fun BillingScreen(
                         text = "New Bill",
                         color = Color.White,
                         fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.weight(1f)
                     )
+                    IconButton(onClick = { showBarcodeDialog = true }) {
+                        Icon(
+                            Icons.Filled.QrCodeScanner,
+                            contentDescription = "Scan barcode",
+                            tint = BrandGold
+                        )
+                    }
+                    IconButton(onClick = { billingViewModel.repeatLastBill() }) {
+                        Icon(
+                            Icons.Filled.History,
+                            contentDescription = "Repeat last bill",
+                            tint = BrandGold
+                        )
+                    }
                 }
             }
 
@@ -113,24 +147,108 @@ fun BillingScreen(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
+                            Spacer(modifier = Modifier.weight(1f))
+                            if (customers.isNotEmpty()) {
+                                TextButton(onClick = { showCustomerSuggestions = !showCustomerSuggestions }) {
+                                    Text(
+                                        text = if (showCustomerSuggestions) "Hide" else "Saved",
+                                        color = BrandGold,
+                                        fontSize = 12.sp
+                                    )
+                                }
+                            }
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedTextField(
-                            value = customerName,
-                            onValueChange = { customerName = it },
+                            value = state.customerName,
+                            onValueChange = {
+                                billingViewModel.setCustomerName(it)
+                                billingViewModel.setCustomer(null)
+                            },
                             placeholder = { Text("Customer name") },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedTextField(
-                            value = customerPhone,
-                            onValueChange = { customerPhone = it },
+                            value = state.customerPhone,
+                            onValueChange = {
+                                billingViewModel.setCustomerPhone(it)
+                                billingViewModel.setCustomer(null)
+                            },
                             placeholder = { Text("Phone (optional)") },
                             modifier = Modifier.fillMaxWidth(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                             singleLine = true
                         )
+                        // Saved customers — tap to autofill name + phone
+                        if (showCustomerSuggestions && customers.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                items(customers, key = { it.id }) { customer ->
+                                    Card(
+                                        modifier = Modifier
+                                            .clickable {
+                                                billingViewModel.setCustomer(customer)
+                                                billingViewModel.setCustomerName(customer.name)
+                                                billingViewModel.setCustomerPhone(customer.phone)
+                                            },
+                                        shape = RoundedCornerShape(10.dp),
+                                        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.12f))
+                                    ) {
+                                        Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+                                            Text(
+                                                text = customer.name,
+                                                color = Color.White,
+                                                fontSize = 13.sp,
+                                                fontWeight = FontWeight.SemiBold
+                                            )
+                                            if (customer.phone.isNotBlank()) {
+                                                Text(
+                                                    text = customer.phone,
+                                                    color = Color.White.copy(alpha = 0.6f),
+                                                    fontSize = 11.sp
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Quick Add tiles — one tap to add frequent parts
+            if (quickParts.isNotEmpty()) {
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Quick Add",
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = "Most billed parts",
+                            color = Color.White.copy(alpha = 0.5f),
+                            fontSize = 11.sp
+                        )
+                    }
+                }
+                item {
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        items(quickParts, key = { it.id }) { part ->
+                            QuickAddTile(
+                                part = part,
+                                alreadyInCart = state.lines.any { it.partId == part.id },
+                                onClick = { billingViewModel.addPart(part, qty = 1) }
+                            )
+                        }
                     }
                 }
             }
@@ -148,7 +266,10 @@ fun BillingScreen(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    TextButton(onClick = { showPartPicker = true }) {
+                    TextButton(onClick = {
+                        catalogViewModel.onSearchChange("")
+                        showPartPicker = true
+                    }) {
                         Icon(
                             Icons.Filled.Add,
                             contentDescription = null,
@@ -198,11 +319,8 @@ fun BillingScreen(
             // Bill-level discount
             item {
                 OutlinedTextField(
-                    value = billDiscountText,
-                    onValueChange = {
-                        billDiscountText = it.filter { c -> c.isDigit() || c == '.' }
-                        billDiscountText.toDoubleOrNull()?.let { d -> billingViewModel.setBillDiscount(d) }
-                    },
+                    value = state.discountText,
+                    onValueChange = { billingViewModel.setDiscountText(it) },
                     label = { Text("Bill Discount %") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
@@ -213,11 +331,8 @@ fun BillingScreen(
             // Notes
             item {
                 OutlinedTextField(
-                    value = notes,
-                    onValueChange = {
-                        notes = it
-                        billingViewModel.setNotes(it)
-                    },
+                    value = state.notes,
+                    onValueChange = { billingViewModel.setNotes(it) },
                     label = { Text("Notes (optional)") },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 1
@@ -264,6 +379,12 @@ fun BillingScreen(
                 billingViewModel.clearCart()
             }
         }
+
+        // Snackbar for transient errors
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 
     if (showPartPicker) {
@@ -278,6 +399,105 @@ fun BillingScreen(
             onDismiss = { showPartPicker = false }
         )
     }
+
+    if (showBarcodeDialog) {
+        BarcodeDialog(
+            barcode = barcodeText,
+            onBarcodeChange = { barcodeText = it },
+            onConfirm = {
+                billingViewModel.addPartByBarcode(barcodeText)
+                barcodeText = ""
+                showBarcodeDialog = false
+            },
+            onDismiss = { showBarcodeDialog = false }
+        )
+    }
+}
+
+/**
+ * One-tap tile used in the "Quick Add" row on the billing screen.
+ */
+@Composable
+private fun QuickAddTile(
+    part: Part,
+    alreadyInCart: Boolean,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(
+                brush = if (alreadyInCart)
+                    Brush.linearGradient(listOf(Color(0xFF2BB673).copy(alpha = 0.9f), Color(0xFF1E7A4B)))
+                else
+                    Brush.linearGradient(listOf(Color.White.copy(alpha = 0.12f), Color.White.copy(alpha = 0.08f)))
+            )
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
+            Text(
+                text = part.name,
+                color = Color.White,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1
+            )
+            Text(
+                text = if (alreadyInCart) "In cart ✓" else "₹${\"%,.0f\".format(part.sellingPrice)}",
+                color = if (alreadyInCart) Color.White.copy(alpha = 0.85f) else BrandGold,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
+
+/**
+ * Small dialog to type/scan a barcode straight into the bill.
+ */
+@Composable
+private fun BarcodeDialog(
+    barcode: String,
+    onBarcodeChange: (String) -> Unit,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Scan / enter barcode") },
+        text = {
+            Column {
+                Text(
+                    text = "Scan a barcode or type it below to add the part to this bill.",
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontSize = 13.sp
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = barcode,
+                    onValueChange = onBarcodeChange,
+                    placeholder = { Text("Barcode number") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = onConfirm,
+                enabled = barcode.isNotBlank()
+            ) {
+                Text("Add", color = BrandGold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel", color = Color.White.copy(alpha = 0.7f))
+            }
+        }
+    )
 }
 
 @Composable
