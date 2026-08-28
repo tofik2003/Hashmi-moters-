@@ -198,20 +198,26 @@ fun BarcodeScannerScreen(
 
         // Result card (bottom)
         if (state.raw != null) {
-            ScanResultCard(
-                state = state,
-                onEditPart = { state.matchedPart?.let { onEditPart(it.id) } },
-                onAddManually = {
-                    onAddPart(state.raw.orEmpty(), null, null, null)
-                },
-                onUseOnline = {
-                    state.onlineProduct?.let { p ->
-                        onAddPart(state.raw.orEmpty(), p.name, p.brand, p.price)
-                    }
-                },
-                onLookupOnline = { viewModel.lookupOnline() },
-                onScanAgain = { viewModel.clearResult() }
-            )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+            ) {
+                ScanResultCard(
+                    state = state,
+                    onEditPart = { state.matchedPart?.let { onEditPart(it.id) } },
+                    onAddManually = {
+                        onAddPart(state.raw.orEmpty(), null, null, null)
+                    },
+                    onUseOnline = {
+                        state.onlineProduct?.let { p ->
+                            onAddPart(state.raw.orEmpty(), p.name, p.brand, p.price)
+                        }
+                    },
+                    onLookupOnline = { viewModel.lookupOnline() },
+                    onScanAgain = { viewModel.clearResult() }
+                )
+            }
         }
     }
 }
@@ -227,7 +233,6 @@ private fun ScanResultCard(
 ) {
     Column(
         modifier = Modifier
-            .align(Alignment.BottomCenter)
             .fillMaxWidth()
             .padding(16.dp)
     ) {
