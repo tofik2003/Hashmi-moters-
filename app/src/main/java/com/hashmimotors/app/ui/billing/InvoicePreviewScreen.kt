@@ -153,7 +153,7 @@ fun InvoicePreviewScreen(
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text(
-                                    text = shop?.name ?: "Hashmi Motors",
+                                    text = shop?.name ?: "Hashmi",
                                     color = Color.White,
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.Bold
@@ -407,7 +407,7 @@ private fun shareOnWhatsApp(context: Context, invoice: Invoice, shop: com.hashmi
     val phone = invoice.customerSnapshot.phone.filter { it.isDigit() }
     val phoneWithCountry = if (phone.length == 10) "91$phone" else phone
     val message = buildString {
-        append("*${shop?.name ?: "Hashmi Motors"}*\n")
+        append("*${shop?.name ?: "Hashmi"}*\n")
         append("Bill No: ${invoice.invoiceNo}\n")
         append("Date: ${SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(Date(invoice.date))}\n\n")
         invoice.lines.forEach { line ->
@@ -430,7 +430,7 @@ private fun shareOnWhatsApp(context: Context, invoice: Invoice, shop: com.hashmi
 
 private fun shareViaSms(context: Context, invoice: Invoice) {
     val message = buildString {
-        append("Hashmi Motors\n")
+        append("Hashmi\n")
         append("Bill ${invoice.invoiceNo}\n")
         append("Total: Rs.${"%,.0f".format(invoice.grandTotal)}\n")
         append("Thank you!")
@@ -492,7 +492,7 @@ private fun generatePdf(context: Context, invoice: Invoice, shop: com.hashmimoto
         }
 
         var y = 40f
-        canvas.drawText(shop?.name ?: "Hashmi Motors", 200f, y, titlePaint)
+        canvas.drawText(shop?.name ?: "Hashmi", 200f, y, titlePaint)
         y += 25f
         paint.textSize = 10f
         if (shop?.address?.isNotBlank() == true) {

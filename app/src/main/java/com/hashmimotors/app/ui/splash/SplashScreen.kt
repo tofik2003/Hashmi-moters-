@@ -3,6 +3,7 @@ package com.hashmimotors.app.ui.splash
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,9 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,7 +51,7 @@ class SplashViewModel @Inject constructor(
             // Ensure a default shop exists so the app never blocks on setup.
             if (shopRepository.getShopOnce() == null) {
                 shopRepository.saveShop(
-                    Shop(name = "Hashmi Motors Premium", isSetupComplete = true)
+                    Shop(name = "Hashmi", isSetupComplete = true)
                 )
             }
         }
@@ -104,15 +103,27 @@ fun SplashScreen(
                     .alpha(alphaAnim),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Build,
-                    contentDescription = null,
-                    tint = Color(0xFFFFA000),
-                    modifier = Modifier.size(120.dp)
-                )
+                // Premium gold "H" monogram in a ring
+                Box(
+                    modifier = Modifier
+                        .size(130.dp)
+                        .border(
+                            width = 2.dp,
+                            color = Color(0xFFFFC107).copy(alpha = 0.6f),
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "H",
+                        color = Color(0xFFFFC107),
+                        fontSize = 84.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
             }
             Text(
-                text = "Hashmi Motors",
+                text = "Hashmi",
                 color = Color.White,
                 fontSize = 34.sp,
                 fontWeight = FontWeight.ExtraBold,

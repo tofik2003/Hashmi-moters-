@@ -29,6 +29,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Autorenew
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -61,6 +62,8 @@ import com.google.mlkit.vision.common.InputImage
 import com.hashmimotors.app.data.remote.OnlineProduct
 import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.ui.components.AnimatedBigButton
+import com.hashmimotors.app.ui.sound.Feedback
+import com.hashmimotors.app.ui.sound.LocalAppFeedback
 
 /**
  * Live camera barcode/QR scanner.
@@ -79,6 +82,7 @@ fun BarcodeScannerScreen(
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val feedback = LocalAppFeedback.current
 
     var hasCameraPermission by remember {
         mutableStateOf(
@@ -214,6 +218,10 @@ fun BarcodeScannerScreen(
                             onAddPart(state.raw.orEmpty(), p.name, p.brand, p.price)
                         }
                     },
+                    onSaveOnline = {
+                        viewModel.saveOnlineToCatalog()
+                        Feedback.success(feedback)
+                    },
                     onLookupOnline = { viewModel.lookupOnline() },
                     onScanAgain = { viewModel.clearResult() }
                 )
@@ -228,6 +236,7 @@ private fun ScanResultCard(
     onEditPart: () -> Unit,
     onAddManually: () -> Unit,
     onUseOnline: () -> Unit,
+    onSaveOnline: () -> Unit,
     onLookupOnline: () -> Unit,
     onScanAgain: () -> Unit
 ) {
@@ -245,10 +254,12 @@ private fun ScanResultCard(
                 // Header row
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = state.matchedPart?.let { "✓ Identified" }
+                        text = if (state.savedName != null) "✅ Saved to catalog"
+                        else state.matchedPart?.let { "✓ Identified" }
                             ?: state.onlineProduct?.let { "🌐 Found online" }
                             ?: "Scanned",
                         color = when {
+                            state.savedName != null -> Color(0xFF66BB6A)
                             state.matchedPart != null -> Color(0xFF66BB6A)
                             state.onlineProduct != null -> Color(0xFF4FC3F7)
                             else -> Color(0xFFFFC107)
@@ -307,10 +318,19 @@ private fun ScanResultCard(
                         )
                     }
                     state.onlineProduct != null -> {
-                        AnimatedBigButton(
-                            text = "Use These Details",
-                            onClick = onUseOnline
-                        )
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            AnimatedBigButton(
+                                text = if (state.isSaving) "Saving..." else "Save to Catalog",
+                                icon = Icons.Filled.Save,
+                                enabled = !state.isSaving,
+                                onClick = onSaveOnline
+                            )
+                            AnimatedBigButton(
+                                text = "Edit Details First",
+                                onClick = onUseOnline,
+                                gradient = false
+                            )
+                        }
                     }
                     else -> {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {

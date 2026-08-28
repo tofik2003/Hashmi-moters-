@@ -492,10 +492,14 @@ private fun QuickActionCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val feedback = com.hashmimotors.app.ui.sound.LocalAppFeedback.current
     Card(
         modifier = modifier
             .height(96.dp)
-            .clickable { onClick() },
+            .clickable {
+                com.hashmimotors.app.ui.sound.Feedback.tap(feedback)
+                onClick()
+            },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White.copy(alpha = 0.12f)

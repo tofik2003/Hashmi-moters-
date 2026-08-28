@@ -27,7 +27,7 @@ class ShopRepository @Inject constructor(
     suspend fun getNextInvoiceNumber(): String {
         val shop = shopDao.getOnce() ?: ShopEntity(
             id = "default",
-            name = "Hashmi Motors",
+            name = "Hashmi",
             address = "", city = "", state = "", stateCode = "", pincode = "",
             phone = "", email = null, gstin = "", pan = null,
             gstMode = GstMode.COMPOSITION.name,

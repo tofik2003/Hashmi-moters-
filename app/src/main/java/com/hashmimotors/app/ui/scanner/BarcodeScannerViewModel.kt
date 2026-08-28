@@ -18,6 +18,8 @@ data class ScanUiState(
     val matchedPart: Part? = null,
     val isLookingUpOnline: Boolean = false,
     val onlineProduct: OnlineProduct? = null,
+    val isSaving: Boolean = false,
+    val savedName: String? = null,
     val error: String? = null
 )
 
@@ -61,6 +63,36 @@ class BarcodeScannerViewModel @Inject constructor(
                 error = if (product == null)
                     "Couldn't identify this barcode online. You can still add it manually."
                 else null
+            )
+        }
+    }
+
+    /**
+     * One-tap save: persists the online result straight into the catalog with
+     * auto-filled name, brand, barcode and price. No form needed.
+     */
+    fun saveOnlineToCatalog() {
+        val product = _uiState.value.onlineProduct ?: return
+        val code = _uiState.value.raw ?: return
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isSaving = true)
+            val name = product.name?.trim().orEmpty()
+            val part = Part(
+                id = java.util.UUID.randomUUID().toString(),
+                sku = code,
+                name = name,
+                brand = product.brand,
+                mrp = product.price ?: 0.0,
+                sellingPrice = product.price ?: 0.0,
+                stockQty = 0,
+                reorderLevel = 5,
+                barcode = code
+            )
+            partRepo.savePart(part)
+            _uiState.value = ScanUiState(
+                raw = code,
+                matchedPart = part,
+                savedName = name
             )
         }
     }

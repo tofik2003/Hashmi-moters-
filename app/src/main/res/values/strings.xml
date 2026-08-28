@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Hashmi Motors Premium</string>
+    <string name="app_name">Hashmi</string>
     <string name="app_tagline">Premium Spare Parts Manager</string>
 
     <!-- Auth -->
@@ -96,7 +96,7 @@
     <string name="empty_bills">No bills yet. Create your first bill.</string>
 
     <!-- Onboarding -->
-    <string name="onboarding_1_title">Welcome to Hashmi Motors Premium</string>
+    <string name="onboarding_1_title">Welcome to Hashmi</string>
     <string name="onboarding_1_desc">Manage your spare parts shop with ease</string>
     <string name="onboarding_2_title">Find any part in seconds</string>
     <string name="onboarding_2_desc">Search by name, OEM number, or vehicle</string>

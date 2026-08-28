@@ -55,6 +55,8 @@ import coil.compose.AsyncImage
 import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.ui.components.AnimatedBigButton
 import com.hashmimotors.app.ui.components.GlassTextField
+import com.hashmimotors.app.ui.sound.Feedback
+import com.hashmimotors.app.ui.sound.LocalAppFeedback
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -73,6 +75,7 @@ fun AddPartScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val feedback = LocalAppFeedback.current
 
     var name by remember { mutableStateOf(initialName ?: "") }
     var sku by remember { mutableStateOf("") }
@@ -429,6 +432,7 @@ fun AddPartScreen(
                             notes = notes.ifBlank { null }
                         )
                     )
+                    Feedback.success(feedback)
                     onSaved()
                 }
             )
