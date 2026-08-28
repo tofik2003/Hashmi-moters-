@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -69,192 +70,198 @@ fun BillingScreen(
     var showPartPicker by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Spacer(modifier = Modifier.height(24.dp))
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 120.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            item { Spacer(modifier = Modifier.height(24.dp)) }
+
             // Top bar
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
+            item {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
+                    }
+                    Text(
+                        text = "New Bill",
+                        color = Color.White,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-                Text(
-                    text = "New Bill",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
             }
-            Spacer(modifier = Modifier.height(16.dp))
 
             // Customer section
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f))
-            ) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Filled.Person,
-                            contentDescription = null,
-                            tint = Color.White.copy(alpha = 0.6f)
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f))
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Filled.Person,
+                                contentDescription = null,
+                                tint = Color.White.copy(alpha = 0.6f)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Customer",
+                                color = Color.White,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = customerName,
+                            onValueChange = { customerName = it },
+                            placeholder = { Text("Customer name") },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Customer",
-                            color = Color.White,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = customerPhone,
+                            onValueChange = { customerPhone = it },
+                            placeholder = { Text("Phone (optional)") },
+                            modifier = Modifier.fillMaxWidth(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                            singleLine = true
                         )
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = customerName,
-                        onValueChange = { customerName = it },
-                        placeholder = { Text("Customer name") },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = customerPhone,
-                        onValueChange = { customerPhone = it },
-                        placeholder = { Text("Phone (optional)") },
-                        modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                        singleLine = true
-                    )
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Lines section
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Items (${state.totalItems})",
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                TextButton(onClick = { showPartPicker = true }) {
-                    Icon(
-                        Icons.Filled.Add,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
+            // Lines header + Add Item
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
-                        text = "Add Item",
-                        color = MaterialTheme.colorScheme.primary
+                        text = "Items (${state.totalItems})",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
                     )
+                    TextButton(onClick = { showPartPicker = true }) {
+                        Icon(
+                            Icons.Filled.Add,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Add Item",
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
 
             // Lines list
             if (state.lines.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
-                        .background(
-                            color = Color.White.copy(alpha = 0.05f),
-                            shape = RoundedCornerShape(12.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "No items added yet",
-                        color = Color.White.copy(alpha = 0.5f)
-                    )
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(state.lines.size) { idx ->
-                        val line = state.lines[idx]
-                        BillLineItem(
-                            line = line,
-                            index = idx,
-                            onQtyChange = { newQty -> billingViewModel.updateLineQty(idx, newQty) },
-                            onRateChange = { newRate -> billingViewModel.updateLineRate(idx, newRate) },
-                            onRemove = { billingViewModel.removeLine(idx) }
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp)
+                            .background(
+                                color = Color.White.copy(alpha = 0.05f),
+                                shape = RoundedCornerShape(12.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No items added yet",
+                            color = Color.White.copy(alpha = 0.5f)
                         )
                     }
                 }
+            } else {
+                items(state.lines.size) { idx ->
+                    val line = state.lines[idx]
+                    BillLineItem(
+                        line = line,
+                        index = idx,
+                        onQtyChange = { newQty -> billingViewModel.updateLineQty(idx, newQty) },
+                        onRateChange = { newRate -> billingViewModel.updateLineRate(idx, newRate) },
+                        onRemove = { billingViewModel.removeLine(idx) }
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            // Bill-level discount
+            item {
+                OutlinedTextField(
+                    value = billDiscountText,
+                    onValueChange = {
+                        billDiscountText = it.filter { c -> c.isDigit() || c == '.' }
+                        billDiscountText.toDoubleOrNull()?.let { d -> billingViewModel.setBillDiscount(d) }
+                    },
+                    label = { Text("Bill Discount %") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    singleLine = true
+                )
+            }
 
-            // Bill-level discount + notes
-            OutlinedTextField(
-                value = billDiscountText,
-                onValueChange = {
-                    billDiscountText = it.filter { c -> c.isDigit() || c == '.' }
-                    billDiscountText.toDoubleOrNull()?.let { d -> billingViewModel.setBillDiscount(d) }
-                },
-                label = { Text("Bill Discount %") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = notes,
-                onValueChange = {
-                    notes = it
-                    billingViewModel.setNotes(it)
-                },
-                label = { Text("Notes (optional)") },
-                modifier = Modifier.fillMaxWidth(),
-                minLines = 1
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
+            // Notes
+            item {
+                OutlinedTextField(
+                    value = notes,
+                    onValueChange = {
+                        notes = it
+                        billingViewModel.setNotes(it)
+                    },
+                    label = { Text("Notes (optional)") },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 1
+                )
+            }
 
             // Totals card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
-                )
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    TotalRow("Subtotal", state.subtotal)
-                    if (state.totalDiscount > 0) {
-                        TotalRow("Discount", -state.totalDiscount, color = Color(0xFFFFA000))
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                    )
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        TotalRow("Subtotal", state.subtotal)
+                        if (state.totalDiscount > 0) {
+                            TotalRow("Discount", -state.totalDiscount, color = Color(0xFFFFA000))
+                        }
+                        HorizontalDivider()
+                        TotalRow("Total", state.grandTotal, bold = true, big = true)
                     }
-                    HorizontalDivider()
-                    TotalRow("Total", state.grandTotal, bold = true, big = true)
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
             // Save button
-            com.hashmimotors.app.ui.components.AnimatedBigButton(
-                text = if (state.isSaving) "Saving..." else "Save Bill",
-                icon = Icons.Filled.Save,
-                enabled = !state.isSaving && state.lines.isNotEmpty(),
-                onClick = {
-                    billingViewModel.saveBill(userId = "default-user")
-                }
-            )
+            item {
+                com.hashmimotors.app.ui.components.AnimatedBigButton(
+                    text = if (state.isSaving) "Saving..." else "Save Bill",
+                    icon = Icons.Filled.Save,
+                    enabled = !state.isSaving && state.lines.isNotEmpty(),
+                    onClick = {
+                        billingViewModel.saveBill(userId = "default-user")
+                    }
+                )
+            }
+        }
 
-            // Auto-navigate when saved
-            androidx.compose.runtime.LaunchedEffect(state.savedInvoice) {
-                state.savedInvoice?.let { invoice ->
-                    onSaved(invoice.id)
-                    billingViewModel.clearCart()
-                }
+        // Auto-navigate when saved
+        androidx.compose.runtime.LaunchedEffect(state.savedInvoice) {
+            state.savedInvoice?.let { invoice ->
+                onSaved(invoice.id)
+                billingViewModel.clearCart()
             }
         }
     }

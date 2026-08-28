@@ -2,7 +2,19 @@ package com.hashmimotors.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Brand colors
+// ============================================
+// BRAND COLORS — Premium navy + gold identity
+// ============================================
+val BrandNavy = Color(0xFF0A0E2A)
+val BrandNavyLight = Color(0xFF141A45)
+val BrandNavyViolet = Color(0xFF2A1058)
+
+// Gold (the premium accent used for the logo, headers and highlights)
+val BrandGold = Color(0xFFFFC53D)
+val BrandGoldBright = Color(0xFFFFD968)
+val BrandGoldDeep = Color(0xFFE0A61B)
+
+// Legacy brand colors kept for compatibility
 val BrandIndigo = Color(0xFF3F51B5)
 val BrandIndigoDark = Color(0xFF1A237E)
 val BrandIndigoLight = Color(0xFFC5CAE9)
@@ -11,33 +23,35 @@ val BrandTeal = Color(0xFF00897B)
 val BrandAmber = Color(0xFFFFA000)
 
 // Accent palette (user-selectable)
-val AccentIndigo = Color(0xFF3F51B5)
-val AccentBlue = Color(0xFF1976D2)
-val AccentGreen = Color(0xFF388E3C)
-val AccentOrange = Color(0xFFE64A19)
+val AccentIndigo = Color(0xFF5C6BFF)
+val AccentBlue = Color(0xFF2F9BFF)
+val AccentGreen = Color(0xFF2BB673)
+val AccentOrange = Color(0xFFFF7A45)
 
-// Gradient colors for background
-val GradientStart = Color(0xFF1A237E)
-val GradientMiddle = Color(0xFF000000)
-val GradientEnd = Color(0xFF4A148C)
+// Gradient colors for background (premium deep navy → midnight → violet)
+val GradientStart = Color(0xFF0A0E2A)
+val GradientMiddle = Color(0xFF0F1233)
+val GradientEnd = Color(0xFF24104A)
 
 // Confetti colors
 val ConfettiColors = listOf(
+    Color(0xFFFFC53D),
     Color(0xFFFF6B6B),
     Color(0xFF4ECDC4),
     Color(0xFFFFE66D),
     Color(0xFF95E1D3),
     Color(0xFFF38181),
     Color(0xFFAA96DA),
-    Color(0xFFFFA000),
     Color(0xFF7B1FA2)
 )
 
-// Light theme
-val LightPrimary = Color(0xFF3F51B5)
+// ============================================
+// MATERIAL 3 LIGHT SCHEME
+// ============================================
+val LightPrimary = Color(0xFF3E4CC0)
 val LightOnPrimary = Color(0xFFFFFFFF)
-val LightPrimaryContainer = Color(0xFFDDE1FF)
-val LightOnPrimaryContainer = Color(0xFF001454)
+val LightPrimaryContainer = Color(0xFFDEE0FF)
+val LightOnPrimaryContainer = Color(0xFF00105C)
 val LightSecondary = Color(0xFF5A5D72)
 val LightOnSecondary = Color(0xFFFFFFFF)
 val LightSecondaryContainer = Color(0xFFDEE1F9)
@@ -59,11 +73,13 @@ val LightOnSurfaceVariant = Color(0xFF45464F)
 val LightOutline = Color(0xFF75767F)
 val LightOutlineVariant = Color(0xFFC6C5D0)
 
-// Dark theme
+// ============================================
+// MATERIAL 3 DARK SCHEME (used by most screens)
+// ============================================
 val DarkPrimary = Color(0xFFBAC3FF)
-val DarkOnPrimary = Color(0xFF02218F)
-val DarkPrimaryContainer = Color(0xFF22359B)
-val DarkOnPrimaryContainer = Color(0xFFDDE1FF)
+val DarkOnPrimary = Color(0xFF162E9E)
+val DarkPrimaryContainer = Color(0xFF2A3FC0)
+val DarkOnPrimaryContainer = Color(0xFFDEE0FF)
 val DarkSecondary = Color(0xFFC2C5DD)
 val DarkOnSecondary = Color(0xFF2C2F42)
 val DarkSecondaryContainer = Color(0xFF424659)
@@ -76,9 +92,9 @@ val DarkError = Color(0xFFFFB4AB)
 val DarkOnError = Color(0xFF690005)
 val DarkErrorContainer = Color(0xFF93000A)
 val DarkOnErrorContainer = Color(0xFFFFDAD6)
-val DarkBackground = Color(0xFF1B1B1F)
+val DarkBackground = Color(0xFF0B0D1F)
 val DarkOnBackground = Color(0xFFE4E1E6)
-val DarkSurface = Color(0xFF1B1B1F)
+val DarkSurface = Color(0xFF0B0D1F)
 val DarkOnSurface = Color(0xFFE4E1E6)
 val DarkSurfaceVariant = Color(0xFF45464F)
 val DarkOnSurfaceVariant = Color(0xFFC6C5D0)
@@ -87,6 +103,6 @@ val DarkOutlineVariant = Color(0xFF45464F)
 
 // Status colors
 val StatusSuccess = Color(0xFF2E7D32)
-val StatusWarning = Color(0xFFF57C00)
+val StatusWarning = Color(0xFFFFA000)
 val StatusError = Color(0xFFC62828)
 val StatusInfo = Color(0xFF0277BD)

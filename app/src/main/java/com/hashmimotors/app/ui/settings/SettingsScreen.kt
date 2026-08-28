@@ -152,13 +152,14 @@ fun SettingsScreen(
             }
 
             SettingsSection("About") {
-                SettingsRow("Version", "1.0.0")
-                SettingsRow("Build", "1")
+                SettingsRow("App", "Hashmi Motors")
+                SettingsRow("Version", "2.0.0 Premium")
+                SettingsRow("Build", "2")
                 SettingsRow("Database", "Local (encrypted)")
                 SettingsRow("Sync", "Firebase (optional)")
             }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(60.dp))
         }
     }
 }

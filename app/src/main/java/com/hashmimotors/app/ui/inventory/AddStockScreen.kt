@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -83,7 +86,13 @@ fun AddStockScreen(
                 singleLine = true
             )
             Spacer(modifier = Modifier.height(12.dp))
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(bottom = 40.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(state.parts, key = { it.id }) { part ->
                     Card(
                         modifier = Modifier
@@ -104,72 +113,79 @@ fun AddStockScreen(
                 }
             }
         } else {
-            // Selected part view
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                )
+            // Selected part view (scrollable so the button is always reachable)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Selected Part", color = Color.White.copy(alpha = 0.6f), fontSize = 12.sp)
-                    Text(selectedPart.name, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                    Text("Current stock: ${selectedPart.stockQty}", color = Color.White, fontSize = 14.sp)
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                    )
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text("Selected Part", color = Color.White.copy(alpha = 0.6f), fontSize = 12.sp)
+                        Text(selectedPart.name, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text("Current stock: ${selectedPart.stockQty}", color = Color.White, fontSize = 14.sp)
+                    }
                 }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            OutlinedTextField(
-                value = qty,
-                onValueChange = { qty = it.filter { c -> c.isDigit() } },
-                label = { Text("Quantity to add *") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
-            )
+                Spacer(modifier = Modifier.height(16.dp))
+                OutlinedTextField(
+                    value = qty,
+                    onValueChange = { qty = it.filter { c -> c.isDigit() } },
+                    label = { Text("Quantity to add *") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true
+                )
 
-            if (invState.suppliers.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(12.dp))
-                Text("Supplier (optional)", color = Color.White, fontSize = 14.sp)
-                Spacer(modifier = Modifier.height(4.dp))
-                invState.suppliers.forEach { sup ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                            .clickable { supplierId = if (supplierId == sup.id) null else sup.id },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = if (supplierId == sup.id) MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
-                            else Color.White.copy(alpha = 0.05f)
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(12.dp).fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                if (invState.suppliers.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text("Supplier (optional)", color = Color.White, fontSize = 14.sp)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    invState.suppliers.forEach { sup ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                                .clickable { supplierId = if (supplierId == sup.id) null else sup.id },
+                            shape = RoundedCornerShape(8.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = if (supplierId == sup.id) MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                                else Color.White.copy(alpha = 0.05f)
+                            )
                         ) {
-                            Text(sup.name, color = Color.White, modifier = Modifier.weight(1f))
-                            if (supplierId == sup.id) {
-                                Icon(Icons.Filled.Check, null, tint = MaterialTheme.colorScheme.primary)
+                            Row(
+                                modifier = Modifier.padding(12.dp).fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(sup.name, color = Color.White, modifier = Modifier.weight(1f))
+                                if (supplierId == sup.id) {
+                                    Icon(Icons.Filled.Check, null, tint = MaterialTheme.colorScheme.primary)
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
-            AnimatedBigButton(
-                text = "Add ${qty.ifBlank { "0" }} to stock",
-                icon = Icons.Filled.Add,
-                enabled = qty.isNotBlank() && (qty.toIntOrNull() ?: 0) > 0,
-                onClick = {
-                    val q = qty.toIntOrNull() ?: 0
-                    if (q > 0) {
-                        inventoryViewModel.addStock(selectedPartId!!, q, supplierId, "default-user")
-                        onSaved()
+                Spacer(modifier = Modifier.height(24.dp))
+                AnimatedBigButton(
+                    text = "Add ${qty.ifBlank { "0" }} to stock",
+                    icon = Icons.Filled.Add,
+                    enabled = qty.isNotBlank() && (qty.toIntOrNull() ?: 0) > 0,
+                    onClick = {
+                        val q = qty.toIntOrNull() ?: 0
+                        if (q > 0) {
+                            inventoryViewModel.addStock(selectedPartId!!, q, supplierId, "default-user")
+                            onSaved()
+                        }
                     }
-                }
-            )
+                )
+                Spacer(modifier = Modifier.height(40.dp))
+            }
         }
     }
 }

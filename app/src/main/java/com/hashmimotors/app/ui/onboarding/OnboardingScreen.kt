@@ -44,7 +44,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hashmimotors.app.ui.theme.BrandGold
+import com.hashmimotors.app.ui.theme.BrandGoldBright
 import com.hashmimotors.app.ui.theme.GradientEnd
+import com.hashmimotors.app.ui.theme.GradientMiddle
 import com.hashmimotors.app.ui.theme.GradientStart
 
 data class OnboardingPage(
@@ -87,7 +90,7 @@ fun OnboardingScreen(
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(GradientStart, Color.Black, GradientEnd)
+                    colors = listOf(GradientStart, GradientMiddle, GradientEnd)
                 )
             )
     ) {
@@ -135,7 +138,7 @@ fun OnboardingScreen(
                         Icon(
                             imageVector = pages[page].icon,
                             contentDescription = null,
-                            tint = Color(0xFFFFA000),
+                            tint = BrandGoldBright,
                             modifier = Modifier.size(120.dp)
                         )
                     }
@@ -168,7 +171,7 @@ fun OnboardingScreen(
                             modifier = Modifier
                                 .size(if (index == currentPage) 12.dp else 8.dp)
                                 .background(
-                                    color = if (index == currentPage) Color(0xFFFFA000)
+                                    color = if (index == currentPage) BrandGold
                                     else Color.White.copy(alpha = 0.3f),
                                     shape = CircleShape
                                 )
@@ -184,14 +187,14 @@ fun OnboardingScreen(
                         .fillMaxWidth()
                         .height(64.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFFA000)
+                        containerColor = BrandGold
                     )
                 ) {
                     Text(
                         text = if (currentPage < pages.size - 1) "Next" else "Get Started",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1A1A2E)
                     )
                 }
             }

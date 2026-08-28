@@ -1,14 +1,18 @@
 package com.hashmimotors.app.ui
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,6 +22,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.hashmimotors.app.data.repository.CategoryRepository
@@ -30,6 +35,7 @@ import com.hashmimotors.app.ui.billing.InvoicePreviewScreen
 import com.hashmimotors.app.ui.catalog.AddPartScreen
 import com.hashmimotors.app.ui.catalog.SearchScreen
 import com.hashmimotors.app.ui.components.AnimatedParticleBackground
+import com.hashmimotors.app.ui.components.HashmiBottomBar
 import com.hashmimotors.app.ui.customers.CustomerListScreen
 import com.hashmimotors.app.ui.dashboard.DashboardScreen
 import com.hashmimotors.app.ui.fitment.FitmentScreen
@@ -63,6 +69,15 @@ object Routes {
     const val CUSTOMERS = "customers"
 }
 
+/** Routes that show the persistent bottom navigation bar. */
+val bottomNavRoutes = setOf(
+    Routes.DASHBOARD,
+    Routes.SEARCH,
+    Routes.NEW_BILL,
+    Routes.INVENTORY,
+    Routes.REPORTS
+)
+
 @HiltViewModel
 class AppShellViewModel @Inject constructor(
     settingsRepository: SettingsRepository,
@@ -83,6 +98,17 @@ fun HashmiMotorsMainScreen(
 ) {
     val navController = rememberNavController()
     val settings by viewModel.settings.collectAsStateWithLifecycle(initialValue = AppSettings())
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry?.destination?.route
+
+    fun navigateTab(route: String) {
+        if (route == currentRoute) return
+        navController.navigate(route) {
+            popUpTo(Routes.DASHBOARD) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (settings.backgroundStyle == BackgroundStyle.GRADIENT_PARTICLES && settings.animationsEnabled) {
@@ -243,6 +269,19 @@ fun HashmiMotorsMainScreen(
             composable(Routes.CUSTOMERS) {
                 CustomerListScreen(onBack = { navController.popBackStack() })
             }
+        }
+
+        // Persistent premium bottom navigation bar (main tabs only)
+        AnimatedVisibility(
+            visible = currentRoute in bottomNavRoutes,
+            enter = fadeIn(tween(200)) + slideInVertically(tween(250)) { it },
+            exit = fadeOut(tween(150)) + slideOutVertically(tween(200)) { it },
+            modifier = Modifier.align(Alignment.BottomCenter)
+        ) {
+            HashmiBottomBar(
+                currentRoute = currentRoute,
+                onNavigate = { route -> navigateTab(route) }
+            )
         }
     }
 }
