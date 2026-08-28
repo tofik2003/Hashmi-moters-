@@ -20,6 +20,8 @@ class InvoiceRepository @Inject constructor(
         list.map { it.toDomain() }
     }
 
+    suspend fun getLatestInvoice(): Invoice? = invoiceDao.getLatest()?.toDomain()
+
     fun getInvoiceById(id: String): Flow<Invoice?> = invoiceDao.getById(id).map { it?.toDomain() }
 
     suspend fun getInvoiceByIdOnce(id: String): Invoice? = invoiceDao.getByIdOnce(id)?.toDomain()

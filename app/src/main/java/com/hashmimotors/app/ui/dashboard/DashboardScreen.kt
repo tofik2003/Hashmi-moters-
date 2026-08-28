@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,7 @@ import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -56,9 +58,14 @@ import com.hashmimotors.app.ui.components.AnimatedCounter
 import com.hashmimotors.app.ui.components.PromotionCarousel
 import com.hashmimotors.app.ui.components.SparklineCard
 import com.hashmimotors.app.ui.components.SavingsHighlight
+import com.hashmimotors.app.ui.theme.BrandGold
+import com.hashmimotors.app.ui.theme.BrandGoldBright
 import com.hashmimotors.app.ui.theme.StatusWarning
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun DashboardScreen(
@@ -72,7 +79,8 @@ fun DashboardScreen(
     onReports: () -> Unit,
     onHistory: () -> Unit,
     onSettings: () -> Unit,
-    onCustomers: () -> Unit = {}
+    onCustomers: () -> Unit = {},
+    onSuppliers: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -80,36 +88,65 @@ fun DashboardScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp),
+        contentPadding = PaddingValues(bottom = 32.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item {
             Spacer(modifier = Modifier.height(40.dp))
-            // Top bar with greeting
+            // Top bar with brand emblem + greeting
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Text(
-                        text = state.shopName,
-                        color = Color.White,
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                    val greeting = remember {
-                        val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
-                        when {
-                            hour < 12 -> "Good morning ☀️"
-                            hour < 17 -> "Good afternoon 🌤️"
-                            else -> "Good evening 🌙"
-                        }
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Brand emblem
+                    Box(
+                        modifier = Modifier
+                            .size(46.dp)
+                            .background(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(BrandGoldBright, BrandGold)
+                                ),
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "H",
+                            color = Color(0xFF1A1A2E),
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
                     }
-                    Text(
-                        text = greeting,
-                        color = Color.White.copy(alpha = 0.7f),
-                        fontSize = 13.sp
-                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = state.shopName,
+                            color = Color.White,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                        val greeting = remember {
+                            val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
+                            when {
+                                hour < 12 -> "Good morning ☀️"
+                                hour < 17 -> "Good afternoon 🌤️"
+                                else -> "Good evening 🌙"
+                            }
+                        }
+                        val today = remember {
+                            SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault()).format(Date())
+                        }
+                        Text(
+                            text = "$greeting · $today",
+                            color = Color.White.copy(alpha = 0.7f),
+                            fontSize = 12.sp
+                        )
+                    }
                 }
                 IconButton(onClick = onSettings) {
                     Box(
@@ -124,7 +161,7 @@ fun DashboardScreen(
                         Icon(
                             Icons.Filled.Settings,
                             contentDescription = "Settings",
-                            tint = Color.White,
+                            tint = BrandGoldBright,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -190,8 +227,8 @@ fun DashboardScreen(
                                 .background(
                                     brush = Brush.linearGradient(
                                         colors = listOf(
-                                            Color(0xFFFFA726),
-                                            Color(0xFFFF6B35)
+                                            BrandGoldBright,
+                                            BrandGold
                                         )
                                     ),
                                     shape = CircleShape
@@ -307,6 +344,7 @@ fun DashboardScreen(
                             "inventory" -> onInventory
                             "history" -> onHistory
                             "customers" -> onCustomers
+                            "suppliers" -> onSuppliers
                             else -> onNewBill
                         },
                         modifier = Modifier.weight(1f)
@@ -512,5 +550,6 @@ private val quickActions = listOf(
     QuickAction("add_stock", "Add Stock", Icons.Filled.Inventory, Color(0xFFAB47BC)),
     QuickAction("fitment", "Find by Vehicle", Icons.Filled.ShoppingCart, Color(0xFFEC407A)),
     QuickAction("history", "Bill History", Icons.Filled.Receipt, Color(0xFF7E57C2)),
-    QuickAction("customers", "Customers", Icons.Filled.Person, Color(0xFF26A69A))
+    QuickAction("customers", "Customers", Icons.Filled.Person, Color(0xFF26A69A)),
+    QuickAction("suppliers", "Suppliers", Icons.Filled.LocalShipping, Color(0xFF5C6BFF))
 )

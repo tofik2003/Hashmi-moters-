@@ -1,16 +1,25 @@
 package com.hashmimotors.app.ui
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -18,6 +27,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.hashmimotors.app.data.repository.CategoryRepository
@@ -30,16 +40,20 @@ import com.hashmimotors.app.ui.billing.InvoicePreviewScreen
 import com.hashmimotors.app.ui.catalog.AddPartScreen
 import com.hashmimotors.app.ui.catalog.SearchScreen
 import com.hashmimotors.app.ui.components.AnimatedParticleBackground
+import com.hashmimotors.app.ui.components.HashmiBottomBar
 import com.hashmimotors.app.ui.customers.CustomerListScreen
 import com.hashmimotors.app.ui.dashboard.DashboardScreen
 import com.hashmimotors.app.ui.fitment.FitmentScreen
 import com.hashmimotors.app.ui.inventory.AddStockScreen
 import com.hashmimotors.app.ui.inventory.InventoryScreen
+import com.hashmimotors.app.ui.lock.LockScreen
+import com.hashmimotors.app.ui.lock.PinSetupScreen
 import com.hashmimotors.app.ui.onboarding.OnboardingScreen
 import com.hashmimotors.app.ui.reports.ReportsScreen
 import com.hashmimotors.app.ui.settings.SettingsScreen
 import com.hashmimotors.app.ui.shop.ShopSetupScreen
 import com.hashmimotors.app.ui.splash.SplashScreen
+import com.hashmimotors.app.ui.suppliers.SuppliersScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -61,7 +75,19 @@ object Routes {
     const val ADD_STOCK = "add_stock"
     const val REPORTS = "reports"
     const val CUSTOMERS = "customers"
+    const val SUPPLIERS = "suppliers"
+    const val LOCK = "lock"
+    const val PIN_SETUP = "pin_setup"
 }
+
+/** Routes that show the persistent bottom navigation bar. */
+val bottomNavRoutes = setOf(
+    Routes.DASHBOARD,
+    Routes.SEARCH,
+    Routes.NEW_BILL,
+    Routes.INVENTORY,
+    Routes.REPORTS
+)
 
 @HiltViewModel
 class AppShellViewModel @Inject constructor(
@@ -83,6 +109,22 @@ fun HashmiMotorsMainScreen(
 ) {
     val navController = rememberNavController()
     val settings by viewModel.settings.collectAsStateWithLifecycle(initialValue = AppSettings())
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry?.destination?.route
+
+    // Bottom clearance: system navigation-bar inset + our nav bar when visible.
+    // This guarantees every screen's content can scroll fully into view.
+    val navBarInset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val bottomSpace = if (currentRoute in bottomNavRoutes) 80.dp + navBarInset else navBarInset
+
+    fun navigateTab(route: String) {
+        if (route == currentRoute) return
+        navController.navigate(route) {
+            popUpTo(Routes.DASHBOARD) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (settings.backgroundStyle == BackgroundStyle.GRADIENT_PARTICLES && settings.animationsEnabled) {
@@ -106,7 +148,9 @@ fun HashmiMotorsMainScreen(
         NavHost(
             navController = navController,
             startDestination = Routes.SPLASH,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = bottomSpace),
             enterTransition = {
                 slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(300)) + fadeIn(tween(300))
             },
@@ -122,9 +166,19 @@ fun HashmiMotorsMainScreen(
         ) {
             composable(Routes.SPLASH) {
                 SplashScreen(
+                    requirePin = settings.pinHash != null,
                     onNavigate = { destination ->
                         navController.navigate(destination) {
                             popUpTo(Routes.SPLASH) { inclusive = true }
+                        }
+                    }
+                )
+            }
+            composable(Routes.LOCK) {
+                LockScreen(
+                    onUnlocked = {
+                        navController.navigate(Routes.DASHBOARD) {
+                            popUpTo(Routes.LOCK) { inclusive = true }
                         }
                     }
                 )
@@ -158,11 +212,18 @@ fun HashmiMotorsMainScreen(
                     onReports = { navController.navigate(Routes.REPORTS) },
                     onHistory = { navController.navigate(Routes.INVOICE_HISTORY) },
                     onSettings = { navController.navigate(Routes.SETTINGS) },
-                    onCustomers = { navController.navigate(Routes.CUSTOMERS) }
+                    onCustomers = { navController.navigate(Routes.CUSTOMERS) },
+                    onSuppliers = { navController.navigate(Routes.SUPPLIERS) }
                 )
             }
             composable(Routes.SETTINGS) {
-                SettingsScreen(onBack = { navController.popBackStack() })
+                SettingsScreen(
+                    onBack = { navController.popBackStack() },
+                    onSecurity = { navController.navigate(Routes.PIN_SETUP) }
+                )
+            }
+            composable(Routes.PIN_SETUP) {
+                PinSetupScreen(onBack = { navController.popBackStack() })
             }
             composable(Routes.SEARCH) {
                 SearchScreen(
@@ -243,6 +304,22 @@ fun HashmiMotorsMainScreen(
             composable(Routes.CUSTOMERS) {
                 CustomerListScreen(onBack = { navController.popBackStack() })
             }
+            composable(Routes.SUPPLIERS) {
+                SuppliersScreen(onBack = { navController.popBackStack() })
+            }
+        }
+
+        // Persistent premium bottom navigation bar (main tabs only)
+        AnimatedVisibility(
+            visible = currentRoute in bottomNavRoutes,
+            enter = fadeIn(tween(200)) + slideInVertically(tween(250)) { it },
+            exit = fadeOut(tween(150)) + slideOutVertically(tween(200)) { it },
+            modifier = Modifier.align(Alignment.BottomCenter)
+        ) {
+            HashmiBottomBar(
+                currentRoute = currentRoute,
+                onNavigate = { route -> navigateTab(route) }
+            )
         }
     }
 }

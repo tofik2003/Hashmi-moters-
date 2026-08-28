@@ -6,6 +6,9 @@
     <color name="brand_purple">#7B1FA2</color>
     <color name="brand_teal">#00897B</color>
     <color name="brand_amber">#FFA000</color>
+    <color name="brand_navy">#0A0E2A</color>
+    <color name="brand_gold">#FFC53D</color>
+    <color name="brand_gold_bright">#FFD968</color>
 
     <!-- Primary palette -->
     <color name="md_theme_light_primary">#3F51B5</color>
@@ -50,9 +53,9 @@
     <color name="md_theme_dark_outline">#90909A</color>
 
     <!-- Gradients -->
-    <color name="gradient_start">#1A237E</color>
-    <color name="gradient_middle">#000000</color>
-    <color name="gradient_end">#4A148C</color>
+    <color name="gradient_start">#0A0E2A</color>
+    <color name="gradient_middle">#0F1233</color>
+    <color name="gradient_end">#24104A</color>
 
     <!-- Status -->
     <color name="status_success">#2E7D32</color>

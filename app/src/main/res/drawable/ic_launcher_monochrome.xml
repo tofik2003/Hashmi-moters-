@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Hashmi Motors premium launcher icon.
-    Gold emblem with a bold "H" monogram, and the "HASHMI"
-    wordmark beneath — all inside the adaptive-icon safe zone.
+    Monochrome layer for themed launcher icons (Android 13+).
+    Same emblem as the foreground but in a single color.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
@@ -10,14 +9,15 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Gold circular badge -->
+    <!-- Ring -->
     <path
-        android:fillColor="#FFC53D"
-        android:pathData="M32,44 a22,22 0 1,0 44,0 a22,22 0 1,0 -44,0" />
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M32,44 a22,22 0 1,0 44,0 a22,22 0 1,0 -44,0 M38,44 a16,16 0 1,0 32,0 a16,16 0 1,0 -32,0" />
 
-    <!-- Bold navy "H" monogram inside the badge -->
+    <!-- Bold "H" monogram -->
     <path
-        android:fillColor="#0A0E2A"
+        android:fillColor="#FFFFFF"
         android:pathData="M46.5,35 h4 v18 h-4 z M57.5,35 h4 v18 h-4 z M46.5,40.5 h15 v7 h-15 z" />
 
     <!-- "HASHMI" wordmark -->

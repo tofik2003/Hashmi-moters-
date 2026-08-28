@@ -33,6 +33,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hashmimotors.app.ui.theme.BrandGoldBright
+import com.hashmimotors.app.ui.theme.BrandGoldDeep
 import com.hashmimotors.app.ui.theme.GradientEnd
 import com.hashmimotors.app.ui.theme.GradientStart
 
@@ -77,7 +79,7 @@ fun AnimatedBigButton(
                 if (gradient) {
                     it.background(
                         brush = Brush.horizontalGradient(
-                            colors = listOf(GradientStart, GradientEnd)
+                            colors = listOf(BrandGoldBright, BrandGoldDeep)
                         ),
                         shape = RoundedCornerShape(16.dp)
                     )
@@ -101,20 +103,21 @@ fun AnimatedBigButton(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
+            val contentColor = if (gradient) Color(0xFF1A1A2E) else Color.White
             if (icon != null) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = contentColor,
                     modifier = Modifier.size(28.dp)
                 )
                 Box(modifier = Modifier.size(12.dp))
             }
             Text(
                 text = text,
-                color = Color.White,
+                color = contentColor,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.Bold
             )
         }
     }
