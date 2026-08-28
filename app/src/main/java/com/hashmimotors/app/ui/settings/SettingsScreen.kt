@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,11 +44,13 @@ import com.hashmimotors.app.domain.model.ThemeMode
 import com.hashmimotors.app.ui.components.SegmentedControl
 import com.hashmimotors.app.ui.components.SettingsRow
 import com.hashmimotors.app.ui.components.SettingsSection
+import com.hashmimotors.app.ui.theme.BrandGoldBright
 
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onSecurity: () -> Unit = {}
 ) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
 
@@ -151,10 +154,43 @@ fun SettingsScreen(
                 }
             }
 
+            SettingsSection("Security") {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onSecurity() }
+                        .padding(horizontal = 16.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Filled.Lock,
+                        contentDescription = null,
+                        tint = BrandGoldBright
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "App Lock (PIN)",
+                            color = Color.White,
+                            fontSize = 15.sp
+                        )
+                        Text(
+                            text = if (settings.pinHash != null)
+                                "PIN enabled — fingerprint unlock available"
+                            else
+                                "Set a 4-digit PIN to protect your data",
+                            color = Color.White.copy(alpha = 0.6f),
+                            fontSize = 12.sp
+                        )
+                    }
+                    Text("→", color = BrandGoldBright, fontSize = 20.sp)
+                }
+            }
+
             SettingsSection("About") {
-                SettingsRow("App", "Hashmi Motors")
-                SettingsRow("Version", "2.0.0 Premium")
-                SettingsRow("Build", "2")
+                SettingsRow("App", "Hashmi Motors Pro")
+                SettingsRow("Version", "2.1.0 Premium")
+                SettingsRow("Build", "3")
                 SettingsRow("Database", "Local (encrypted)")
                 SettingsRow("Sync", "Firebase (optional)")
             }

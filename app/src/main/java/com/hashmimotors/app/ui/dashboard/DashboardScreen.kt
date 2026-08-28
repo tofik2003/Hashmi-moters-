@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -78,7 +79,8 @@ fun DashboardScreen(
     onReports: () -> Unit,
     onHistory: () -> Unit,
     onSettings: () -> Unit,
-    onCustomers: () -> Unit = {}
+    onCustomers: () -> Unit = {},
+    onSuppliers: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -86,7 +88,7 @@ fun DashboardScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp),
-        contentPadding = PaddingValues(bottom = 132.dp),
+        contentPadding = PaddingValues(bottom = 32.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item {
@@ -342,6 +344,7 @@ fun DashboardScreen(
                             "inventory" -> onInventory
                             "history" -> onHistory
                             "customers" -> onCustomers
+                            "suppliers" -> onSuppliers
                             else -> onNewBill
                         },
                         modifier = Modifier.weight(1f)
@@ -547,5 +550,6 @@ private val quickActions = listOf(
     QuickAction("add_stock", "Add Stock", Icons.Filled.Inventory, Color(0xFFAB47BC)),
     QuickAction("fitment", "Find by Vehicle", Icons.Filled.ShoppingCart, Color(0xFFEC407A)),
     QuickAction("history", "Bill History", Icons.Filled.Receipt, Color(0xFF7E57C2)),
-    QuickAction("customers", "Customers", Icons.Filled.Person, Color(0xFF26A69A))
+    QuickAction("customers", "Customers", Icons.Filled.Person, Color(0xFF26A69A)),
+    QuickAction("suppliers", "Suppliers", Icons.Filled.LocalShipping, Color(0xFF5C6BFF))
 )

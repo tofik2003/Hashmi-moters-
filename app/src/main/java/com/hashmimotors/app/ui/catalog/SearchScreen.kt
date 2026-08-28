@@ -199,7 +199,7 @@ fun SearchScreen(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
-                contentPadding = PaddingValues(bottom = 96.dp),
+                contentPadding = PaddingValues(bottom = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(state.parts, key = { it.id }) { part ->
@@ -217,7 +217,7 @@ fun SearchScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 24.dp)
-            .padding(bottom = 104.dp),
+            .padding(bottom = 20.dp),
         contentAlignment = Alignment.BottomEnd
     ) {
         Box(

@@ -91,7 +91,7 @@ fun BillingScreen(
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 120.dp),
+            contentPadding = PaddingValues(bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item { Spacer(modifier = Modifier.height(24.dp)) }

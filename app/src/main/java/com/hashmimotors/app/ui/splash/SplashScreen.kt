@@ -74,6 +74,7 @@ class SplashViewModel @Inject constructor(
 @Composable
 fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel(),
+    requirePin: Boolean = false,
     onNavigate: (String) -> Unit
 ) {
     var startAnimation by remember { mutableStateOf(false) }
@@ -111,10 +112,14 @@ fun SplashScreen(
 
     val isSetup = viewModel.isShopSetup.collectAsState().value
 
-    LaunchedEffect(isSetup) {
+    LaunchedEffect(isSetup, requirePin) {
         startAnimation = true
         delay(1900)
-        val destination = if (isSetup == true) Routes.DASHBOARD else Routes.ONBOARDING
+        val destination = when {
+            requirePin -> Routes.LOCK
+            isSetup == true -> Routes.DASHBOARD
+            else -> Routes.ONBOARDING
+        }
         onNavigate(destination)
     }
 
@@ -176,12 +181,31 @@ fun SplashScreen(
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 1.sp
                 )
+                Spacer(modifier = Modifier.width(10.dp))
+                Box(
+                    modifier = Modifier
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(BrandGoldBright, BrandGold)
+                            ),
+                            shape = CircleShape
+                        )
+                        .padding(horizontal = 10.dp, vertical = 3.dp)
+                ) {
+                    Text(
+                        text = "PRO",
+                        color = Color(0xFF1A1A2E),
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        letterSpacing = 1.sp
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Spare Parts Manager",
+                text = "Premium Spare Parts Manager",
                 color = Color.White.copy(alpha = 0.72f),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
