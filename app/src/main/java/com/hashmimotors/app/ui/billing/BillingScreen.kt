@@ -444,7 +444,7 @@ private fun QuickAddTile(
                 maxLines = 1
             )
             Text(
-                text = if (alreadyInCart) "In cart ✓" else "₹${\"%,.0f\".format(part.sellingPrice)}",
+                text = if (alreadyInCart) "In cart ✓" else "₹${"%,.0f".format(part.sellingPrice)}",
                 color = if (alreadyInCart) Color.White.copy(alpha = 0.85f) else BrandGold,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
