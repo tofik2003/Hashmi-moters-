@@ -28,6 +28,7 @@ import com.hashmimotors.app.ui.billing.BillingScreen
 import com.hashmimotors.app.ui.billing.InvoiceHistoryScreen
 import com.hashmimotors.app.ui.billing.InvoicePreviewScreen
 import com.hashmimotors.app.ui.catalog.AddPartScreen
+import com.hashmimotors.app.ui.catalog.CatalogImportScreen
 import com.hashmimotors.app.ui.catalog.SearchScreen
 import com.hashmimotors.app.ui.components.AnimatedParticleBackground
 import com.hashmimotors.app.ui.customers.CustomerListScreen
@@ -51,6 +52,7 @@ object Routes {
     const val DASHBOARD = "dashboard"
     const val SETTINGS = "settings"
     const val SEARCH = "search"
+    const val IMPORT = "import"
     const val ADD_PART = "add_part"
     const val EDIT_PART = "edit_part/{partId}"
     const val FITMENT_WIZARD = "fitment_wizard"
@@ -158,7 +160,8 @@ fun HashmiMotorsMainScreen(
                     onReports = { navController.navigate(Routes.REPORTS) },
                     onHistory = { navController.navigate(Routes.INVOICE_HISTORY) },
                     onSettings = { navController.navigate(Routes.SETTINGS) },
-                    onCustomers = { navController.navigate(Routes.CUSTOMERS) }
+                    onCustomers = { navController.navigate(Routes.CUSTOMERS) },
+                    onImport = { navController.navigate(Routes.IMPORT) }
                 )
             }
             composable(Routes.SETTINGS) {
@@ -169,6 +172,12 @@ fun HashmiMotorsMainScreen(
                     onPartClick = { id -> navController.navigate("edit_part/$id") },
                     onAddPartClick = { navController.navigate(Routes.ADD_PART) },
                     onScanClick = { },
+                    onImportClick = { navController.navigate(Routes.IMPORT) },
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.IMPORT) {
+                CatalogImportScreen(
                     onBack = { navController.popBackStack() }
                 )
             }

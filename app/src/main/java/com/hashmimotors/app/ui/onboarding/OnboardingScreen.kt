@@ -59,7 +59,7 @@ fun OnboardingScreen(
 ) {
     val pages = listOf(
         OnboardingPage(
-            title = "Welcome to Hashmi Motors",
+            title = "Welcome to Hashmi Motors Premium",
             description = "Manage your spare parts shop with ease. Everything you need, in your pocket.",
             icon = Icons.Filled.Build
         ),

@@ -18,6 +18,30 @@ class CategoryRepository @Inject constructor(
 
     suspend fun getCategoryById(id: String): Category? = categoryDao.getById(id)?.toDomain()
 
+    suspend fun getAllCategoriesOnce(): List<Category> =
+        categoryDao.getAllOnce().map { it.toDomain() }
+
+    /**
+     * Resolve a category by name (case-insensitive). Creates it if it doesn't exist yet.
+     * Used by bulk CSV import where categories are referenced by name.
+     */
+    suspend fun getOrCreateCategory(name: String): Category? {
+        val trimmed = name.trim()
+        if (trimmed.isBlank()) return null
+        val existing = categoryDao.getAllOnce().firstOrNull {
+            it.name.equals(trimmed, ignoreCase = true)
+        }
+        if (existing != null) return existing.toDomain()
+        val created = Category(
+            id = java.util.UUID.randomUUID().toString(),
+            name = trimmed,
+            icon = "build",
+            sortOrder = 999
+        )
+        categoryDao.insert(created.toEntity())
+        return created
+    }
+
     suspend fun ensureSeeded() {
         if (categoryDao.count() == 0) {
             val defaults = listOf(

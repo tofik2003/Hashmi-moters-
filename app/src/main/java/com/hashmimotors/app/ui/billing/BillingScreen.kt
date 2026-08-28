@@ -435,7 +435,9 @@ fun PartPickerSheet(
             Spacer(modifier = Modifier.height(8.dp))
             if (parts.isEmpty()) {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -444,7 +446,12 @@ fun PartPickerSheet(
                     )
                 }
             } else {
-                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     items(parts, key = { it.id }) { part ->
                         PartListItem(part = part, onClick = { onPartClick(part) })
                     }

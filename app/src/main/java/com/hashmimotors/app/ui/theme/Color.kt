@@ -10,6 +10,11 @@ val BrandPurple = Color(0xFF7B1FA2)
 val BrandTeal = Color(0xFF00897B)
 val BrandAmber = Color(0xFFFFA000)
 
+// Premium gold palette
+val BrandGold = Color(0xFFFFC107)
+val BrandGoldLight = Color(0xFFFFD54F)
+val BrandGoldDark = Color(0xFFFF8F00)
+
 // Accent palette (user-selectable)
 val AccentIndigo = Color(0xFF3F51B5)
 val AccentBlue = Color(0xFF1976D2)

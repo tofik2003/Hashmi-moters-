@@ -83,7 +83,12 @@ fun AddStockScreen(
                 singleLine = true
             )
             Spacer(modifier = Modifier.height(12.dp))
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(state.parts, key = { it.id }) { part ->
                     Card(
                         modifier = Modifier

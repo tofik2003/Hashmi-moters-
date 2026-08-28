@@ -6,7 +6,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
@@ -117,16 +119,28 @@ fun SplashScreen(
             Text(
                 text = "Hashmi Motors",
                 color = Color.White,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
+                fontSize = 34.sp,
+                fontWeight = FontWeight.ExtraBold,
                 modifier = Modifier
                     .scale(scaleAnim)
                     .alpha(alphaAnim)
             )
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Spare Parts Manager",
+                text = "P R E M I U M",
+                color = Color(0xFFFFC107),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 4.sp,
+                modifier = Modifier
+                    .scale(scaleAnim)
+                    .alpha(alphaAnim)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "Premium Spare Parts Manager",
                 color = Color.White.copy(alpha = 0.7f),
-                fontSize = 16.sp,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.Normal,
                 modifier = Modifier
                     .alpha(alphaAnim)

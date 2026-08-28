@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -52,6 +53,7 @@ fun SearchScreen(
     onPartClick: (String) -> Unit,
     onAddPartClick: () -> Unit,
     onScanClick: () -> Unit,
+    onImportClick: () -> Unit = {},
     onBack: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -67,8 +69,12 @@ fun SearchScreen(
                 text = "Search Parts",
                 color = Color.White,
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
             )
+            IconButton(onClick = onImportClick) {
+                Icon(Icons.Filled.UploadFile, "Import", tint = Color(0xFFFFC107))
+            }
         }
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -153,7 +159,8 @@ fun SearchScreen(
             // Empty state
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .weight(1f)
+                    .fillMaxWidth()
                     .padding(32.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -175,20 +182,27 @@ fun SearchScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Tap the + button to add your first part",
+                        text = "Tap the + button to add your first part, or import a CSV",
                         color = Color.White.copy(alpha = 0.6f),
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
                 }
             }
         } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(state.parts, key = { it.id }) { part ->
                     PartListItem(
                         part = part,
                         onClick = { onPartClick(part.id) }
                     )
                 }
+                item { Spacer(modifier = Modifier.height(80.dp)) }
             }
         }
     }
