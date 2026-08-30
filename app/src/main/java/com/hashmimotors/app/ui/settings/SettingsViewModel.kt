@@ -115,9 +115,9 @@ class SettingsViewModel @Inject constructor(
     fun getAccentColor(type: AccentColorType): Color {
         return when (type) {
             AccentColorType.INDIGO -> Color(0xFF6366F1)
-            AccentColorType.EMERALD -> Color(0xFF10B981)
-            AccentColorType.AMBER -> Color(0xFFF59E0B)
-            AccentColorType.ROSE -> Color(0xFFF43F5E)
+            AccentColorType.BLUE -> Color(0xFF2563EB)
+            AccentColorType.GREEN -> Color(0xFF10B981)
+            AccentColorType.ORANGE -> Color(0xFFF97316)
         }
     }
 }

@@ -26,6 +26,10 @@ class SettingsRepository @Inject constructor(
         settingsDao.upsert(settings.toEntity())
     }
 
+    suspend fun updateSettings(settings: AppSettings) {
+        saveSettings(settings)
+    }
+
     /**
      * Compute accent color from user selection.
      */
