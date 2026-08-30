@@ -209,7 +209,8 @@ fun HashmiMotorsMainScreen(
                         onBack = { navController.popBackStack() },
                         onNavigateToShopSetup = { navController.navigate(Routes.SHOP_SETUP) },
                         onNavigateToSuppliers = { navController.navigate(Routes.SUPPLIERS) },
-                        onNavigateToPinSetup = { navController.navigate(Routes.PIN_SETUP) }
+                        onNavigateToPinSetup = { navController.navigate(Routes.PIN_SETUP) },
+                        onNavigateToImport = { navController.navigate(Routes.IMPORT) }
                     )
                 }
 

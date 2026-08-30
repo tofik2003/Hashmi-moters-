@@ -71,7 +71,8 @@ fun SettingsScreen(
     onBack: () -> Unit,
     onNavigateToShopSetup: () -> Unit = {},
     onNavigateToSuppliers: () -> Unit = {},
-    onNavigateToPinSetup: () -> Unit = {}
+    onNavigateToPinSetup: () -> Unit = {},
+    onNavigateToImport: () -> Unit = {}
 ) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
     val statusMessage by viewModel.statusMessage.collectAsState()
@@ -151,6 +152,12 @@ fun SettingsScreen(
 
             // Quick Data Actions
             SettingsSection("Inventory Tools & Backup") {
+                ActionRow(
+                    title = "Bulk Import Parts (CSV / Excel)",
+                    subtitle = "Import hundreds of items from spreadsheets or text",
+                    icon = Icons.Filled.Upload,
+                    onClick = onNavigateToImport
+                )
                 ActionRow(
                     title = "Load 50 Sample Indian Auto Parts",
                     subtitle = "Instantly populates Bosch, Mann, NGK parts & Swift fitments",
