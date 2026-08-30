@@ -17,7 +17,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,6 +28,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.hashmimotors.app.ui.theme.BrandGold
+import com.hashmimotors.app.ui.theme.BrandGoldBright
 
 @Composable
 fun ReportsScreen(
@@ -41,14 +42,21 @@ fun ReportsScreen(
         Spacer(modifier = Modifier.height(24.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onBack) {
-                Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
+                Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
             }
-            Text(
-                text = "Reports",
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Column {
+                Text(
+                    text = "Sales & Inventory Reports",
+                    color = Color.White,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Real-time summary & analytics",
+                    color = BrandGold,
+                    fontSize = 12.sp
+                )
+            }
         }
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -61,11 +69,12 @@ fun ReportsScreen(
             // Today's stats
             item {
                 ReportCard(
-                    title = "Today",
+                    title = "Today's Performance",
                     rows = listOf(
-                        "Total Sales" to "₹${"%,.0f".format(state.todaySales)}",
-                        "Bills" to state.todayBills.toString(),
-                        "Items Sold" to state.todayItems.toString()
+                        "Total Revenue" to "₹${"%,.0f".format(state.todaySales)}",
+                        "Invoices Issued" to state.todayBills.toString(),
+                        "Parts / Units Sold" to "${state.todayItems} pcs",
+                        "Avg Bill Size" to "₹${"%,.0f".format(state.avgBillValue)}"
                     )
                 )
             }
@@ -74,22 +83,24 @@ fun ReportsScreen(
                 ReportCard(
                     title = "This Month",
                     rows = listOf(
-                        "Total Sales" to "₹${"%,.0f".format(state.monthSales)}",
-                        "Bills" to state.monthBills.toString(),
-                        "Avg per Bill" to "₹${"%,.0f".format(state.avgBillValue)}"
+                        "Monthly Revenue" to "₹${"%,.0f".format(state.monthSales)}",
+                        "Total Invoices" to state.monthBills.toString()
                     )
                 )
             }
-            // Inventory
+            // Inventory & Stock
             item {
                 ReportCard(
-                    title = "Inventory",
+                    title = "Inventory Valuation",
                     rows = listOf(
-                        "Total Parts" to state.totalParts.toString(),
-                        "Stock Value (at cost)" to "₹${"%,.0f".format(state.stockValue)}",
-                        "Low Stock" to state.lowStockCount.toString()
+                        "Catalog SKUs" to state.totalParts.toString(),
+                        "Total Stock Value (Cost)" to "₹${"%,.0f".format(state.stockValue)}",
+                        "Low Stock Items" to state.lowStockCount.toString()
                     )
                 )
+            }
+            item {
+                Spacer(modifier = Modifier.height(72.dp))
             }
         }
     }
@@ -108,18 +119,21 @@ private fun ReportCard(
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = title,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold
+                color = BrandGoldBright,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            rows.forEach { (label, value) ->
+            Spacer(modifier = Modifier.height(10.dp))
+            rows.forEachIndexed { index, (label, value) ->
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(label, color = Color.White.copy(alpha = 0.7f), fontSize = 14.sp)
+                    Text(label, color = Color.White.copy(alpha = 0.75f), fontSize = 13.sp)
                     Text(value, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                }
+                if (index < rows.size - 1) {
+                    Box(modifier = Modifier.fillMaxWidth().height(1.dp).padding(vertical = 2.dp))
                 }
             }
         }

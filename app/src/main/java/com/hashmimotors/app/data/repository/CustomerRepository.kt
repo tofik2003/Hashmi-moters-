@@ -16,6 +16,8 @@ class CustomerRepository @Inject constructor(
         list.map { it.toDomain() }
     }
 
+    suspend fun getAllCustomersOnce(): List<Customer> = customerDao.getAllOnce().map { it.toDomain() }
+
     fun searchCustomers(query: String): Flow<List<Customer>> = customerDao.search(query).map { list ->
         list.map { it.toDomain() }
     }

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.hashmimotors.app.data.repository.InvoiceRepository
 import com.hashmimotors.app.data.repository.PartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -24,27 +23,44 @@ data class ReportsUiState(
     val lowStockCount: Int = 0
 )
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ReportsViewModel @Inject constructor(
-    private val invoiceRepository: InvoiceRepository,
-    private val partRepository: PartRepository
+    invoiceRepository: InvoiceRepository,
+    partRepository: PartRepository
 ) : ViewModel() {
 
     val uiState: StateFlow<ReportsUiState> = combine(
-        invoiceRepository.getTodaySalesTotal(),
-        invoiceRepository.getTodayBillCount(),
-        partRepository.getPartCount(),
-        partRepository.getLowStockCount(),
-        partRepository.getTotalStockValue()
-    ) { today, bills, totalParts, lowStock, stockValue ->
+        combine(
+            invoiceRepository.getTodaySalesTotal(),
+            invoiceRepository.getTodayBillCount(),
+            invoiceRepository.getTodayItemsSold()
+        ) { sales, bills, items ->
+            Triple(sales, bills, items)
+        },
+        combine(
+            invoiceRepository.getMonthSalesTotal(),
+            invoiceRepository.getMonthBillCount(),
+            partRepository.getPartCount()
+        ) { mSales, mBills, partsCount ->
+            Triple(mSales, mBills, partsCount)
+        },
+        combine(
+            partRepository.getTotalStockValue(),
+            partRepository.getLowStockCount()
+        ) { stockVal, lowStock ->
+            stockVal to lowStock
+        }
+    ) { (todaySales, todayBills, todayItems), (mSales, mBills, partsCount), (stockVal, lowStock) ->
         ReportsUiState(
-            todaySales = today,
-            todayBills = bills,
-            totalParts = totalParts,
-            lowStockCount = lowStock,
-            stockValue = stockValue,
-            avgBillValue = if (bills > 0) today / bills else 0.0
+            todaySales = todaySales,
+            todayBills = todayBills,
+            todayItems = todayItems,
+            monthSales = mSales,
+            monthBills = mBills,
+            avgBillValue = if (todayBills > 0) todaySales / todayBills else 0.0,
+            totalParts = partsCount,
+            stockValue = stockVal,
+            lowStockCount = lowStock
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ReportsUiState())
 }

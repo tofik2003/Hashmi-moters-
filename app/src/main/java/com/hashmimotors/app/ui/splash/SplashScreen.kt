@@ -29,32 +29,50 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.hashmimotors.app.data.repository.CategoryRepository
+import com.hashmimotors.app.data.repository.SettingsRepository
 import com.hashmimotors.app.data.repository.ShopRepository
+import com.hashmimotors.app.data.repository.VehicleRepository
+import com.hashmimotors.app.data.seed.DemoCatalogSeeder
 import com.hashmimotors.app.domain.model.Shop
 import com.hashmimotors.app.ui.Routes
+import com.hashmimotors.app.ui.theme.BrandGold
+import com.hashmimotors.app.ui.theme.BrandGoldBright
 import com.hashmimotors.app.ui.theme.GradientEnd
 import com.hashmimotors.app.ui.theme.GradientStart
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import javax.inject.Inject
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val shopRepository: ShopRepository
+    private val shopRepository: ShopRepository,
+    private val categoryRepository: CategoryRepository,
+    private val vehicleRepository: VehicleRepository,
+    private val demoCatalogSeeder: DemoCatalogSeeder,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
-    init {
-        viewModelScope.launch {
-            // Ensure a default shop exists so the app never blocks on setup.
-            if (shopRepository.getShopOnce() == null) {
-                shopRepository.saveShop(
-                    Shop(name = "Hashmi", isSetupComplete = true)
-                )
-            }
+    suspend fun prepareApp(): String {
+        // 1. Ensure shop exists
+        if (shopRepository.getShopOnce() == null) {
+            shopRepository.saveShop(
+                Shop(name = "Hashmi Motors", isSetupComplete = true)
+            )
         }
+        // 2. Ensure default categories & vehicles are seeded
+        categoryRepository.ensureSeeded()
+        vehicleRepository.ensureSeeded()
+        // 3. Seed demo inventory if catalog is empty
+        demoCatalogSeeder.seedIfEmpty()
+
+        // 4. Check if PIN lock is active
+        val settings = settingsRepository.getSettings().first()
+        return if (settings.pinHash != null) Routes.LOCK else Routes.DASHBOARD
     }
 }
 
@@ -65,21 +83,21 @@ fun SplashScreen(
 ) {
     var startAnimation by remember { mutableStateOf(false) }
     val scaleAnim by animateFloatAsState(
-        targetValue = if (startAnimation) 1f else 0.3f,
-        animationSpec = tween(durationMillis = 800),
+        targetValue = if (startAnimation) 1f else 0.4f,
+        animationSpec = tween(durationMillis = 700),
         label = "scale"
     )
     val alphaAnim by animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0f,
-        animationSpec = tween(durationMillis = 1200),
+        animationSpec = tween(durationMillis = 900),
         label = "alpha"
     )
 
     LaunchedEffect(Unit) {
         startAnimation = true
-        delay(1800)
-        // Straight to the dashboard — no onboarding or setup blocking.
-        onNavigate(Routes.DASHBOARD)
+        val targetDestination = viewModel.prepareApp()
+        delay(1400)
+        onNavigate(targetDestination)
     }
 
     Box(
@@ -87,7 +105,7 @@ fun SplashScreen(
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(GradientStart, Color.Black, GradientEnd)
+                    colors = listOf(GradientStart, Color(0xFF0C0F26), GradientEnd)
                 )
             ),
         contentAlignment = Alignment.Center
@@ -98,58 +116,56 @@ fun SplashScreen(
         ) {
             Box(
                 modifier = Modifier
-                    .size(140.dp)
+                    .size(130.dp)
                     .scale(scaleAnim)
                     .alpha(alphaAnim),
                 contentAlignment = Alignment.Center
             ) {
-                // Premium gold "H" monogram in a ring
                 Box(
                     modifier = Modifier
-                        .size(130.dp)
+                        .size(120.dp)
                         .border(
                             width = 2.dp,
-                            color = Color(0xFFFFC107).copy(alpha = 0.6f),
+                            color = BrandGold.copy(alpha = 0.7f),
                             shape = CircleShape
                         ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "H",
-                        color = Color(0xFFFFC107),
-                        fontSize = 84.sp,
+                        text = "HM",
+                        color = BrandGoldBright,
+                        fontSize = 54.sp,
                         fontWeight = FontWeight.ExtraBold
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Hashmi",
+                text = "Hashmi Motors",
                 color = Color.White,
-                fontSize = 34.sp,
+                fontSize = 32.sp,
                 fontWeight = FontWeight.ExtraBold,
                 modifier = Modifier
                     .scale(scaleAnim)
                     .alpha(alphaAnim)
             )
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "P R E M I U M",
-                color = Color(0xFFFFC107),
-                fontSize = 14.sp,
+                text = "SPARE PARTS & BILLING",
+                color = BrandGold,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                letterSpacing = 4.sp,
+                letterSpacing = 3.sp,
                 modifier = Modifier
                     .scale(scaleAnim)
                     .alpha(alphaAnim)
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Premium Spare Parts Manager",
-                color = Color.White.copy(alpha = 0.7f),
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Normal,
-                modifier = Modifier
-                    .alpha(alphaAnim)
+                text = "Offline-First Counter System",
+                color = Color.White.copy(alpha = 0.65f),
+                fontSize = 13.sp,
+                modifier = Modifier.alpha(alphaAnim)
             )
         }
     }

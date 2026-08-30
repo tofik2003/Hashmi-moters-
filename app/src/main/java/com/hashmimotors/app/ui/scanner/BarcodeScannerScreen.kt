@@ -64,6 +64,8 @@ import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.ui.components.AnimatedBigButton
 import com.hashmimotors.app.ui.sound.Feedback
 import com.hashmimotors.app.ui.sound.LocalAppFeedback
+import com.hashmimotors.app.ui.theme.BrandGold
+import com.hashmimotors.app.ui.theme.BrandGoldBright
 
 /**
  * Live camera barcode/QR scanner.
@@ -110,7 +112,10 @@ fun BarcodeScannerScreen(
                     .build()
                 analysis.setAnalyzer(
                     executor,
-                    BarcodeAnalyzer { raw -> viewModel.onBarcode(raw) }
+                    BarcodeAnalyzer { raw ->
+                        Feedback.scan(feedback)
+                        viewModel.onBarcode(raw)
+                    }
                 )
                 provider.unbindAll()
                 provider.bindToLifecycle(
@@ -128,14 +133,11 @@ fun BarcodeScannerScreen(
 
     Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
         if (hasCameraPermission) {
-            // Camera preview
             AndroidView(
                 factory = { previewView },
                 modifier = Modifier.fillMaxSize()
             )
-
         } else {
-            // Permission prompt
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -146,14 +148,14 @@ fun BarcodeScannerScreen(
                 Text("📷", fontSize = 64.sp)
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Camera permission needed",
+                    text = "Camera Permission Required",
                     color = Color.White,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Grant camera access to scan barcodes and QR codes.",
+                    text = "Grant camera access to scan automotive barcodes & QR codes.",
                     color = Color.White.copy(alpha = 0.7f),
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center
@@ -162,12 +164,12 @@ fun BarcodeScannerScreen(
                 AnimatedBigButton(
                     text = "Grant Permission",
                     onClick = { permissionLauncher.launch(Manifest.permission.CAMERA) },
-                    gradient = false
+                    gradient = true
                 )
             }
         }
 
-        // Top bar (over camera)
+        // Top bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -177,7 +179,7 @@ fun BarcodeScannerScreen(
             Box(
                 modifier = Modifier
                     .size(44.dp)
-                    .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(22.dp)),
+                    .background(Color.Black.copy(alpha = 0.6f), RoundedCornerShape(22.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 IconButton(onClick = onBack) {
@@ -187,20 +189,20 @@ fun BarcodeScannerScreen(
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
-                    text = "Scan Barcode",
+                    text = "Scan Barcode / QR",
                     color = Color.White,
-                    fontSize = 22.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Point camera at a barcode or QR code",
-                    color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 13.sp
+                    text = "Point camera at part barcode",
+                    color = BrandGold,
+                    fontSize = 12.sp
                 )
             }
         }
 
-        // Result card (bottom)
+        // Result card
         if (state.raw != null) {
             Box(
                 modifier = Modifier
@@ -248,23 +250,23 @@ private fun ScanResultCard(
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A2E))
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF15193B))
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
                 // Header row
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = if (state.savedName != null) "✅ Saved to catalog"
-                        else state.matchedPart?.let { "✓ Identified" }
+                        else state.matchedPart?.let { "✓ Part Found" }
                             ?: state.onlineProduct?.let { "🌐 Found online" }
-                            ?: "Scanned",
+                            ?: "Scanned Code",
                         color = when {
                             state.savedName != null -> Color(0xFF66BB6A)
-                            state.matchedPart != null -> Color(0xFF66BB6A)
+                            state.matchedPart != null -> BrandGoldBright
                             state.onlineProduct != null -> Color(0xFF4FC3F7)
                             else -> Color(0xFFFFC107)
                         },
-                        fontSize = 18.sp,
+                        fontSize = 17.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.weight(1f)
                     )
@@ -283,17 +285,17 @@ private fun ScanResultCard(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(20.dp),
-                                color = MaterialTheme.colorScheme.primary
+                                color = BrandGold
                             )
                             Spacer(modifier = Modifier.width(10.dp))
-                            Text("Searching online…", color = Color.White, fontSize = 14.sp)
+                            Text("Searching catalog online…", color = Color.White, fontSize = 14.sp)
                         }
                     }
                     else -> {
                         Text(
-                            text = "Not in your catalog yet.",
+                            text = "Item not yet registered in catalog.",
                             color = Color.White,
-                            fontSize = 15.sp
+                            fontSize = 14.sp
                         )
                         if (state.error != null) {
                             Spacer(modifier = Modifier.height(6.dp))
@@ -312,7 +314,7 @@ private fun ScanResultCard(
                 when {
                     state.matchedPart != null -> {
                         AnimatedBigButton(
-                            text = "Edit / Restock",
+                            text = "View / Edit SKU",
                             icon = Icons.Filled.Edit,
                             onClick = onEditPart
                         )
@@ -320,7 +322,7 @@ private fun ScanResultCard(
                     state.onlineProduct != null -> {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             AnimatedBigButton(
-                                text = if (state.isSaving) "Saving..." else "Save to Catalog",
+                                text = if (state.isSaving) "Saving..." else "1-Tap Save to Catalog",
                                 icon = Icons.Filled.Save,
                                 enabled = !state.isSaving,
                                 onClick = onSaveOnline
@@ -341,9 +343,9 @@ private fun ScanResultCard(
                                 gradient = false
                             )
                             AnimatedBigButton(
-                                text = "Add Manually",
+                                text = "Add to Catalog",
                                 onClick = onAddManually,
-                                gradient = false
+                                gradient = true
                             )
                         }
                     }
@@ -384,12 +386,12 @@ private fun MatchedPartContent(part: Part) {
         Box(
             modifier = Modifier
                 .size(52.dp)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), RoundedCornerShape(10.dp)),
+                .background(BrandGold.copy(alpha = 0.2f), RoundedCornerShape(10.dp)),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = part.name.take(2).uppercase(),
-                color = Color.White,
+                color = BrandGoldBright,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
@@ -399,7 +401,7 @@ private fun MatchedPartContent(part: Part) {
             Text(
                 text = part.name,
                 color = Color.White,
-                fontSize = 16.sp,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold
             )
             if (part.brand != null) {
@@ -426,43 +428,27 @@ private fun OnlineProductContent(product: OnlineProduct) {
         Text(
             text = product.name.orEmpty(),
             color = Color.White,
-            fontSize = 16.sp,
+            fontSize = 15.sp,
             fontWeight = FontWeight.SemiBold
         )
         if (product.brand != null) {
             Text(
                 text = "Brand: ${product.brand}",
                 color = Color.White.copy(alpha = 0.7f),
-                fontSize = 13.sp
-            )
-        }
-        if (product.category != null) {
-            Text(
-                text = "Category: ${product.category}",
-                color = Color.White.copy(alpha = 0.7f),
-                fontSize = 13.sp
+                fontSize = 12.sp
             )
         }
         if (product.price != null) {
             Text(
                 text = "Reference price: ₹${"%,.0f".format(product.price)}",
-                color = Color(0xFFFFC107),
+                color = BrandGoldBright,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold
             )
         }
-        Text(
-            text = "Source: ${product.source}",
-            color = Color.White.copy(alpha = 0.5f),
-            fontSize = 11.sp,
-            modifier = Modifier.padding(top = 4.dp)
-        )
     }
 }
 
-/**
- * ML Kit barcode analyzer running on the camera's ImageAnalysis stream.
- */
 private class BarcodeAnalyzer(
     private val onBarcode: (String) -> Unit
 ) : ImageAnalysis.Analyzer {

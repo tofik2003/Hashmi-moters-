@@ -20,6 +20,11 @@ object Feedback {
         feedback?.sound?.play(SoundEffect.TAP)
     }
 
+    fun scan(feedback: AppFeedback?) {
+        feedback?.haptic?.heavyClick()
+        feedback?.sound?.play(SoundEffect.NOTIFICATION)
+    }
+
     fun success(feedback: AppFeedback?) {
         feedback?.haptic?.success()
         feedback?.sound?.play(SoundEffect.SUCCESS)

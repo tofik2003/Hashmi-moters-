@@ -47,11 +47,11 @@ class CatalogViewModel @Inject constructor(
     }.flatMapLatest { (q, catId, lowOnly) ->
         val partsFlow = when {
             lowOnly -> partRepo.getLowStock()
-            q.isNotBlank() -> partRepo.searchParts(q)
             else -> partRepo.getAllParts()
         }
-        combine(partsFlow, categoryRepo.getAllCategories()) { parts, categories ->
-            val filtered = if (catId != null) parts.filter { it.categoryId == catId } else parts
+        combine(partsFlow, categoryRepo.getAllCategories()) { allParts, categories ->
+            val byCategory = if (catId != null) allParts.filter { it.categoryId == catId } else allParts
+            val filtered = if (q.isNotBlank()) FuzzySearch.rank(byCategory, q) else byCategory
             CatalogUiState(
                 parts = filtered,
                 categories = categories,

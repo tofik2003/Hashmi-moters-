@@ -29,7 +29,9 @@ class HapticManager @Inject constructor(
 
     fun lightTap() = vibrate(10L, 80)
     fun mediumTap() = vibrate(20L, 120)
+    fun heavyClick() = vibrate(25L, 160)
     fun heavyTap() = vibrate(40L, 200)
+
     fun success() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator?.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 30, 50, 30), -1))
@@ -38,6 +40,7 @@ class HapticManager @Inject constructor(
             vibrator?.vibrate(longArrayOf(0, 30, 50, 30), -1)
         }
     }
+
     fun error() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator?.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 50, 30, 50, 30, 50), -1))

@@ -16,6 +16,8 @@ class SupplierRepository @Inject constructor(
         list.map { it.toDomain() }
     }
 
+    suspend fun getAllSuppliersOnce(): List<Supplier> = supplierDao.getAllOnce().map { it.toDomain() }
+
     suspend fun getSupplierById(id: String): Supplier? = supplierDao.getById(id)?.toDomain()
 
     suspend fun saveSupplier(supplier: Supplier) {

@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,8 +24,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,6 +40,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,9 +56,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.InvoiceLine
+import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.ui.catalog.CatalogViewModel
 import com.hashmimotors.app.ui.catalog.PartListItem
+import com.hashmimotors.app.ui.components.AnimatedBigButton
 import com.hashmimotors.app.ui.components.GlassTextField
+import com.hashmimotors.app.ui.sound.Feedback
+import com.hashmimotors.app.ui.sound.LocalAppFeedback
+import com.hashmimotors.app.ui.theme.BrandGold
+import com.hashmimotors.app.ui.theme.BrandGoldBright
 
 @Composable
 fun BillingScreen(
@@ -59,77 +72,157 @@ fun BillingScreen(
     catalogViewModel: CatalogViewModel = hiltViewModel(),
     onBack: () -> Unit,
     onSaved: (String) -> Unit,
-    onAddItem: () -> Unit
+    onAddItem: () -> Unit = {},
+    onScanToBill: () -> Unit = {}
 ) {
     val state by billingViewModel.state.collectAsState()
     val catalogState by catalogViewModel.uiState.collectAsState()
-    var customerName by remember { mutableStateOf("Walk-in Customer") }
-    var customerPhone by remember { mutableStateOf("") }
-    var billDiscountText by remember { mutableStateOf("0") }
-    var notes by remember { mutableStateOf("") }
+    val customers by billingViewModel.customers.collectAsState()
+    val quickParts by billingViewModel.quickParts.collectAsState()
+    val feedback = LocalAppFeedback.current
+
     var showPartPicker by remember { mutableStateOf(false) }
+    var showCustomerPicker by remember { mutableStateOf(false) }
+
+    LaunchedEffect(state.savedInvoice) {
+        state.savedInvoice?.let { invoice ->
+            Feedback.success(feedback)
+            onSaved(invoice.id)
+            billingViewModel.clearCart()
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Column(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.height(24.dp))
-            // Top bar
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
-                }
-                Text(
-                    text = "New Bill",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
 
-            // Customer section
-            Card(
+            // Top Bar
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onBack) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "New Bill",
+                        color = Color.White,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "Bill of Supply • Composition",
+                        color = BrandGold,
+                        fontSize = 11.sp
+                    )
+                }
+                IconButton(onClick = {
+                    Feedback.tap(feedback)
+                    billingViewModel.repeatLastBill()
+                }) {
+                    Icon(Icons.Filled.History, contentDescription = "Repeat Last Bill", tint = BrandGoldBright)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Quick Add Tiles Carousel
+            if (quickParts.isNotEmpty()) {
+                Text(
+                    text = "⚡ Quick Add",
+                    color = Color.White.copy(alpha = 0.8f),
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(end = 8.dp)
+                ) {
+                    items(quickParts, key = { it.id }) { part ->
+                        QuickPartChip(
+                            part = part,
+                            onClick = {
+                                Feedback.tap(feedback)
+                                billingViewModel.addPart(part, qty = 1)
+                            }
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            // Customer Card
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showCustomerPicker = !showCustomerPicker },
+                shape = RoundedCornerShape(14.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f))
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Filled.Person,
-                            contentDescription = null,
-                            tint = Color.White.copy(alpha = 0.6f)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .background(BrandGold.copy(alpha = 0.2f), CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(Icons.Filled.Person, null, tint = BrandGoldBright, modifier = Modifier.size(18.dp))
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = state.customerName.ifBlank { "Walk-in Customer" },
+                                color = Color.White,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            if (state.customerPhone.isNotBlank()) {
+                                Text(
+                                    text = state.customerPhone,
+                                    color = Color.White.copy(alpha = 0.7f),
+                                    fontSize = 11.sp
+                                )
+                            }
+                        }
                         Text(
-                            text = "Customer",
-                            color = Color.White,
-                            fontSize = 14.sp,
+                            text = if (showCustomerPicker) "Close" else "Change",
+                            color = BrandGold,
+                            fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold
                         )
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = customerName,
-                        onValueChange = { customerName = it },
-                        placeholder = { Text("Customer name") },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = customerPhone,
-                        onValueChange = { customerPhone = it },
-                        placeholder = { Text("Phone (optional)") },
-                        modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                        singleLine = true
-                    )
+
+                    if (showCustomerPicker) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        OutlinedTextField(
+                            value = state.customerName,
+                            onValueChange = { billingViewModel.setCustomerName(it) },
+                            label = { Text("Customer Name") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = state.customerPhone,
+                            onValueChange = { billingViewModel.setCustomerPhone(it) },
+                            label = { Text("Customer Phone (for WhatsApp bill)") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            // Lines section
+            // Cart Items Header & Add Button
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -139,38 +232,42 @@ fun BillingScreen(
                     text = "Items (${state.totalItems})",
                     color = Color.White,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.Bold
                 )
-                TextButton(onClick = { showPartPicker = true }) {
-                    Icon(
-                        Icons.Filled.Add,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "Add Item",
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TextButton(onClick = { showPartPicker = true }) {
+                        Icon(Icons.Filled.Add, null, tint = BrandGoldBright, modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Add Item", color = BrandGoldBright, fontWeight = FontWeight.SemiBold)
+                    }
                 }
             }
 
-            // Lines list
+            // Cart Items List
             if (state.lines.isEmpty()) {
                 Box(
                     modifier = Modifier
+                        .weight(1f)
                         .fillMaxWidth()
-                        .height(120.dp)
-                        .background(
-                            color = Color.White.copy(alpha = 0.05f),
-                            shape = RoundedCornerShape(12.dp)
-                        ),
+                        .background(Color.White.copy(alpha = 0.04f), RoundedCornerShape(12.dp))
+                        .clickable { showPartPicker = true },
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "No items added yet",
-                        color = Color.White.copy(alpha = 0.5f)
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("🛒", fontSize = 36.sp)
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = "Cart is empty",
+                            color = Color.White,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = "Tap + Add Item or choose from Quick Add above",
+                            color = Color.White.copy(alpha = 0.6f),
+                            fontSize = 12.sp
+                        )
+                    }
                 }
             } else {
                 LazyColumn(
@@ -181,82 +278,85 @@ fun BillingScreen(
                 ) {
                     items(state.lines.size) { idx ->
                         val line = state.lines[idx]
-                        BillLineItem(
+                        BillLineCard(
                             line = line,
                             index = idx,
-                            onQtyChange = { newQty -> billingViewModel.updateLineQty(idx, newQty) },
+                            onQtyInc = {
+                                Feedback.tap(feedback)
+                                billingViewModel.updateLineQty(idx, line.qty + 1)
+                            },
+                            onQtyDec = {
+                                Feedback.tap(feedback)
+                                billingViewModel.updateLineQty(idx, line.qty - 1)
+                            },
                             onRateChange = { newRate -> billingViewModel.updateLineRate(idx, newRate) },
-                            onRemove = { billingViewModel.removeLine(idx) }
+                            onDiscountChange = { newDisc -> billingViewModel.updateLineDiscount(idx, newDisc) },
+                            onRemove = {
+                                Feedback.tap(feedback)
+                                billingViewModel.removeLine(idx)
+                            }
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            // Bill-level discount + notes
-            OutlinedTextField(
-                value = billDiscountText,
-                onValueChange = {
-                    billDiscountText = it.filter { c -> c.isDigit() || c == '.' }
-                    billDiscountText.toDoubleOrNull()?.let { d -> billingViewModel.setBillDiscount(d) }
-                },
-                label = { Text("Bill Discount %") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = notes,
-                onValueChange = {
-                    notes = it
-                    billingViewModel.setNotes(it)
-                },
-                label = { Text("Notes (optional)") },
-                modifier = Modifier.fillMaxWidth(),
-                minLines = 1
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Totals card
+            // Totals Summary Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
-                )
+                colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.12f))
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    TotalRow("Subtotal", state.subtotal)
-                    if (state.totalDiscount > 0) {
-                        TotalRow("Discount", -state.totalDiscount, color = Color(0xFFFFA000))
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Subtotal", color = Color.White.copy(alpha = 0.7f), fontSize = 13.sp)
+                        Text("₹${"%,.0f".format(state.subtotal)}", color = Color.White, fontSize = 13.sp)
                     }
-                    HorizontalDivider()
-                    TotalRow("Total", state.grandTotal, bold = true, big = true)
+                    if (state.totalDiscount > 0) {
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Discount", color = Color(0xFFFFA000), fontSize = 13.sp)
+                            Text("- ₹${"%,.0f".format(state.totalDiscount)}", color = Color(0xFFFFA000), fontSize = 13.sp)
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.White.copy(alpha = 0.2f)))
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("Grand Total", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = "₹${"%,.0f".format(state.grandTotal)}",
+                            color = BrandGoldBright,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            // Save button
-            com.hashmimotors.app.ui.components.AnimatedBigButton(
-                text = if (state.isSaving) "Saving..." else "Save Bill",
+            // Save Bill Action
+            AnimatedBigButton(
+                text = if (state.isSaving) "Saving Bill..." else "Save Bill (₹${"%,.0f".format(state.grandTotal)})",
                 icon = Icons.Filled.Save,
                 enabled = !state.isSaving && state.lines.isNotEmpty(),
                 onClick = {
-                    billingViewModel.saveBill(userId = "default-user")
+                    billingViewModel.saveBill(userId = "shop-owner")
                 }
             )
-
-            // Auto-navigate when saved
-            androidx.compose.runtime.LaunchedEffect(state.savedInvoice) {
-                state.savedInvoice?.let { invoice ->
-                    onSaved(invoice.id)
-                    billingViewModel.clearCart()
-                }
-            }
+            Spacer(modifier = Modifier.height(56.dp))
         }
     }
 
@@ -266,6 +366,7 @@ fun BillingScreen(
             searchQuery = catalogState.searchQuery,
             onSearchChange = { catalogViewModel.onSearchChange(it) },
             onPartClick = { part ->
+                Feedback.tap(feedback)
                 billingViewModel.addPart(part, qty = 1)
                 showPartPicker = false
             },
@@ -275,16 +376,45 @@ fun BillingScreen(
 }
 
 @Composable
-private fun BillLineItem(
+private fun QuickPartChip(
+    part: Part,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color.White.copy(alpha = 0.1f))
+            .clickable { onClick() }
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+    ) {
+        Column {
+            Text(
+                text = part.name,
+                color = Color.White,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1
+            )
+            Text(
+                text = "₹${"%,.0f".format(part.sellingPrice)}",
+                color = BrandGoldBright,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
+
+@Composable
+private fun BillLineCard(
     line: InvoiceLine,
     index: Int,
-    onQtyChange: (Int) -> Unit,
+    onQtyInc: () -> Unit,
+    onQtyDec: () -> Unit,
     onRateChange: (Double) -> Unit,
+    onDiscountChange: (Double) -> Unit,
     onRemove: () -> Unit
 ) {
-    var qtyText by remember(line.qty) { mutableStateOf(line.qty.toString()) }
-    var rateText by remember(line.rate) { mutableStateOf(line.rate.toString()) }
-
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -296,16 +426,11 @@ private fun BillLineItem(
                     text = "${index + 1}. ${line.partSnapshot.name}",
                     color = Color.White,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.weight(1f),
-                    maxLines = 2
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
                 )
-                IconButton(onClick = onRemove) {
-                    Icon(
-                        Icons.Filled.Delete,
-                        contentDescription = "Remove",
-                        tint = Color(0xFFFF6B6B)
-                    )
+                IconButton(onClick = onRemove, modifier = Modifier.size(28.dp)) {
+                    Icon(Icons.Filled.Delete, contentDescription = "Remove", tint = Color(0xFFFF6B6B), modifier = Modifier.size(18.dp))
                 }
             }
             if (line.partSnapshot.oemNumbers.isNotEmpty()) {
@@ -317,39 +442,52 @@ private fun BillLineItem(
             }
             Spacer(modifier = Modifier.height(8.dp))
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Qty
-                OutlinedTextField(
-                    value = qtyText,
-                    onValueChange = {
-                        qtyText = it.filter { c -> c.isDigit() }
-                        qtyText.toIntOrNull()?.let { onQtyChange(it) }
-                    },
-                    label = { Text("Qty") },
-                    modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
-                )
-                // Rate
-                OutlinedTextField(
-                    value = rateText,
-                    onValueChange = {
-                        rateText = it.filter { c -> c.isDigit() || c == '.' }
-                        rateText.toDoubleOrNull()?.let { onRateChange(it) }
-                    },
-                    label = { Text("Rate") },
-                    modifier = Modifier.weight(1.5f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    singleLine = true
-                )
-                // Line total
+                // Qty Stepper
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .background(Color.White.copy(alpha = 0.12f), RoundedCornerShape(8.dp))
+                        .padding(4.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clip(CircleShape)
+                            .background(Color.White.copy(alpha = 0.15f))
+                            .clickable { onQtyDec() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(Icons.Filled.Remove, null, tint = Color.White, modifier = Modifier.size(16.dp))
+                    }
+                    Text(
+                        text = " ${line.qty} ",
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 6.dp)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clip(CircleShape)
+                            .background(BrandGold)
+                            .clickable { onQtyInc() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(Icons.Filled.Add, null, tint = Color(0xFF1A1A2E), modifier = Modifier.size(16.dp))
+                    }
+                }
+
+                // Rate x Qty
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "Total",
-                        color = Color.White.copy(alpha = 0.6f),
-                        fontSize = 10.sp
+                        text = "@ ₹${"%,.0f".format(line.rate)}",
+                        color = Color.White.copy(alpha = 0.65f),
+                        fontSize = 12.sp
                     )
                     Text(
                         text = "₹${"%,.0f".format(line.lineTotal)}",
@@ -363,61 +501,26 @@ private fun BillLineItem(
     }
 }
 
-@Composable
-private fun TotalRow(
-    label: String,
-    value: Double,
-    color: Color = Color.White,
-    bold: Boolean = false,
-    big: Boolean = false
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = label,
-            color = Color.White.copy(alpha = 0.8f),
-            fontSize = if (big) 18.sp else 14.sp,
-            fontWeight = if (bold) FontWeight.Bold else FontWeight.Normal
-        )
-        Text(
-            text = "₹${"%,.0f".format(value)}",
-            color = color,
-            fontSize = if (big) 24.sp else 14.sp,
-            fontWeight = if (bold) FontWeight.Bold else FontWeight.SemiBold
-        )
-    }
-}
-
-@Composable
-private fun HorizontalDivider() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color.White.copy(alpha = 0.2f))
-    )
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PartPickerSheet(
-    parts: List<com.hashmimotors.app.domain.model.Part>,
+private fun PartPickerSheet(
+    parts: List<Part>,
     searchQuery: String,
     onSearchChange: (String) -> Unit,
-    onPartClick: (com.hashmimotors.app.domain.model.Part) -> Unit,
+    onPartClick: (Part) -> Unit,
     onDismiss: () -> Unit
 ) {
     androidx.compose.material3.ModalBottomSheet(
         onDismissRequest = onDismiss,
-        containerColor = Color(0xFF1A1A2E)
+        containerColor = Color(0xFF15193B)
     ) {
-        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
             Text(
-                text = "Add Item to Bill",
+                text = "Pick Part for Bill",
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -426,12 +529,12 @@ fun PartPickerSheet(
             GlassTextField(
                 value = searchQuery,
                 onValueChange = onSearchChange,
-                label = "Search",
-                placeholder = "Search parts...",
-                leadingIcon = Icons.Filled.Add,
+                label = "Search Part",
+                placeholder = "Search name, OEM, brand...",
+                leadingIcon = Icons.Filled.Search,
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             if (parts.isEmpty()) {
                 Box(
                     modifier = Modifier
@@ -439,10 +542,7 @@ fun PartPickerSheet(
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "No parts. Add some in Catalog first.",
-                        color = Color.White.copy(alpha = 0.6f)
-                    )
+                    Text("No matching parts found.", color = Color.White.copy(alpha = 0.6f))
                 }
             } else {
                 LazyColumn(

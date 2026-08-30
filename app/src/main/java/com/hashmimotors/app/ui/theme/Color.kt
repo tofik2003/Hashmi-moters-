@@ -12,6 +12,7 @@ val BrandAmber = Color(0xFFFFA000)
 
 // Premium gold palette
 val BrandGold = Color(0xFFFFC107)
+val BrandGoldBright = Color(0xFFFFD700)
 val BrandGoldLight = Color(0xFFFFD54F)
 val BrandGoldDark = Color(0xFFFF8F00)
 

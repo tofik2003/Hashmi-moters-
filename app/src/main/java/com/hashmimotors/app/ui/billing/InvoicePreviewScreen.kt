@@ -23,14 +23,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Print
+import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Sms
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,7 +40,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -50,7 +48,10 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.Invoice
+import com.hashmimotors.app.domain.model.Shop
 import com.hashmimotors.app.ui.components.AnimatedBigButton
+import com.hashmimotors.app.ui.theme.BrandGold
+import com.hashmimotors.app.ui.theme.BrandGoldBright
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -67,7 +68,7 @@ fun InvoicePreviewScreen(
     val invoice by viewModel.invoice.collectAsState()
     val shop by viewModel.shop.collectAsState()
 
-    var showConfetti by remember { mutableStateOf(true) }
+    var showSuccess by remember { mutableStateOf(true) }
 
     LaunchedEffect(invoiceId) {
         viewModel.loadInvoice(invoiceId)
@@ -79,7 +80,7 @@ fun InvoicePreviewScreen(
             // Top bar
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.Filled.ArrowBack, "Back", tint = Color.White)
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                 }
                 Text(
                     text = "Bill of Supply",
@@ -93,27 +94,27 @@ fun InvoicePreviewScreen(
             invoice?.let { inv ->
                 LazyColumn(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     // Success banner
-                    if (showConfetti) {
+                    if (showSuccess) {
                         item {
                             Card(
                                 modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(16.dp),
+                                shape = RoundedCornerShape(14.dp),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = Color(0xFF2E7D32).copy(alpha = 0.3f)
+                                    containerColor = Color(0xFF2E7D32).copy(alpha = 0.35f)
                                 )
                             ) {
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(16.dp),
+                                        .padding(14.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Box(
                                         modifier = Modifier
-                                            .size(48.dp)
+                                            .size(40.dp)
                                             .background(Color(0xFF2E7D32), CircleShape),
                                         contentAlignment = Alignment.Center
                                     ) {
@@ -126,15 +127,16 @@ fun InvoicePreviewScreen(
                                     Spacer(modifier = Modifier.width(12.dp))
                                     Column {
                                         Text(
-                                            text = "Bill Saved!",
+                                            text = "Bill Saved & Stock Deducted",
                                             color = Color.White,
-                                            fontSize = 18.sp,
+                                            fontSize = 16.sp,
                                             fontWeight = FontWeight.Bold
                                         )
                                         Text(
                                             text = inv.invoiceNo,
-                                            color = Color.White.copy(alpha = 0.8f),
-                                            fontSize = 12.sp
+                                            color = BrandGoldBright,
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.SemiBold
                                         )
                                     }
                                 }
@@ -148,12 +150,12 @@ fun InvoicePreviewScreen(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = Color.White.copy(alpha = 0.08f)
+                                containerColor = Color.White.copy(alpha = 0.09f)
                             )
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text(
-                                    text = shop?.name ?: "Hashmi",
+                                    text = shop?.name?.ifBlank { "Hashmi Motors" } ?: "Hashmi Motors",
                                     color = Color.White,
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.Bold
@@ -167,7 +169,7 @@ fun InvoicePreviewScreen(
                                 }
                                 if (shop?.city?.isNotBlank() == true) {
                                     Text(
-                                        text = "${shop!!.city}, ${shop!!.state} - ${shop!!.pincode}",
+                                        text = "${shop!!.city}${if (shop!!.state.isNotBlank()) ", " + shop!!.state else ""}${if (shop!!.pincode.isNotBlank()) " - " + shop!!.pincode else ""}",
                                         color = Color.White.copy(alpha = 0.7f),
                                         fontSize = 12.sp
                                     )
@@ -182,25 +184,25 @@ fun InvoicePreviewScreen(
                                 if (shop?.gstin?.isNotBlank() == true) {
                                     Text(
                                         text = "GSTIN: ${shop!!.gstin}",
-                                        color = Color.White.copy(alpha = 0.7f),
+                                        color = BrandGold,
                                         fontSize = 12.sp
                                     )
                                 }
-                                Spacer(modifier = Modifier.height(12.dp))
-                                Divider()
-                                Spacer(modifier = Modifier.height(12.dp))
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.White.copy(alpha = 0.15f)))
+                                Spacer(modifier = Modifier.height(10.dp))
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     Column {
                                         Text("Bill No", color = Color.White.copy(alpha = 0.6f), fontSize = 11.sp)
-                                        Text(inv.invoiceNo, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                                        Text(inv.invoiceNo, color = BrandGoldBright, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                                     }
                                     Column(horizontalAlignment = Alignment.End) {
                                         Text("Date", color = Color.White.copy(alpha = 0.6f), fontSize = 11.sp)
                                         Text(
-                                            text = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+                                            text = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
                                                 .format(Date(inv.date)),
                                             color = Color.White,
                                             fontSize = 13.sp
@@ -208,98 +210,107 @@ fun InvoicePreviewScreen(
                                     }
                                 }
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text(
-                                    text = "Customer: ${inv.customerSnapshot.name}",
-                                    color = Color.White,
-                                    fontSize = 13.sp
-                                )
-                                if (inv.customerSnapshot.phone.isNotBlank()) {
-                                    Text(
-                                        text = "Ph: ${inv.customerSnapshot.phone}",
-                                        color = Color.White.copy(alpha = 0.7f),
-                                        fontSize = 12.sp
-                                    )
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column {
+                                        Text("Customer", color = Color.White.copy(alpha = 0.6f), fontSize = 11.sp)
+                                        Text(inv.customerSnapshot.name, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                                    }
+                                    if (inv.customerSnapshot.phone.isNotBlank()) {
+                                        Column(horizontalAlignment = Alignment.End) {
+                                            Text("Phone", color = Color.White.copy(alpha = 0.6f), fontSize = 11.sp)
+                                            Text(inv.customerSnapshot.phone, color = Color.White, fontSize = 13.sp)
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
 
-                    // Lines
+                    // Items list
                     item {
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = Color.White.copy(alpha = 0.08f)
+                                containerColor = Color.White.copy(alpha = 0.09f)
                             )
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text(
-                                    text = "Items",
+                                    text = "Purchased Items",
                                     color = Color.White,
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.SemiBold
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Bold
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
-                                inv.lines.forEach { line ->
-                                    Column(modifier = Modifier.padding(vertical = 6.dp)) {
-                                        Row(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.SpaceBetween
-                                        ) {
+                                inv.lines.forEachIndexed { idx, line ->
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Column(modifier = Modifier.weight(1f)) {
                                             Text(
-                                                text = "${line.qty} x ${line.partSnapshot.name}",
+                                                text = "${idx + 1}. ${line.partSnapshot.name}",
                                                 color = Color.White,
                                                 fontSize = 13.sp,
-                                                modifier = Modifier.weight(1f)
+                                                fontWeight = FontWeight.SemiBold
                                             )
-                                            Text(
-                                                text = "₹${"%,.0f".format(line.lineTotal)}",
-                                                color = Color.White,
-                                                fontSize = 13.sp
-                                            )
+                                            if (line.partSnapshot.oemNumbers.isNotEmpty()) {
+                                                Text(
+                                                    text = "OEM: ${line.partSnapshot.oemNumbers.first()}",
+                                                    color = Color.White.copy(alpha = 0.55f),
+                                                    fontSize = 11.sp
+                                                )
+                                            }
                                         }
                                         Text(
-                                            text = "₹${"%,.0f".format(line.rate)} each",
-                                            color = Color.White.copy(alpha = 0.5f),
-                                            fontSize = 11.sp
+                                            text = "${line.qty} x ₹${"%,.0f".format(line.rate)}",
+                                            color = Color.White.copy(alpha = 0.7f),
+                                            fontSize = 12.sp,
+                                            modifier = Modifier.padding(horizontal = 8.dp)
+                                        )
+                                        Text(
+                                            text = "₹${"%,.0f".format(line.lineTotal)}",
+                                            color = Color.White,
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Bold
                                         )
                                     }
-                                    Divider()
+                                    if (idx < inv.lines.size - 1) {
+                                        Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.White.copy(alpha = 0.08f)))
+                                    }
                                 }
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.White.copy(alpha = 0.2f)))
                                 Spacer(modifier = Modifier.height(8.dp))
+
                                 TotalRow("Subtotal", inv.subtotal)
                                 if (inv.totalDiscount > 0) {
-                                    TotalRow("Discount", -inv.totalDiscount, Color(0xFFFFA000))
+                                    TotalRow("Discount", -inv.totalDiscount, color = Color(0xFFFFA000))
                                 }
-                                if (inv.totalGst > 0) {
-                                    TotalRow("GST", inv.totalGst)
-                                }
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(4.dp))
                                 Row(
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Text(
-                                        text = "GRAND TOTAL",
-                                        color = Color.White,
-                                        fontSize = 16.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
+                                    Text("Grand Total", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                                     Text(
                                         text = "₹${"%,.0f".format(inv.grandTotal)}",
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontSize = 24.sp,
-                                        fontWeight = FontWeight.Bold
+                                        color = BrandGoldBright,
+                                        fontSize = 22.sp,
+                                        fontWeight = FontWeight.ExtraBold
                                     )
                                 }
                             }
                         }
                     }
 
+                    // Composition note
                     item {
-                        // Composition note
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp),
@@ -322,19 +333,19 @@ fun InvoicePreviewScreen(
                 // Share buttons
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        ShareButton(
+                        ShareActionButton(
                             icon = Icons.Filled.Share,
                             label = "Share",
                             modifier = Modifier.weight(1f),
                             onClick = { sharePdf(context, inv, shop) }
                         )
-                        ShareButton(
-                            icon = Icons.Filled.Print,
-                            label = "PDF",
+                        ShareActionButton(
+                            icon = Icons.Filled.PictureAsPdf,
+                            label = "View PDF",
                             modifier = Modifier.weight(1f),
-                            onClick = { generateAndSharePdf(context, inv, shop) }
+                            onClick = { generateAndOpenPdf(context, inv, shop) }
                         )
-                        ShareButton(
+                        ShareActionButton(
                             icon = Icons.Filled.Sms,
                             label = "SMS",
                             modifier = Modifier.weight(1f),
@@ -353,7 +364,7 @@ fun InvoicePreviewScreen(
 }
 
 @Composable
-private fun ShareButton(
+private fun ShareActionButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     label: String,
     modifier: Modifier = Modifier,
@@ -361,7 +372,7 @@ private fun ShareButton(
 ) {
     Card(
         modifier = modifier
-            .height(72.dp)
+            .height(68.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
@@ -373,9 +384,9 @@ private fun ShareButton(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(icon, null, tint = Color.White)
+            Icon(icon, null, tint = BrandGoldBright, modifier = Modifier.size(20.dp))
             Spacer(modifier = Modifier.height(4.dp))
-            Text(label, color = Color.White, fontSize = 12.sp)
+            Text(label, color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
         }
     }
 }
@@ -391,31 +402,26 @@ private fun TotalRow(label: String, value: Double, color: Color = Color.White) {
     }
 }
 
-@Composable
-private fun Divider() {
-    Box(
-        modifier = Modifier.fillMaxWidth().height(1.dp)
-            .background(Color.White.copy(alpha = 0.15f))
-    )
-}
-
-// ============================================
-// Share & PDF helpers
-// ============================================
-
-private fun shareOnWhatsApp(context: Context, invoice: Invoice, shop: com.hashmimotors.app.domain.model.Shop?) {
+private fun shareOnWhatsApp(context: Context, invoice: Invoice, shop: Shop?) {
     val phone = invoice.customerSnapshot.phone.filter { it.isDigit() }
     val phoneWithCountry = if (phone.length == 10) "91$phone" else phone
+    val shopTitle = shop?.name?.ifBlank { "Hashmi Motors" } ?: "Hashmi Motors"
     val message = buildString {
-        append("*${shop?.name ?: "Hashmi"}*\n")
+        append("*$shopTitle*\n")
+        if (!shop?.phone.isNullOrBlank()) append("Ph: ${shop?.phone}\n")
+        append("-------------------------\n")
+        append("*BILL OF SUPPLY*\n")
         append("Bill No: ${invoice.invoiceNo}\n")
-        append("Date: ${SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(Date(invoice.date))}\n\n")
+        append("Date: ${SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault()).format(Date(invoice.date))}\n")
+        append("Customer: ${invoice.customerSnapshot.name}\n")
+        append("-------------------------\n")
         invoice.lines.forEach { line ->
             append("${line.qty} x ${line.partSnapshot.name}\n")
             append("   ₹${"%,.0f".format(line.rate)} = ₹${"%,.0f".format(line.lineTotal)}\n")
         }
-        append("\n*Total: ₹${"%,.0f".format(invoice.grandTotal)}*\n")
-        append("\nThank you for your business!")
+        append("-------------------------\n")
+        append("*GRAND TOTAL: ₹${"%,.0f".format(invoice.grandTotal)}*\n\n")
+        append("Thank you for your business!")
     }
     val intent = Intent(Intent.ACTION_VIEW).apply {
         data = android.net.Uri.parse("https://wa.me/${phoneWithCountry}?text=${android.net.Uri.encode(message)}")
@@ -423,15 +429,14 @@ private fun shareOnWhatsApp(context: Context, invoice: Invoice, shop: com.hashmi
     }
     runCatching { context.startActivity(intent) }
         .onFailure {
-            // WhatsApp not installed, fall back to SMS
             shareViaSms(context, invoice)
         }
 }
 
 private fun shareViaSms(context: Context, invoice: Invoice) {
     val message = buildString {
-        append("Hashmi\n")
-        append("Bill ${invoice.invoiceNo}\n")
+        append("Hashmi Motors\n")
+        append("Bill: ${invoice.invoiceNo}\n")
         append("Total: Rs.${"%,.0f".format(invoice.grandTotal)}\n")
         append("Thank you!")
     }
@@ -447,7 +452,7 @@ private fun shareViaSms(context: Context, invoice: Invoice) {
     })
 }
 
-private fun sharePdf(context: Context, invoice: Invoice, shop: com.hashmimotors.app.domain.model.Shop?) {
+private fun sharePdf(context: Context, invoice: Invoice, shop: Shop?) {
     val file = generatePdf(context, invoice, shop)
     if (file != null) {
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
@@ -456,13 +461,13 @@ private fun sharePdf(context: Context, invoice: Invoice, shop: com.hashmimotors.
             putExtra(Intent.EXTRA_STREAM, uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        context.startActivity(Intent.createChooser(intent, "Share Bill").apply {
+        context.startActivity(Intent.createChooser(intent, "Share Bill PDF").apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         })
     }
 }
 
-private fun generateAndSharePdf(context: Context, invoice: Invoice, shop: com.hashmimotors.app.domain.model.Shop?) {
+private fun generateAndOpenPdf(context: Context, invoice: Invoice, shop: Shop?) {
     val file = generatePdf(context, invoice, shop)
     if (file != null) {
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
@@ -475,7 +480,7 @@ private fun generateAndSharePdf(context: Context, invoice: Invoice, shop: com.ha
     }
 }
 
-private fun generatePdf(context: Context, invoice: Invoice, shop: com.hashmimotors.app.domain.model.Shop?): File? {
+private fun generatePdf(context: Context, invoice: Invoice, shop: Shop?): File? {
     return runCatching {
         val pdf = PdfDocument()
         val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create() // A4
@@ -483,66 +488,78 @@ private fun generatePdf(context: Context, invoice: Invoice, shop: com.hashmimoto
         val canvas = page.canvas
         val paint = Paint().apply {
             color = android.graphics.Color.BLACK
-            textSize = 12f
+            textSize = 11f
             isAntiAlias = true
         }
         val titlePaint = Paint(paint).apply {
-            textSize = 20f
+            textSize = 18f
             isFakeBoldText = true
         }
 
-        var y = 40f
-        canvas.drawText(shop?.name ?: "Hashmi", 200f, y, titlePaint)
-        y += 25f
+        var y = 45f
+        val shopName = shop?.name?.ifBlank { "Hashmi Motors" } ?: "Hashmi Motors"
+        canvas.drawText(shopName, 40f, y, titlePaint)
+        y += 20f
         paint.textSize = 10f
-        if (shop?.address?.isNotBlank() == true) {
-            canvas.drawText(shop.address, 40f, y, paint); y += 15f
+        if (!shop?.address.isNullOrBlank()) {
+            canvas.drawText(shop!!.address, 40f, y, paint); y += 14f
         }
-        if (shop?.phone?.isNotBlank() == true) {
-            canvas.drawText("Ph: ${shop.phone}", 40f, y, paint); y += 15f
+        if (!shop?.phone.isNullOrBlank()) {
+            canvas.drawText("Ph: ${shop!!.phone}", 40f, y, paint); y += 14f
         }
-        if (shop?.gstin?.isNotBlank() == true) {
-            canvas.drawText("GSTIN: ${shop.gstin}", 40f, y, paint); y += 15f
+        if (!shop?.gstin.isNullOrBlank()) {
+            canvas.drawText("GSTIN: ${shop!!.gstin}", 40f, y, paint); y += 14f
         }
         y += 10f
+        canvas.drawLine(40f, y, 555f, y, paint); y += 16f
+
+        canvas.drawText("BILL OF SUPPLY", 40f, y, Paint(paint).apply { isFakeBoldText = true; textSize = 13f })
+        y += 16f
         canvas.drawText("Bill No: ${invoice.invoiceNo}", 40f, y, paint)
         canvas.drawText(
-            "Date: ${SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(Date(invoice.date))}",
-            400f, y, paint
+            "Date: ${SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault()).format(Date(invoice.date))}",
+            380f, y, paint
         )
-        y += 20f
+        y += 16f
         canvas.drawText("Customer: ${invoice.customerSnapshot.name}", 40f, y, paint)
-        y += 25f
-        canvas.drawLine(40f, y, 555f, y, paint); y += 15f
-        canvas.drawText("Item", 40f, y, paint)
-        canvas.drawText("Qty", 320f, y, paint)
-        canvas.drawText("Rate", 380f, y, paint)
-        canvas.drawText("Total", 480f, y, paint)
-        y += 15f
-        canvas.drawLine(40f, y, 555f, y, paint); y += 15f
+        if (invoice.customerSnapshot.phone.isNotBlank()) {
+            canvas.drawText("Phone: ${invoice.customerSnapshot.phone}", 380f, y, paint)
+        }
+        y += 20f
+
+        canvas.drawLine(40f, y, 555f, y, paint); y += 14f
+        canvas.drawText("Item / Description", 40f, y, Paint(paint).apply { isFakeBoldText = true })
+        canvas.drawText("Qty", 320f, y, Paint(paint).apply { isFakeBoldText = true })
+        canvas.drawText("Rate", 380f, y, Paint(paint).apply { isFakeBoldText = true })
+        canvas.drawText("Total", 480f, y, Paint(paint).apply { isFakeBoldText = true })
+        y += 12f
+        canvas.drawLine(40f, y, 555f, y, paint); y += 16f
 
         invoice.lines.forEach { line ->
-            val name = line.partSnapshot.name.take(40)
+            val name = line.partSnapshot.name.take(42)
             canvas.drawText(name, 40f, y, paint)
             canvas.drawText(line.qty.toString(), 320f, y, paint)
             canvas.drawText("%.0f".format(line.rate), 380f, y, paint)
             canvas.drawText("%.0f".format(line.lineTotal), 480f, y, paint)
-            y += 15f
+            y += 16f
         }
 
         y += 10f
-        canvas.drawLine(40f, y, 555f, y, paint); y += 15f
+        canvas.drawLine(40f, y, 555f, y, paint); y += 18f
         canvas.drawText("Subtotal:", 380f, y, paint)
-        canvas.drawText("Rs.${"%,.0f".format(invoice.subtotal)}", 480f, y, paint); y += 15f
+        canvas.drawText("Rs.${"%,.0f".format(invoice.subtotal)}", 480f, y, paint); y += 16f
         if (invoice.totalDiscount > 0) {
             canvas.drawText("Discount:", 380f, y, paint)
-            canvas.drawText("- Rs.${"%,.0f".format(invoice.totalDiscount)}", 480f, y, paint); y += 15f
+            canvas.drawText("- Rs.${"%,.0f".format(invoice.totalDiscount)}", 480f, y, paint); y += 16f
         }
-        y += 5f
-        paint.textSize = 14f
-        paint.isFakeBoldText = true
-        canvas.drawText("GRAND TOTAL:", 340f, y, paint)
-        canvas.drawText("Rs.${"%,.0f".format(invoice.grandTotal)}", 460f, y, paint)
+        y += 6f
+        val totalPaint = Paint(paint).apply { textSize = 14f; isFakeBoldText = true }
+        canvas.drawText("GRAND TOTAL:", 330f, y, totalPaint)
+        canvas.drawText("Rs.${"%,.0f".format(invoice.grandTotal)}", 460f, y, totalPaint)
+
+        y += 30f
+        paint.textSize = 9f
+        canvas.drawText("Composition taxable person — not eligible to collect tax on supplies.", 40f, y, paint)
 
         pdf.finishPage(page)
 

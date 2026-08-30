@@ -3,6 +3,7 @@ package com.hashmimotors.app.ui.shop
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,12 +13,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,15 +36,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hashmimotors.app.domain.model.Shop
 import com.hashmimotors.app.ui.components.AnimatedBigButton
+import com.hashmimotors.app.ui.theme.BrandGold
+import com.hashmimotors.app.ui.theme.BrandGoldBright
 
 @Composable
 fun ShopSetupScreen(
     viewModel: ShopSetupViewModel = hiltViewModel(),
-    onComplete: () -> Unit
+    onComplete: () -> Unit,
+    onBack: (() -> Unit)? = null
 ) {
     val existingShop by viewModel.shop.collectAsStateWithLifecycle(initialValue = null)
 
-    var name by remember { mutableStateOf("Hashmi") }
+    var name by remember { mutableStateOf("Hashmi Motors") }
     var address by remember { mutableStateOf("") }
     var city by remember { mutableStateOf("") }
     var state by remember { mutableStateOf("") }
@@ -51,10 +57,9 @@ fun ShopSetupScreen(
     var email by remember { mutableStateOf("") }
     var saving by remember { mutableStateOf(false) }
 
-    // Pre-fill if shop already exists
-    androidx.compose.runtime.LaunchedEffect(existingShop) {
+    LaunchedEffect(existingShop) {
         existingShop?.let {
-            name = it.name
+            if (it.name.isNotBlank()) name = it.name
             address = it.address
             city = it.city
             state = it.state
@@ -65,118 +70,124 @@ fun ShopSetupScreen(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+    Box(modifier = Modifier.fillMaxSize().padding(20.dp)) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.Start
         ) {
-            Spacer(modifier = Modifier.height(48.dp))
-            Text(
-                text = "Shop Details",
-                color = Color.White,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "This information will appear on your bills. You can edit later in Settings.",
-                color = Color.White.copy(alpha = 0.7f),
-                fontSize = 14.sp
-            )
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (onBack != null) {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                    }
+                }
+                Column {
+                    Text(
+                        text = "Shop Details",
+                        color = Color.White,
+                        fontSize = 26.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "Printed on all invoices & PDF receipts",
+                        color = BrandGold,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(20.dp))
 
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Shop Name") },
+                label = { Text("Shop Name *") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
-            Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(
-                value = address,
-                onValueChange = { address = it },
-                label = { Text("Street Address") },
-                modifier = Modifier.fillMaxWidth(),
-                minLines = 2
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(
-                value = city,
-                onValueChange = { city = it },
-                label = { Text("City") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(
-                value = state,
-                onValueChange = {
-                    state = it
-                    // Auto-fill state code
-                },
-                label = { Text("State (e.g. Maharashtra)") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(
-                value = pincode,
-                onValueChange = { pincode = it },
-                label = { Text("PIN Code") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
                 value = phone,
                 onValueChange = { phone = it },
-                label = { Text("Phone Number") },
+                label = { Text("Shop Phone / WhatsApp *") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 singleLine = true
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
-                value = gstin,
-                onValueChange = { gstin = it.uppercase() },
-                label = { Text("GSTIN (15 characters)") },
+                value = address,
+                onValueChange = { address = it },
+                label = { Text("Shop Address") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                minLines = 2
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = city,
+                    onValueChange = { city = it },
+                    label = { Text("City") },
+                    modifier = Modifier.weight(1f),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = state,
+                    onValueChange = { state = it },
+                    label = { Text("State") },
+                    modifier = Modifier.weight(1f),
+                    singleLine = true
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = pincode,
+                    onValueChange = { pincode = it },
+                    label = { Text("PIN Code") },
+                    modifier = Modifier.weight(1f),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = gstin,
+                    onValueChange = { gstin = it.uppercase() },
+                    label = { Text("GSTIN (Optional)") },
+                    modifier = Modifier.weight(1.5f),
+                    singleLine = true
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email (optional)") },
+                label = { Text("Email (Optional)") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 singleLine = true
             )
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             AnimatedBigButton(
-                text = if (saving) "Saving..." else "Continue",
-                icon = Icons.Filled.ArrowForward,
-                enabled = !saving && name.isNotBlank() && gstin.isNotBlank(),
+                text = if (saving) "Saving..." else "Save Shop Details",
+                icon = Icons.Filled.Save,
+                enabled = !saving && name.isNotBlank(),
                 onClick = {
                     saving = true
-                    val stateCode = getStateCode(state)
                     viewModel.saveShop(
                         Shop(
-                            name = name,
-                            address = address,
-                            city = city,
-                            state = state,
-                            stateCode = stateCode,
-                            pincode = pincode,
-                            phone = phone,
-                            email = email.ifBlank { null },
-                            gstin = gstin,
+                            name = name.trim(),
+                            address = address.trim(),
+                            city = city.trim(),
+                            state = state.trim(),
+                            stateCode = "",
+                            pincode = pincode.trim(),
+                            phone = phone.trim(),
+                            email = email.trim().ifBlank { null },
+                            gstin = gstin.trim(),
                             isSetupComplete = true
                         )
                     ) {
@@ -188,21 +199,4 @@ fun ShopSetupScreen(
             Spacer(modifier = Modifier.height(40.dp))
         }
     }
-}
-
-private fun getStateCode(state: String): String {
-    val codes = mapOf(
-        "Andhra Pradesh" to "37", "Arunachal Pradesh" to "12", "Assam" to "18",
-        "Bihar" to "10", "Chhattisgarh" to "22", "Goa" to "30", "Gujarat" to "24",
-        "Haryana" to "06", "Himachal Pradesh" to "02", "Jharkhand" to "20",
-        "Karnataka" to "29", "Kerala" to "32", "Madhya Pradesh" to "23",
-        "Maharashtra" to "27", "Manipur" to "14", "Meghalaya" to "17",
-        "Mizoram" to "15", "Nagaland" to "13", "Odisha" to "21", "Punjab" to "03",
-        "Rajasthan" to "08", "Sikkim" to "11", "Tamil Nadu" to "33",
-        "Telangana" to "36", "Tripura" to "16", "Uttar Pradesh" to "09",
-        "Uttarakhand" to "05", "West Bengal" to "19", "Delhi" to "07",
-        "Jammu and Kashmir" to "01", "Ladakh" to "98", "Chandigarh" to "04",
-        "Puducherry" to "34"
-    )
-    return codes[state] ?: ""
 }

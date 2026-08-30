@@ -2,7 +2,10 @@ package com.hashmimotors.app.ui.fitment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hashmimotors.app.data.local.FitmentDao
+import com.hashmimotors.app.data.repository.PartRepository
 import com.hashmimotors.app.data.repository.VehicleRepository
+import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.domain.model.Vehicle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,13 +22,16 @@ data class FitmentUiState(
     val allMakes: List<String> = emptyList(),
     val selectedMake: String? = null,
     val models: List<Vehicle> = emptyList(),
-    val selectedVehicleId: String? = null
+    val selectedVehicleId: String? = null,
+    val compatibleParts: List<Part> = emptyList()
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class FitmentViewModel @Inject constructor(
-    private val vehicleRepository: VehicleRepository
+    private val vehicleRepository: VehicleRepository,
+    private val partRepository: PartRepository,
+    private val fitmentDao: FitmentDao
 ) : ViewModel() {
 
     private val _selectedMake = MutableStateFlow<String?>(null)
@@ -42,13 +48,20 @@ class FitmentViewModel @Inject constructor(
             if (make == null) kotlinx.coroutines.flow.flowOf(emptyList())
             else vehicleRepository.getByMake(make)
         },
-        _selectedVehicleId
-    ) { (all, selectedMake), models, selectedVehicleId ->
+        _selectedVehicleId.flatMapLatest { vId ->
+            if (vId == null) kotlinx.coroutines.flow.flowOf(emptyList())
+            else fitmentDao.getForVehicle(vId)
+        },
+        partRepository.getAllParts()
+    ) { (all, selectedMake), models, fitments, allParts ->
+        val partIds = fitments.map { it.partId }.toSet()
+        val matchedParts = allParts.filter { it.id in partIds }
         FitmentUiState(
             allMakes = all.map { it.make }.distinct().sorted(),
             selectedMake = selectedMake,
             models = models,
-            selectedVehicleId = selectedVehicleId
+            selectedVehicleId = _selectedVehicleId.value,
+            compatibleParts = matchedParts
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), FitmentUiState())
 

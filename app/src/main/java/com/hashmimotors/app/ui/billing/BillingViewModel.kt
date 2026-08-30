@@ -14,11 +14,14 @@ import com.hashmimotors.app.domain.model.InvoiceStatus
 import com.hashmimotors.app.domain.model.InvoiceType
 import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.domain.model.PartSnapshot
+import com.hashmimotors.app.domain.money.InvoiceMath
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,7 +29,10 @@ import javax.inject.Inject
 data class BillingUiState(
     val lines: List<InvoiceLine> = emptyList(),
     val customer: Customer? = null,
+    val customerName: String = "Walk-in Customer",
+    val customerPhone: String = "",
     val billDiscountPct: Double = 0.0,
+    val discountText: String = "0",
     val notes: String = "",
     val isSaving: Boolean = false,
     val savedInvoice: Invoice? = null,
@@ -38,8 +44,8 @@ data class BillingUiState(
         val billLevelDiscount = subtotal * (billDiscountPct / 100.0)
         return lineDiscounts + billLevelDiscount
     }
-    val totalGst: Double get() = 0.0 // Composition = no tax on bill
-    val grandTotal: Double get() = (subtotal - totalDiscount).coerceAtLeast(0.0)
+    val totalGst: Double get() = 0.0 // Composition = Bill of Supply
+    val grandTotal: Double get() = InvoiceMath.grandTotal(subtotal, totalDiscount)
     val totalItems: Int get() = lines.sumOf { it.qty }
 }
 
@@ -54,8 +60,38 @@ class BillingViewModel @Inject constructor(
     private val _state = MutableStateFlow(BillingUiState())
     val state: StateFlow<BillingUiState> = _state.asStateFlow()
 
+    val customers: StateFlow<List<Customer>> = customerRepo.getAllCustomers()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    private val _quickParts = MutableStateFlow<List<Part>>(emptyList())
+    val quickParts: StateFlow<List<Part>> = _quickParts.asStateFlow()
+
+    init {
+        refreshQuickParts()
+    }
+
+    fun refreshQuickParts() {
+        viewModelScope.launch {
+            val invoices = invoiceRepo.getAllInvoices().first()
+            val parts = partRepo.getAllPartsOnce()
+            val counts = HashMap<String, Int>()
+            invoices.forEach { inv ->
+                inv.lines.forEach { line ->
+                    counts[line.partId] = (counts[line.partId] ?: 0) + line.qty
+                }
+            }
+            val top = counts.entries
+                .sortedByDescending { it.value }
+                .mapNotNull { (id, _) -> parts.find { it.id == id } }
+                .take(12)
+            _quickParts.value = if (top.isNotEmpty()) top
+            else parts.sortedByDescending { it.createdAt }.take(8)
+        }
+    }
+
     fun addPart(part: Part, qty: Int = 1) {
         if (qty <= 0) return
+        _state.update { it.copy(error = null) }
         val snapshot = PartSnapshot(
             name = part.name,
             oemNumbers = part.oemNumbers,
@@ -72,12 +108,12 @@ class BillingViewModel @Inject constructor(
             lineTotal = part.sellingPrice * qty
         )
         _state.update { current ->
-            // If part already in cart, increase qty
             val existing = current.lines.find { it.partId == part.id }
             val newLines = if (existing != null) {
                 current.lines.map {
                     if (it.partId == part.id) {
-                        it.copy(qty = it.qty + qty, lineTotal = (it.qty + qty) * it.rate)
+                        val newQ = it.qty + qty
+                        it.copy(qty = newQ, lineTotal = InvoiceMath.lineTotal(newQ, it.rate, it.discountPct))
                     } else it
                 }
             } else {
@@ -98,7 +134,7 @@ class BillingViewModel @Inject constructor(
                 val line = newLines[index]
                 newLines[index] = line.copy(
                     qty = newQty,
-                    lineTotal = newQty * line.rate * (1 - line.discountPct / 100.0)
+                    lineTotal = InvoiceMath.lineTotal(newQty, line.rate, line.discountPct)
                 )
             }
             current.copy(lines = newLines)
@@ -110,9 +146,10 @@ class BillingViewModel @Inject constructor(
             val newLines = current.lines.toMutableList()
             if (index in newLines.indices) {
                 val line = newLines[index]
+                val safeRate = newRate.coerceAtLeast(0.0)
                 newLines[index] = line.copy(
-                    rate = newRate.coerceAtLeast(0.0),
-                    lineTotal = line.qty * newRate.coerceAtLeast(0.0) * (1 - line.discountPct / 100.0)
+                    rate = safeRate,
+                    lineTotal = InvoiceMath.lineTotal(line.qty, safeRate, line.discountPct)
                 )
             }
             current.copy(lines = newLines)
@@ -124,9 +161,10 @@ class BillingViewModel @Inject constructor(
             val newLines = current.lines.toMutableList()
             if (index in newLines.indices) {
                 val line = newLines[index]
+                val safeDisc = newDiscountPct.coerceIn(0.0, 100.0)
                 newLines[index] = line.copy(
-                    discountPct = newDiscountPct.coerceIn(0.0, 100.0),
-                    lineTotal = line.qty * line.rate * (1 - newDiscountPct.coerceIn(0.0, 100.0) / 100.0)
+                    discountPct = safeDisc,
+                    lineTotal = InvoiceMath.lineTotal(line.qty, line.rate, safeDisc)
                 )
             }
             current.copy(lines = newLines)
@@ -142,24 +180,84 @@ class BillingViewModel @Inject constructor(
     }
 
     fun setCustomer(customer: Customer?) {
-        _state.update { it.copy(customer = customer) }
+        _state.update {
+            it.copy(
+                customer = customer,
+                customerName = customer?.name ?: "Walk-in Customer",
+                customerPhone = customer?.phone ?: ""
+            )
+        }
+    }
+
+    fun setCustomerName(name: String) {
+        _state.update { it.copy(customerName = name) }
+    }
+
+    fun setCustomerPhone(phone: String) {
+        _state.update { it.copy(customerPhone = phone) }
     }
 
     fun setBillDiscount(pct: Double) {
         _state.update { it.copy(billDiscountPct = pct.coerceIn(0.0, 100.0)) }
     }
 
+    fun setDiscountText(text: String) {
+        val clean = text.filter { c -> c.isDigit() || c == '.' }.take(6)
+        val pct = clean.toDoubleOrNull() ?: 0.0
+        _state.update {
+            it.copy(discountText = clean, billDiscountPct = pct.coerceIn(0.0, 100.0))
+        }
+    }
+
     fun setNotes(notes: String) {
         _state.update { it.copy(notes = notes) }
+    }
+
+    fun addPartByBarcode(barcode: String) {
+        val code = barcode.trim()
+        if (code.isEmpty()) return
+        viewModelScope.launch {
+            val part = partRepo.getPartByBarcode(code)
+            if (part != null) {
+                addPart(part, qty = 1)
+            } else {
+                _state.update { it.copy(error = "No part found for barcode $code") }
+            }
+        }
+    }
+
+    fun repeatLastBill() {
+        viewModelScope.launch {
+            val latest = invoiceRepo.getLatestInvoice()
+            if (latest == null) {
+                _state.update { it.copy(error = "No previous bill found") }
+                return@launch
+            }
+            val lineDiscounts = latest.lines.sumOf {
+                it.qty * it.rate * (it.discountPct / 100.0)
+            }
+            val billDiscount = (latest.totalDiscount - lineDiscounts).coerceAtLeast(0.0)
+            val pct = if (latest.subtotal > 0) billDiscount / latest.subtotal * 100.0 else 0.0
+
+            _state.update { current ->
+                current.copy(
+                    lines = latest.lines,
+                    customer = null,
+                    customerName = latest.customerSnapshot.name.ifBlank { "Walk-in Customer" },
+                    customerPhone = latest.customerSnapshot.phone,
+                    billDiscountPct = pct.coerceIn(0.0, 100.0),
+                    discountText = if (pct > 0) "%.2f".format(pct) else "0",
+                    notes = latest.notes ?: "",
+                    error = null
+                )
+            }
+        }
     }
 
     fun clearCart() {
         _state.value = BillingUiState()
     }
 
-    /**
-     * Save the current cart as an invoice. Decrements stock for each line.
-     */
     fun saveBill(userId: String) {
         val current = _state.value
         if (current.lines.isEmpty()) {
@@ -169,9 +267,7 @@ class BillingViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isSaving = true, error = null) }
             try {
-                val shop = shopRepo.getShopOnce()
                 val invoiceNo = shopRepo.getNextInvoiceNumber()
-
                 val customer = current.customer
                 val snapshot = if (customer != null) {
                     CustomerSnapshot(
@@ -181,14 +277,18 @@ class BillingViewModel @Inject constructor(
                         gstin = customer.gstin
                     )
                 } else {
-                    CustomerSnapshot(name = "Walk-in Customer", phone = "", address = null, gstin = null)
+                    CustomerSnapshot(
+                        name = current.customerName.ifBlank { "Walk-in Customer" },
+                        phone = current.customerPhone,
+                        address = null,
+                        gstin = null
+                    )
                 }
 
                 val invoice = Invoice(
                     invoiceNo = invoiceNo,
                     date = System.currentTimeMillis(),
-                    type = if (shop?.gstMode == com.hashmimotors.app.domain.model.GstMode.COMPOSITION)
-                        InvoiceType.BILL_OF_SUPPLY else InvoiceType.BILL_OF_SUPPLY,
+                    type = InvoiceType.BILL_OF_SUPPLY,
                     customerId = customer?.id,
                     customerSnapshot = snapshot,
                     userId = userId,
@@ -203,12 +303,10 @@ class BillingViewModel @Inject constructor(
 
                 invoiceRepo.saveInvoice(invoice)
 
-                // Decrement stock for each line
                 current.lines.forEach { line ->
                     partRepo.decrementStock(line.partId, line.qty, invoice.id, userId)
                 }
 
-                // Update customer total purchases
                 if (customer != null) {
                     customerRepo.saveCustomer(
                         customer.copy(

@@ -9,6 +9,7 @@ import com.hashmimotors.app.domain.model.InvoiceStatus
 import com.hashmimotors.app.domain.model.InvoiceType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,6 +20,10 @@ class InvoiceRepository @Inject constructor(
     fun getAllInvoices(): Flow<List<Invoice>> = invoiceDao.getAll().map { list ->
         list.map { it.toDomain() }
     }
+
+    suspend fun getAllInvoicesOnce(): List<Invoice> = invoiceDao.getAllOnce().map { it.toDomain() }
+
+    suspend fun getLatestInvoice(): Invoice? = invoiceDao.getLatest()?.toDomain()
 
     fun getInvoiceById(id: String): Flow<Invoice?> = invoiceDao.getById(id).map { it?.toDomain() }
 
@@ -40,6 +45,23 @@ class InvoiceRepository @Inject constructor(
         return invoiceDao.countForDay(start, end)
     }
 
+    fun getMonthSalesTotal(): Flow<Double> {
+        val (start, end) = currentMonthRange()
+        return invoiceDao.totalBetween(start, end)
+    }
+
+    fun getMonthBillCount(): Flow<Int> {
+        val (start, end) = currentMonthRange()
+        return invoiceDao.countBetween(start, end)
+    }
+
+    fun getTodayItemsSold(): Flow<Int> {
+        val (start, end) = todayRange()
+        return invoiceDao.getForDay(start, end).map { list ->
+            list.sumOf { invoice -> invoice.lines.sumOf { it.qty } }
+        }
+    }
+
     suspend fun saveInvoice(invoice: Invoice) {
         invoiceDao.insert(invoice.toEntity())
     }
@@ -49,14 +71,28 @@ class InvoiceRepository @Inject constructor(
     }
 
     private fun todayRange(): Pair<Long, Long> {
-        val cal = java.util.Calendar.getInstance()
-        cal.set(java.util.Calendar.HOUR_OF_DAY, 0)
-        cal.set(java.util.Calendar.MINUTE, 0)
-        cal.set(java.util.Calendar.SECOND, 0)
-        cal.set(java.util.Calendar.MILLISECOND, 0)
+        val cal = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
         val start = cal.timeInMillis
         val end = start + 24L * 60 * 60 * 1000
         return start to end
+    }
+
+    private fun currentMonthRange(): Pair<Long, Long> {
+        val cal = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_MONTH, 1)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val start = cal.timeInMillis
+        cal.add(Calendar.MONTH, 1)
+        return start to cal.timeInMillis
     }
 }
 

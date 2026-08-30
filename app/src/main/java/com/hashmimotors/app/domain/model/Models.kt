@@ -26,7 +26,7 @@ enum class UserRole { OWNER, FATHER }
 @Serializable
 data class Shop(
     val id: String = "default",
-    val name: String = "Hashmi",
+    val name: String = "Hashmi Motors",
     val address: String = "",
     val city: String = "",
     val state: String = "",

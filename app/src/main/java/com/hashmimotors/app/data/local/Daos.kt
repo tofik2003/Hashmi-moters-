@@ -13,6 +13,9 @@ interface PartDao {
     @Query("SELECT * FROM parts WHERE active = 1 ORDER BY name ASC")
     fun getAll(): Flow<List<PartEntity>>
 
+    @Query("SELECT * FROM parts WHERE active = 1 ORDER BY name ASC")
+    suspend fun getAllOnce(): List<PartEntity>
+
     @Query("SELECT * FROM parts WHERE id = :id")
     fun getById(id: String): Flow<PartEntity?>
 
@@ -41,6 +44,9 @@ interface PartDao {
 
     @Query("SELECT COUNT(*) FROM parts WHERE active = 1")
     fun count(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM parts WHERE active = 1")
+    suspend fun countSnapshot(): Int
 
     @Query("SELECT COUNT(*) FROM parts WHERE stockQty <= reorderLevel AND active = 1")
     fun lowStockCount(): Flow<Int>
@@ -96,6 +102,9 @@ interface CustomerDao {
     @Query("SELECT * FROM customers ORDER BY name ASC")
     fun getAll(): Flow<List<CustomerEntity>>
 
+    @Query("SELECT * FROM customers ORDER BY name ASC")
+    suspend fun getAllOnce(): List<CustomerEntity>
+
     @Query("SELECT * FROM customers WHERE id = :id")
     suspend fun getById(id: String): CustomerEntity?
 
@@ -121,6 +130,9 @@ interface SupplierDao {
     @Query("SELECT * FROM suppliers ORDER BY name ASC")
     fun getAll(): Flow<List<SupplierEntity>>
 
+    @Query("SELECT * FROM suppliers ORDER BY name ASC")
+    suspend fun getAllOnce(): List<SupplierEntity>
+
     @Query("SELECT * FROM suppliers WHERE id = :id")
     suspend fun getById(id: String): SupplierEntity?
 
@@ -138,6 +150,9 @@ interface SupplierDao {
 interface VehicleDao {
     @Query("SELECT * FROM vehicles ORDER BY make ASC, model ASC")
     fun getAll(): Flow<List<VehicleEntity>>
+
+    @Query("SELECT * FROM vehicles ORDER BY make ASC, model ASC")
+    suspend fun getAllOnce(): List<VehicleEntity>
 
     @Query("SELECT * FROM vehicles WHERE make = :make ORDER BY model ASC")
     fun getByMake(make: String): Flow<List<VehicleEntity>>
@@ -175,6 +190,12 @@ interface InvoiceDao {
     @Query("SELECT * FROM invoices ORDER BY date DESC")
     fun getAll(): Flow<List<InvoiceEntity>>
 
+    @Query("SELECT * FROM invoices ORDER BY date DESC")
+    suspend fun getAllOnce(): List<InvoiceEntity>
+
+    @Query("SELECT * FROM invoices ORDER BY date DESC LIMIT 1")
+    suspend fun getLatest(): InvoiceEntity?
+
     @Query("SELECT * FROM invoices WHERE date >= :startOfDay AND date < :endOfDay ORDER BY date DESC")
     fun getForDay(startOfDay: Long, endOfDay: Long): Flow<List<InvoiceEntity>>
 
@@ -195,6 +216,12 @@ interface InvoiceDao {
 
     @Query("SELECT COALESCE(SUM(grandTotal), 0) FROM invoices WHERE date >= :startOfDay AND date < :endOfDay AND status = 'PAID'")
     fun paidTotalForDay(startOfDay: Long, endOfDay: Long): Flow<Double>
+
+    @Query("SELECT COUNT(*) FROM invoices WHERE date >= :start AND date < :end")
+    fun countBetween(start: Long, end: Long): Flow<Int>
+
+    @Query("SELECT COALESCE(SUM(grandTotal), 0) FROM invoices WHERE date >= :start AND date < :end")
+    fun totalBetween(start: Long, end: Long): Flow<Double>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(invoice: InvoiceEntity)

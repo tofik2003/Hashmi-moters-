@@ -4,6 +4,7 @@ import com.hashmimotors.app.data.local.ShopDao
 import com.hashmimotors.app.data.local.ShopEntity
 import com.hashmimotors.app.domain.model.GstMode
 import com.hashmimotors.app.domain.model.Shop
+import com.hashmimotors.app.domain.money.FinancialYear
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -22,26 +23,25 @@ class ShopRepository @Inject constructor(
     }
 
     /**
-     * Atomically increment invoice counter and return the next number.
+     * Atomically increment invoice counter and return the next formatted number.
+     * Follows the Indian Financial Year (e.g. HM/2026-27/000001).
      */
     suspend fun getNextInvoiceNumber(): String {
         val shop = shopDao.getOnce() ?: ShopEntity(
             id = "default",
-            name = "Hashmi",
+            name = "Hashmi Motors",
             address = "", city = "", state = "", stateCode = "", pincode = "",
             phone = "", email = null, gstin = "", pan = null,
             gstMode = GstMode.COMPOSITION.name,
             invoicePrefix = "HM",
             invoiceCounter = 0,
             logoPath = null, signaturePath = null,
-            footerText = "Thank you!",
+            footerText = "Thank you for your business!",
             isSetupComplete = false
         )
         val nextCounter = shop.invoiceCounter + 1
-        val year = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
-        val nextYear = year + 1
-        val financialYear = "$year-${(nextYear % 100).toString().padStart(2, '0')}"
-        val invoiceNo = "${shop.invoicePrefix}/$financialYear/${nextCounter.toString().padStart(6, '0')}"
+        val fy = FinancialYear.label(System.currentTimeMillis())
+        val invoiceNo = "${shop.invoicePrefix}/$fy/${nextCounter.toString().padStart(6, '0')}"
         shopDao.upsert(shop.copy(invoiceCounter = nextCounter))
         return invoiceNo
     }
