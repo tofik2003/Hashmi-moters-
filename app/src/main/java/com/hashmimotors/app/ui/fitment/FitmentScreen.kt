@@ -104,6 +104,9 @@ fun FitmentScreen(
                 } else {
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(3),
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -152,7 +155,12 @@ fun FitmentScreen(
                 if (state.models.isEmpty()) {
                     Text("No models for this brand", color = Color.White.copy(alpha = 0.6f))
                 } else {
-                    LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
                         items(state.models, key = { it.id }) { vehicle ->
                             Card(
                                 modifier = Modifier

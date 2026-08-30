@@ -2,7 +2,6 @@ package com.hashmimotors.app.ui.theme
 
 import android.app.Activity
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -72,8 +71,8 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun HashmiMotorsTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    darkTheme: Boolean = true,
+    dynamicColor: Boolean = false,
     accentColor: Color = AccentIndigo,
     content: @Composable () -> Unit
 ) {

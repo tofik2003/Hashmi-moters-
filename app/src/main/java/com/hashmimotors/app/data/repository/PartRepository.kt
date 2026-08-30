@@ -28,6 +28,9 @@ class PartRepository @Inject constructor(
 
     suspend fun getPartByIdOnce(id: String): Part? = partDao.getByIdOnce(id)?.toDomain()
 
+    suspend fun getPartByBarcode(barcode: String): Part? =
+        partDao.getByBarcode(barcode)?.toDomain()
+
     fun searchParts(query: String): Flow<List<Part>> = partDao.search(query).map { list ->
         list.map { it.toDomain() }
     }

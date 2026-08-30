@@ -33,6 +33,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hashmimotors.app.ui.sound.Feedback
+import com.hashmimotors.app.ui.sound.LocalAppFeedback
 import com.hashmimotors.app.ui.theme.GradientEnd
 import com.hashmimotors.app.ui.theme.GradientStart
 
@@ -49,6 +51,7 @@ fun AnimatedBigButton(
     enabled: Boolean = true,
     gradient: Boolean = true
 ) {
+    val feedback = LocalAppFeedback.current
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(
@@ -92,7 +95,10 @@ fun AnimatedBigButton(
                 interactionSource = interactionSource,
                 indication = null,
                 enabled = enabled,
-                onClick = onClick
+                onClick = {
+                    Feedback.tap(feedback)
+                    onClick()
+                }
             )
             .padding(horizontal = 24.dp),
         contentAlignment = Alignment.Center

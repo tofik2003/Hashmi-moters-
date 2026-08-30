@@ -152,8 +152,9 @@ fun SettingsScreen(
             }
 
             SettingsSection("About") {
-                SettingsRow("Version", "1.0.0")
-                SettingsRow("Build", "1")
+                SettingsRow("Version", "1.1.0")
+                SettingsRow("Build", "2")
+                SettingsRow("Edition", "Premium")
                 SettingsRow("Database", "Local (encrypted)")
                 SettingsRow("Sync", "Firebase (optional)")
             }

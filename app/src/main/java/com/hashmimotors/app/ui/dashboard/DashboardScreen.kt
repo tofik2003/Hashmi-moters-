@@ -26,10 +26,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -72,7 +74,9 @@ fun DashboardScreen(
     onReports: () -> Unit,
     onHistory: () -> Unit,
     onSettings: () -> Unit,
-    onCustomers: () -> Unit = {}
+    onCustomers: () -> Unit = {},
+    onImport: () -> Unit = {},
+    onScan: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -91,12 +95,18 @@ fun DashboardScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text(
-                        text = state.shopName,
-                        color = Color.White,
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = state.shopName,
+                            color = Color.White,
+                            fontSize = 26.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                        PremiumBadge()
+                    }
                     val greeting = remember {
                         val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
                         when {
@@ -307,6 +317,8 @@ fun DashboardScreen(
                             "inventory" -> onInventory
                             "history" -> onHistory
                             "customers" -> onCustomers
+                            "import" -> onImport
+                            "scan" -> onScan
                             else -> onNewBill
                         },
                         modifier = Modifier.weight(1f)
@@ -434,6 +446,28 @@ fun DashboardScreen(
 }
 
 @Composable
+private fun PremiumBadge() {
+    Box(
+        modifier = Modifier
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(Color(0xFFFFD54F), Color(0xFFFFA000))
+                ),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(horizontal = 8.dp, vertical = 3.dp)
+    ) {
+        Text(
+            text = "PREMIUM",
+            color = Color(0xFF1A1A1A),
+            fontSize = 10.sp,
+            fontWeight = FontWeight.ExtraBold,
+            letterSpacing = 1.sp
+        )
+    }
+}
+
+@Composable
 private fun StatChip(label: String, value: String) {
     Column {
         Text(
@@ -458,10 +492,14 @@ private fun QuickActionCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val feedback = com.hashmimotors.app.ui.sound.LocalAppFeedback.current
     Card(
         modifier = modifier
             .height(96.dp)
-            .clickable { onClick() },
+            .clickable {
+                com.hashmimotors.app.ui.sound.Feedback.tap(feedback)
+                onClick()
+            },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White.copy(alpha = 0.12f)
@@ -512,5 +550,7 @@ private val quickActions = listOf(
     QuickAction("add_stock", "Add Stock", Icons.Filled.Inventory, Color(0xFFAB47BC)),
     QuickAction("fitment", "Find by Vehicle", Icons.Filled.ShoppingCart, Color(0xFFEC407A)),
     QuickAction("history", "Bill History", Icons.Filled.Receipt, Color(0xFF7E57C2)),
-    QuickAction("customers", "Customers", Icons.Filled.Person, Color(0xFF26A69A))
+    QuickAction("customers", "Customers", Icons.Filled.Person, Color(0xFF26A69A)),
+    QuickAction("import", "Import", Icons.Filled.UploadFile, Color(0xFFFFC107)),
+    QuickAction("scan", "Scan Barcode", Icons.Filled.QrCodeScanner, Color(0xFF4FC3F7))
 )

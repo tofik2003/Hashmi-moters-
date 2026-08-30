@@ -19,6 +19,9 @@ interface PartDao {
     @Query("SELECT * FROM parts WHERE id = :id")
     suspend fun getByIdOnce(id: String): PartEntity?
 
+    @Query("SELECT * FROM parts WHERE barcode = :barcode AND active = 1 LIMIT 1")
+    suspend fun getByBarcode(barcode: String): PartEntity?
+
     @Query("""
         SELECT * FROM parts
         WHERE active = 1
@@ -72,8 +75,17 @@ interface CategoryDao {
     @Query("SELECT * FROM categories WHERE id = :id")
     suspend fun getById(id: String): CategoryEntity?
 
+    @Query("SELECT * FROM categories WHERE name = :name")
+    suspend fun getByName(name: String): CategoryEntity?
+
+    @Query("SELECT * FROM categories ORDER BY sortOrder ASC, name ASC")
+    suspend fun getAllOnce(): List<CategoryEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(categories: List<CategoryEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(category: CategoryEntity)
 
     @Query("SELECT COUNT(*) FROM categories")
     suspend fun count(): Int

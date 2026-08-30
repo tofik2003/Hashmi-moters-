@@ -50,6 +50,7 @@ import androidx.lifecycle.viewModelScope
 import com.hashmimotors.app.data.repository.CustomerRepository
 import com.hashmimotors.app.domain.model.Customer
 import com.hashmimotors.app.ui.components.AnimatedBigButton
+import com.hashmimotors.app.ui.components.GlassTextField
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -107,19 +108,21 @@ fun CustomerListScreen(
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(
+            GlassTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                placeholder = { Text("Search by name or phone") },
-                leadingIcon = { Icon(Icons.Filled.Search, null, tint = Color.White.copy(alpha = 0.6f)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                label = "Search",
+                placeholder = "Search by name or phone",
+                leadingIcon = Icons.Filled.Search,
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(12.dp))
 
             if (filtered.isEmpty()) {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -134,7 +137,12 @@ fun CustomerListScreen(
                     }
                 }
             } else {
-                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     items(filtered, key = { it.id }) { customer ->
                         Card(
                             modifier = Modifier

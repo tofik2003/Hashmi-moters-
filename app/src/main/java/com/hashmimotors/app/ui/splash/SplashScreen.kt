@@ -3,19 +3,18 @@ package com.hashmimotors.app.ui.splash
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.data.repository.ShopRepository
+import com.hashmimotors.app.domain.model.Shop
 import com.hashmimotors.app.ui.Routes
 import com.hashmimotors.app.ui.theme.GradientEnd
 import com.hashmimotors.app.ui.theme.GradientStart
@@ -39,22 +39,21 @@ import kotlinx.coroutines.delay
 import javax.inject.Inject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val shopRepository: ShopRepository
 ) : ViewModel() {
-    private val _isShopSetup = MutableStateFlow<Boolean?>(null)
-    val isShopSetup: StateFlow<Boolean?> = _isShopSetup.asStateFlow()
 
     init {
         viewModelScope.launch {
-            val shop = shopRepository.getShopOnce()
-            _isShopSetup.value = shop?.isSetupComplete == true
+            // Ensure a default shop exists so the app never blocks on setup.
+            if (shopRepository.getShopOnce() == null) {
+                shopRepository.saveShop(
+                    Shop(name = "Hashmi", isSetupComplete = true)
+                )
+            }
         }
     }
 }
@@ -76,14 +75,11 @@ fun SplashScreen(
         label = "alpha"
     )
 
-    val isSetup = viewModel.isShopSetup.collectAsState().value
-
-    LaunchedEffect(isSetup) {
+    LaunchedEffect(Unit) {
         startAnimation = true
         delay(1800)
-        // Navigate based on setup state
-        val destination = if (isSetup == true) Routes.DASHBOARD else Routes.ONBOARDING
-        onNavigate(destination)
+        // Straight to the dashboard — no onboarding or setup blocking.
+        onNavigate(Routes.DASHBOARD)
     }
 
     Box(
@@ -107,26 +103,50 @@ fun SplashScreen(
                     .alpha(alphaAnim),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Build,
-                    contentDescription = null,
-                    tint = Color(0xFFFFA000),
-                    modifier = Modifier.size(120.dp)
-                )
+                // Premium gold "H" monogram in a ring
+                Box(
+                    modifier = Modifier
+                        .size(130.dp)
+                        .border(
+                            width = 2.dp,
+                            color = Color(0xFFFFC107).copy(alpha = 0.6f),
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "H",
+                        color = Color(0xFFFFC107),
+                        fontSize = 84.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
             }
             Text(
-                text = "Hashmi Motors",
+                text = "Hashmi",
                 color = Color.White,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
+                fontSize = 34.sp,
+                fontWeight = FontWeight.ExtraBold,
                 modifier = Modifier
                     .scale(scaleAnim)
                     .alpha(alphaAnim)
             )
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Spare Parts Manager",
+                text = "P R E M I U M",
+                color = Color(0xFFFFC107),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 4.sp,
+                modifier = Modifier
+                    .scale(scaleAnim)
+                    .alpha(alphaAnim)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "Premium Spare Parts Manager",
                 color = Color.White.copy(alpha = 0.7f),
-                fontSize = 16.sp,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.Normal,
                 modifier = Modifier
                     .alpha(alphaAnim)

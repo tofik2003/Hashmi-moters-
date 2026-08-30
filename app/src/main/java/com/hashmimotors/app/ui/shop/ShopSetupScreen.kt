@@ -41,7 +41,7 @@ fun ShopSetupScreen(
 ) {
     val existingShop by viewModel.shop.collectAsStateWithLifecycle(initialValue = null)
 
-    var name by remember { mutableStateOf("Hashmi Motors") }
+    var name by remember { mutableStateOf("Hashmi") }
     var address by remember { mutableStateOf("") }
     var city by remember { mutableStateOf("") }
     var state by remember { mutableStateOf("") }

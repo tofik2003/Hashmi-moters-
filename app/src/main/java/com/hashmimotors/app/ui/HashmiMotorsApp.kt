@@ -28,6 +28,7 @@ import com.hashmimotors.app.ui.billing.BillingScreen
 import com.hashmimotors.app.ui.billing.InvoiceHistoryScreen
 import com.hashmimotors.app.ui.billing.InvoicePreviewScreen
 import com.hashmimotors.app.ui.catalog.AddPartScreen
+import com.hashmimotors.app.ui.catalog.CatalogImportScreen
 import com.hashmimotors.app.ui.catalog.SearchScreen
 import com.hashmimotors.app.ui.components.AnimatedParticleBackground
 import com.hashmimotors.app.ui.customers.CustomerListScreen
@@ -35,10 +36,9 @@ import com.hashmimotors.app.ui.dashboard.DashboardScreen
 import com.hashmimotors.app.ui.fitment.FitmentScreen
 import com.hashmimotors.app.ui.inventory.AddStockScreen
 import com.hashmimotors.app.ui.inventory.InventoryScreen
-import com.hashmimotors.app.ui.onboarding.OnboardingScreen
 import com.hashmimotors.app.ui.reports.ReportsScreen
+import com.hashmimotors.app.ui.scanner.BarcodeScannerScreen
 import com.hashmimotors.app.ui.settings.SettingsScreen
-import com.hashmimotors.app.ui.shop.ShopSetupScreen
 import com.hashmimotors.app.ui.splash.SplashScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -51,7 +51,9 @@ object Routes {
     const val DASHBOARD = "dashboard"
     const val SETTINGS = "settings"
     const val SEARCH = "search"
-    const val ADD_PART = "add_part"
+    const val IMPORT = "import"
+    const val SCAN = "scan"
+    const val ADD_PART = "add_part?barcode={barcode}&name={name}&brand={brand}&price={price}"
     const val EDIT_PART = "edit_part/{partId}"
     const val FITMENT_WIZARD = "fitment_wizard"
     const val NEW_BILL = "new_bill"
@@ -61,6 +63,19 @@ object Routes {
     const val ADD_STOCK = "add_stock"
     const val REPORTS = "reports"
     const val CUSTOMERS = "customers"
+
+    /**
+     * Builds the Add Part route, optionally pre-filling fields from a scan result.
+     */
+    fun addPartRoute(
+        barcode: String? = null,
+        name: String? = null,
+        brand: String? = null,
+        price: Double? = null
+    ): String {
+        fun enc(s: String?): String = android.net.Uri.encode(s ?: "")
+        return "add_part?barcode=${enc(barcode)}&name=${enc(name)}&brand=${enc(brand)}&price=${price ?: ""}"
+    }
 }
 
 @HiltViewModel
@@ -129,36 +144,20 @@ fun HashmiMotorsMainScreen(
                     }
                 )
             }
-            composable(Routes.ONBOARDING) {
-                OnboardingScreen(
-                    onComplete = {
-                        navController.navigate(Routes.SHOP_SETUP) {
-                            popUpTo(Routes.ONBOARDING) { inclusive = true }
-                        }
-                    }
-                )
-            }
-            composable(Routes.SHOP_SETUP) {
-                ShopSetupScreen(
-                    onComplete = {
-                        navController.navigate(Routes.DASHBOARD) {
-                            popUpTo(Routes.SHOP_SETUP) { inclusive = true }
-                        }
-                    }
-                )
-            }
             composable(Routes.DASHBOARD) {
                 DashboardScreen(
                     onSearch = { navController.navigate(Routes.SEARCH) },
                     onNewBill = { navController.navigate(Routes.NEW_BILL) },
                     onAddStock = { navController.navigate(Routes.ADD_STOCK) },
-                    onAddPart = { navController.navigate(Routes.ADD_PART) },
+                    onAddPart = { navController.navigate(Routes.addPartRoute()) },
                     onFitment = { navController.navigate(Routes.FITMENT_WIZARD) },
                     onInventory = { navController.navigate(Routes.INVENTORY) },
                     onReports = { navController.navigate(Routes.REPORTS) },
                     onHistory = { navController.navigate(Routes.INVOICE_HISTORY) },
                     onSettings = { navController.navigate(Routes.SETTINGS) },
-                    onCustomers = { navController.navigate(Routes.CUSTOMERS) }
+                    onCustomers = { navController.navigate(Routes.CUSTOMERS) },
+                    onImport = { navController.navigate(Routes.IMPORT) },
+                    onScan = { navController.navigate(Routes.SCAN) }
                 )
             }
             composable(Routes.SETTINGS) {
@@ -167,14 +166,45 @@ fun HashmiMotorsMainScreen(
             composable(Routes.SEARCH) {
                 SearchScreen(
                     onPartClick = { id -> navController.navigate("edit_part/$id") },
-                    onAddPartClick = { navController.navigate(Routes.ADD_PART) },
-                    onScanClick = { },
+                    onAddPartClick = { navController.navigate(Routes.addPartRoute()) },
+                    onScanClick = { navController.navigate(Routes.SCAN) },
+                    onImportClick = { navController.navigate(Routes.IMPORT) },
                     onBack = { navController.popBackStack() }
                 )
             }
-            composable(Routes.ADD_PART) {
+            composable(Routes.SCAN) {
+                BarcodeScannerScreen(
+                    onBack = { navController.popBackStack() },
+                    onEditPart = { id -> navController.navigate("edit_part/$id") },
+                    onAddPart = { barcode, name, brand, price ->
+                        navController.navigate(Routes.addPartRoute(barcode, name, brand, price))
+                    }
+                )
+            }
+            composable(Routes.IMPORT) {
+                CatalogImportScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(
+                Routes.ADD_PART,
+                arguments = listOf(
+                    navArgument("barcode") { type = NavType.StringType; nullable = true; defaultValue = null },
+                    navArgument("name") { type = NavType.StringType; nullable = true; defaultValue = null },
+                    navArgument("brand") { type = NavType.StringType; nullable = true; defaultValue = null },
+                    navArgument("price") { type = NavType.StringType; nullable = true; defaultValue = null }
+                )
+            ) { backStackEntry ->
+                val barcode = backStackEntry.arguments?.getString("barcode")?.takeIf { it.isNotBlank() }
+                val name = backStackEntry.arguments?.getString("name")?.takeIf { it.isNotBlank() }
+                val brand = backStackEntry.arguments?.getString("brand")?.takeIf { it.isNotBlank() }
+                val price = backStackEntry.arguments?.getString("price")?.toDoubleOrNull()
                 AddPartScreen(
                     partId = null,
+                    initialBarcode = barcode,
+                    initialName = name,
+                    initialBrand = brand,
+                    initialPrice = price,
                     onBack = { navController.popBackStack() },
                     onSaved = { navController.popBackStack() }
                 )

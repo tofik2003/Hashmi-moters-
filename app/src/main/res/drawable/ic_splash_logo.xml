@@ -4,16 +4,22 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    <!-- Premium gold ring -->
+    <path
+        android:pathData="M54,54 m-32,0 a32,32 0 1,0 64,0 a32,32 0 1,0 -64,0"
+        android:strokeColor="#66FFC107"
+        android:strokeWidth="2"
+        android:fillColor="#00000000" />
+    <!-- "H" monogram (Hashmi) — bold gold -->
+    <path
+        android:fillColor="#FFC107"
+        android:pathData="M36,30 L46,30 L46,48 L62,48 L62,30 L72,30 L72,78 L62,78 L62,60 L46,60 L46,78 L36,78 Z" />
+    <!-- Top shine for gradient depth -->
+    <path
+        android:fillColor="#66FFD54F"
+        android:pathData="M36,30 L46,30 L46,44 L62,44 L62,30 L72,30 L72,40 L36,40 Z" />
+    <!-- Sparkle -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M54,30 L70,42 L70,62 L62,62 L62,72 L46,72 L46,62 L38,62 L38,42 Z" />
-    <path
-        android:fillColor="#FFA000"
-        android:pathData="M30,54 L30,68 L36,68 L36,62 L72,62 L72,68 L78,68 L78,54 L66,40 L42,40 Z" />
-    <path
-        android:fillColor="#1A237E"
-        android:pathData="M42,68 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
-    <path
-        android:fillColor="#1A237E"
-        android:pathData="M66,68 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+        android:pathData="M74,24 L76,29 L81,31 L76,33 L74,38 L72,33 L67,31 L72,29 Z" />
 </vector>

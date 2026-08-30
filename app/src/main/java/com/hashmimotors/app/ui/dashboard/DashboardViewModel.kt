@@ -18,7 +18,7 @@ data class DashboardUiState(
     val lowStockCount: Int = 0,
     val totalParts: Int = 0,
     val totalStockValue: Double = 0.0,
-    val shopName: String = "Hashmi Motors"
+    val shopName: String = "Hashmi"
 )
 
 @HiltViewModel
@@ -52,7 +52,7 @@ class DashboardViewModel @Inject constructor(
             lowStockCount = lowStock,
             totalParts = totalParts,
             totalStockValue = stockValue,
-            shopName = shop?.name ?: "Hashmi Motors"
+            shopName = shop?.name ?: "Hashmi"
         )
     }.stateIn(
         scope = viewModelScope,
