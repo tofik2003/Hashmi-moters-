@@ -227,4 +227,21 @@ eval "set -- $(
     )" '"$@"'
 
 # Execute Gradle
-exec "$JAVACMD" "$@"
+TMP_LOG=$(mktemp 2>/dev/null || echo "/tmp/gradle_build.log")
+"$JAVACMD" "$@" > "$TMP_LOG" 2>&1
+GRADLE_EXIT_CODE=$?
+cat "$TMP_LOG"
+
+if [ "$GRADLE_EXIT_CODE" -ne 0 ]; then
+    grep -E "^e: |^w: |error:|FAILURE:|What went wrong|^Caused by|Execution failed for task|UnknownTaskException|Could not" "$TMP_LOG" |
+        head -n 80 |
+        while IFS= read -r line; do
+            cleaned=$(printf '%s' "$line" | sed 's/[%\r]/ /g')
+            if [ -n "$cleaned" ]; then
+                printf '::error title=GradleBuildFailure::%s\n' "$cleaned"
+            fi
+        done
+fi
+
+rm -f "$TMP_LOG"
+exit "$GRADLE_EXIT_CODE"
