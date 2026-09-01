@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 /**
  * Data classes for the bundled seed/reference datasets
- * (loaded from app/src/main/assets/seed/*.json).
+ * (loaded from the JSON assets under app/src/main/assets/seed/).
  *
  * All values are factual, publicly-known information (vehicle makes/models,
  * standard replacement-part names, HSN codes and GST rates). Nothing here is
