@@ -58,6 +58,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.Part
+import com.hashmimotors.app.util.QrProduct
+import com.hashmimotors.app.util.QrProductParser
 
 @Composable
 fun SearchScreen(
@@ -65,6 +67,7 @@ fun SearchScreen(
     onPartClick: (String) -> Unit,
     onAddPartClick: () -> Unit,
     onAddPartWithBarcode: (String) -> Unit,
+    onAddPartWithProduct: (QrProduct) -> Unit,
     onScanClick: () -> Unit,
     onBack: () -> Unit,
     scannedBarcode: String = "",
@@ -75,15 +78,22 @@ fun SearchScreen(
     val focusManager = LocalFocusManager.current
     var scannedValue by remember { mutableStateOf("") }
 
-    // Route a scanned barcode: exact match opens the part, otherwise search it.
+    // Route a scanned code: exact match opens the part; a full product payload
+    // goes to Add Part pre-filled; otherwise fall back to a plain search.
     LaunchedEffect(scannedBarcode) {
         if (scannedBarcode.isNotBlank()) {
             val match = viewModel.findByBarcode(scannedBarcode)
-            if (match != null) {
-                onPartClick(match.id)
-            } else {
-                scannedValue = scannedBarcode
-                viewModel.onSearchChange(scannedBarcode)
+            when {
+                match != null -> onPartClick(match.id)
+                else -> {
+                    val product = QrProductParser.parse(scannedBarcode)
+                    if (product != null) {
+                        onAddPartWithProduct(product)
+                    } else {
+                        scannedValue = scannedBarcode
+                        viewModel.onSearchChange(scannedBarcode)
+                    }
+                }
             }
             onBarcodeConsumed()
         }

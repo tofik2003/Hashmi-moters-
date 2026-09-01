@@ -54,12 +54,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.ui.components.AnimatedBigButton
+import com.hashmimotors.app.util.QrProductParser
 import kotlinx.coroutines.launch
 
 @Composable
 fun AddPartScreen(
     partId: String? = null,
     prefillBarcode: String? = null,
+    prefillName: String? = null,
+    prefillPrice: String? = null,
+    prefillSku: String? = null,
     viewModel: CatalogViewModel = hiltViewModel(),
     onBack: () -> Unit,
     onSaved: () -> Unit,
@@ -135,10 +139,30 @@ fun AddPartScreen(
         }
     }
 
-    // Barcode scanned from the camera while editing this form.
+    // Pre-fill name/price/SKU when launched from a parsed product QR.
+    LaunchedEffect(prefillName, prefillPrice, prefillSku) {
+        if (!prefillName.isNullOrBlank() && name.isBlank()) name = prefillName
+        if (!prefillPrice.isNullOrBlank()) {
+            if (mrp.isBlank()) mrp = prefillPrice
+            if (sellingPrice.isBlank()) sellingPrice = prefillPrice
+        }
+        if (!prefillSku.isNullOrBlank() && sku.isBlank()) sku = prefillSku
+    }
+
+    // Barcode scanned from the camera while editing this form. A full product
+    // payload auto-fills every field it carries.
     LaunchedEffect(scannedBarcode) {
         if (scannedBarcode.isNotBlank()) {
-            barcode = scannedBarcode
+            val product = QrProductParser.parse(scannedBarcode)
+            if (product != null) {
+                if (name.isBlank()) name = product.name
+                if (mrp.isBlank() && product.mrp != null) mrp = product.mrp.toString()
+                if (sellingPrice.isBlank() && product.mrp != null) sellingPrice = product.mrp.toString()
+                if (sku.isBlank() && product.sku != null) sku = product.sku
+                if (barcode.isBlank() && product.barcode != null) barcode = product.barcode
+            } else if (barcode.isBlank() && scannedBarcode.all { it.isDigit() }) {
+                barcode = scannedBarcode
+            }
             onBarcodeConsumed()
         }
     }

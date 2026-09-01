@@ -61,7 +61,7 @@ object Routes {
     const val DASHBOARD = "dashboard"
     const val SETTINGS = "settings"
     const val SEARCH = "search"
-    const val ADD_PART = "add_part?barcode={barcode}"
+    const val ADD_PART = "add_part?barcode={barcode}&name={name}&price={price}&sku={sku}"
     const val EDIT_PART = "edit_part/{partId}"
     const val FITMENT_WIZARD = "fitment_wizard"
     const val NEW_BILL = "new_bill"
@@ -189,6 +189,14 @@ fun HashmiMotorsMainScreen(
                     onAddPartWithBarcode = { value ->
                         navController.navigate("add_part?barcode=${Uri.encode(value)}")
                     },
+                    onAddPartWithProduct = { p ->
+                        navController.navigate(
+                            "add_part?barcode=${Uri.encode(p.barcode ?: "")}" +
+                                "&name=${Uri.encode(p.name)}" +
+                                "&price=${Uri.encode(p.mrp?.toString() ?: "")}" +
+                                "&sku=${Uri.encode(p.sku ?: "")}"
+                        )
+                    },
                     onScanClick = { navController.navigate(Routes.SCAN_BARCODE) },
                     onBack = { navController.popBackStack() },
                     scannedBarcode = barcode.value,
@@ -223,13 +231,21 @@ fun HashmiMotorsMainScreen(
             }
             composable(
                 Routes.ADD_PART,
-                arguments = listOf(navArgument("barcode") { type = NavType.StringType; defaultValue = "" })
+                arguments = listOf(
+                    navArgument("barcode") { type = NavType.StringType; defaultValue = "" },
+                    navArgument("name") { type = NavType.StringType; defaultValue = "" },
+                    navArgument("price") { type = NavType.StringType; defaultValue = "" },
+                    navArgument("sku") { type = NavType.StringType; defaultValue = "" }
+                )
             ) { entry ->
                 val scanned = entry.savedStateHandle.getStateFlow("scanned_barcode", "")
                     .collectAsStateWithLifecycle()
                 AddPartScreen(
                     partId = null,
                     prefillBarcode = entry.arguments?.getString("barcode")?.takeIf { it.isNotBlank() },
+                    prefillName = entry.arguments?.getString("name")?.takeIf { it.isNotBlank() },
+                    prefillPrice = entry.arguments?.getString("price")?.takeIf { it.isNotBlank() },
+                    prefillSku = entry.arguments?.getString("sku")?.takeIf { it.isNotBlank() },
                     onBack = { navController.popBackStack() },
                     onSaved = { navController.popBackStack() },
                     onScanBarcode = { navController.navigate(Routes.SCAN_BARCODE) },

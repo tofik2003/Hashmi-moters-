@@ -54,6 +54,7 @@ import com.hashmimotors.app.domain.model.InvoiceLine
 import com.hashmimotors.app.ui.catalog.CatalogViewModel
 import com.hashmimotors.app.ui.catalog.PartListItem
 import com.hashmimotors.app.ui.scanner.BillScanBus
+import com.hashmimotors.app.util.QrProductParser
 
 @Composable
 fun BillingScreen(
@@ -88,15 +89,28 @@ fun BillingScreen(
         }
     }
 
-    // Add a barcode-scanned part straight to the bill.
+    // Add a scanned code straight to the bill: exact catalog part first, then a
+    // full product payload becomes an ad-hoc line.
     androidx.compose.runtime.LaunchedEffect(scannedBarcode) {
         if (scannedBarcode.isNotBlank()) {
             val part = billingViewModel.findByBarcode(scannedBarcode)
-            if (part != null) {
-                billingViewModel.addPart(part, qty = 1)
-                scanNotice = "Added: ${part.name}"
-            } else {
-                scanNotice = "No part found for \"$scannedBarcode\""
+            when {
+                part != null -> {
+                    billingViewModel.addPart(part, qty = 1)
+                    scanNotice = "Added: ${part.name}"
+                }
+                else -> {
+                    val product = QrProductParser.parse(scannedBarcode)
+                    if (product != null && product.mrp != null) {
+                        val qty = product.qty.coerceAtLeast(1)
+                        billingViewModel.addAdHocLine(product.name, qty, product.mrp)
+                        scanNotice = "Added: ${product.name} × $qty"
+                    } else if (product != null) {
+                        scanNotice = "Parsed \"${product.name}\" but no price found"
+                    } else {
+                        scanNotice = "No part found for \"$scannedBarcode\""
+                    }
+                }
             }
             onBarcodeConsumed()
         }
