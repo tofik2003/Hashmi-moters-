@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Brand Colors -->
-    <color name="brand_indigo">#3F51B5</color>
-    <color name="brand_indigo_dark">#1A237E</color>
-    <color name="brand_purple">#7B1FA2</color>
-    <color name="brand_teal">#00897B</color>
-    <color name="brand_amber">#FFA000</color>
+    <!-- Brand Colors (premium midnight indigo & gold) -->
+    <color name="brand_indigo">#6366F1</color>
+    <color name="brand_indigo_dark">#312E81</color>
+    <color name="brand_purple">#8B5CF6</color>
+    <color name="brand_teal">#14B8A6</color>
+    <color name="brand_amber">#F5B942</color>
 
     <!-- Primary palette -->
-    <color name="md_theme_light_primary">#3F51B5</color>
+    <color name="md_theme_light_primary">#4F46E5</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>
     <color name="md_theme_light_primaryContainer">#DDE1FF</color>
     <color name="md_theme_light_onPrimaryContainer">#001454</color>
@@ -49,10 +49,10 @@
     <color name="md_theme_dark_onSurfaceVariant">#C6C5D0</color>
     <color name="md_theme_dark_outline">#90909A</color>
 
-    <!-- Gradients -->
-    <color name="gradient_start">#1A237E</color>
-    <color name="gradient_middle">#000000</color>
-    <color name="gradient_end">#4A148C</color>
+    <!-- Gradients (premium midnight indigo -> violet) -->
+    <color name="gradient_start">#141433</color>
+    <color name="gradient_middle">#1E1B5E</color>
+    <color name="gradient_end">#3B1E7A</color>
 
     <!-- Status -->
     <color name="status_success">#2E7D32</color>

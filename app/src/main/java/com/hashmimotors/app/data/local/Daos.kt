@@ -40,6 +40,9 @@ interface PartDao {
     @Query("SELECT COUNT(*) FROM parts WHERE active = 1")
     fun count(): Flow<Int>
 
+    @Query("SELECT COUNT(*) FROM parts WHERE active = 1")
+    suspend fun countOnce(): Int
+
     @Query("SELECT COUNT(*) FROM parts WHERE stockQty <= reorderLevel AND active = 1")
     fun lowStockCount(): Flow<Int>
 
@@ -69,6 +72,9 @@ interface PartDao {
 interface CategoryDao {
     @Query("SELECT * FROM categories ORDER BY sortOrder ASC, name ASC")
     fun getAll(): Flow<List<CategoryEntity>>
+
+    @Query("SELECT * FROM categories ORDER BY sortOrder ASC, name ASC")
+    suspend fun getAllOnce(): List<CategoryEntity>
 
     @Query("SELECT * FROM categories WHERE id = :id")
     suspend fun getById(id: String): CategoryEntity?

@@ -77,6 +77,10 @@ fun accentColorFor(type: AccentColorType): Color = when (type) {
     AccentColorType.BLUE -> AccentBlue
     AccentColorType.GREEN -> AccentGreen
     AccentColorType.ORANGE -> AccentOrange
+    AccentColorType.ROSE -> AccentRose
+    AccentColorType.TEAL -> AccentTeal
+    AccentColorType.VIOLET -> AccentViolet
+    AccentColorType.GOLD -> AccentGold
 }
 
 /**

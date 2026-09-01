@@ -34,6 +34,10 @@ class SettingsRepository @Inject constructor(
         AccentColorType.BLUE -> com.hashmimotors.app.ui.theme.AccentBlue
         AccentColorType.GREEN -> com.hashmimotors.app.ui.theme.AccentGreen
         AccentColorType.ORANGE -> com.hashmimotors.app.ui.theme.AccentOrange
+        AccentColorType.ROSE -> com.hashmimotors.app.ui.theme.AccentRose
+        AccentColorType.TEAL -> com.hashmimotors.app.ui.theme.AccentTeal
+        AccentColorType.VIOLET -> com.hashmimotors.app.ui.theme.AccentViolet
+        AccentColorType.GOLD -> com.hashmimotors.app.ui.theme.AccentGold
     }
 }
 

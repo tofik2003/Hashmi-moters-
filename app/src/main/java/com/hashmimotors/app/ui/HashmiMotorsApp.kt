@@ -21,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.hashmimotors.app.data.repository.CategoryRepository
+import com.hashmimotors.app.data.repository.PartRepository
 import com.hashmimotors.app.data.repository.SettingsRepository
 import com.hashmimotors.app.data.repository.VehicleRepository
 import com.hashmimotors.app.domain.model.AppSettings
@@ -77,7 +78,8 @@ object Routes {
 class AppShellViewModel @Inject constructor(
     settingsRepository: SettingsRepository,
     categoryRepository: CategoryRepository,
-    vehicleRepository: VehicleRepository
+    vehicleRepository: VehicleRepository,
+    partRepository: PartRepository
 ) : ViewModel() {
     val settings = settingsRepository.getSettings()
 
@@ -85,6 +87,7 @@ class AppShellViewModel @Inject constructor(
         viewModelScope.launch {
             categoryRepository.ensureSeeded()
             vehicleRepository.ensureSeeded()
+            partRepository.ensureSeeded()
         }
     }
 }

@@ -9,9 +9,13 @@ import com.hashmimotors.app.domain.model.AppSettings
 import com.hashmimotors.app.domain.model.BackgroundStyle
 import com.hashmimotors.app.domain.model.ThemeMode
 import com.hashmimotors.app.ui.theme.AccentBlue
+import com.hashmimotors.app.ui.theme.AccentGold
 import com.hashmimotors.app.ui.theme.AccentGreen
 import com.hashmimotors.app.ui.theme.AccentIndigo
 import com.hashmimotors.app.ui.theme.AccentOrange
+import com.hashmimotors.app.ui.theme.AccentRose
+import com.hashmimotors.app.ui.theme.AccentTeal
+import com.hashmimotors.app.ui.theme.AccentViolet
 import androidx.compose.ui.graphics.Color
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -40,6 +44,10 @@ class SettingsViewModel @Inject constructor(
         AccentColorType.BLUE -> AccentBlue
         AccentColorType.GREEN -> AccentGreen
         AccentColorType.ORANGE -> AccentOrange
+        AccentColorType.ROSE -> AccentRose
+        AccentColorType.TEAL -> AccentTeal
+        AccentColorType.VIOLET -> AccentViolet
+        AccentColorType.GOLD -> AccentGold
     }
 
     private fun update(transform: (AppSettings) -> AppSettings) {

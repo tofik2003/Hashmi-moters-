@@ -770,11 +770,201 @@ PARTS_EXTRA = [
     p("Chain Cleaner", "Tools", "34029099", 18.0, ["Motul", "3M"], ["chain cleaner"]),
 ]
 
+PARTS_EXTRA2 = [
+    # ---- Steering ---- 
+    p("Power Steering Pump", "Steering", "87089400", 28.0, ["ZF", "Rane", "TVS"], ["steering pump"]),
+    p("Steering Rack Assembly", "Steering", "87089400", 28.0, ["Rane", "ZF"], ["rack", "rack and pinion"]),
+    p("Steering Column", "Steering", "87089400", 28.0, ["Rane"], ["steering column"]),
+    p("Tie Rod End", "Steering", "87089400", 28.0, ["Rane", "Moog"], ["tie rod"]),
+    p("Steering Rack Boot", "Steering", "40169990", 18.0, [], ["rack boot", "gaiter"]),
+    p("Steering Gear Box", "Steering", "87089400", 28.0, ["ZF", "Rane"], ["gear box"]),
+    p("Power Steering Hose", "Steering", "40093100", 18.0, ["Gates"], ["steering hose"]),
+    p("Steering U-Joint", "Steering", "87089400", 28.0, [], ["steering joint"]),
+    # ---- Clutch ----
+    p("Clutch Plate / Disc", "Clutch", "87089300", 28.0, ["Valeo", "Luk", "TVS"], ["clutch disc", "clutch plate"]),
+    p("Clutch Pressure Plate", "Clutch", "87089300", 28.0, ["Valeo", "Luk", "TVS"], ["pressure plate"]),
+    p("Clutch Release Bearing", "Clutch", "84828000", 18.0, ["SKF", "NBC", "TVS"], ["release bearing", "throwout"]),
+    p("Clutch Cable", "Clutch", "87089300", 28.0, ["Rolon", "Diamond"], ["clutch cable"]),
+    p("Clutch Master Cylinder", "Clutch", "87089300", 28.0, ["Valeo", "TVS"], ["clutch master"]),
+    p("Clutch Slave Cylinder", "Clutch", "87089300", 28.0, ["Valeo", "TVS"], ["clutch slave"]),
+    p("Clutch Basket / Housing", "Clutch", "87089300", 28.0, [], ["clutch basket"]),
+    p("Clutch Lever", "Clutch", "87141090", 28.0, [], ["clutch lever"]),
+    # ---- Transmission ----
+    p("Drive Shaft Assembly", "Transmission", "87085000", 28.0, ["GKN", "Rane"], ["drive shaft"]),
+    p("CV Joint Kit", "Transmission", "87085000", 28.0, ["GKN"], ["cv joint"]),
+    p("Half Shaft / Axle Shaft", "Transmission", "87085000", 28.0, [], ["axle shaft"]),
+    p("Gear Shift Lever", "Transmission", "87084000", 28.0, [], ["gear lever", "shifter"]),
+    p("Universal Joint", "Transmission", "87089900", 28.0, [], ["u joint", "cross joint"]),
+    p("Propeller Shaft", "Transmission", "87089900", 28.0, [], ["prop shaft"]),
+    p("Gear Selector Cable", "Transmission", "87084000", 28.0, [], ["selector cable"]),
+    p("Transmission Oil Seal", "Transmission", "84879000", 18.0, ["NOK"], ["gearbox seal"]),
+    # ---- Batteries ----
+    p("Car Battery", "Batteries", "85071000", 28.0, ["Amaron", "Exide", "SF Sonic", "Livguard"], ["battery"]),
+    p("Two-Wheeler Battery", "Batteries", "85071000", 28.0, ["Amaron", "Exide", "SF Sonic"], ["bike battery"]),
+    p("Battery Terminal", "Batteries", "85369090", 18.0, [], ["terminal", "connector"]),
+    p("Battery Clamp / Holder", "Batteries", "87089900", 28.0, [], ["battery clamp"]),
+    p("Battery Charger", "Batteries", "85044030", 18.0, ["Amaron", "Livguard"], ["charger"]),
+    p("Battery Acid / Distilled Water", "Batteries", "28070010", 18.0, [], ["battery water", "electrolyte"]),
+    # ---- Ignition ----
+    p("Ignition Coil", "Ignition", "85113000", 28.0, ["Bosch", "Denso", "NGK"], ["coil"]),
+    p("Spark Plug", "Ignition", "85111000", 28.0, ["NGK", "Bosch", "Champion", "Mico"], ["plug"]),
+    p("Spark Plug Cap", "Ignition", "85119000", 28.0, ["NGK"], ["plug cap"]),
+    p("CDI Unit", "Ignition", "85119000", 28.0, ["Minda", "Bosch"], ["cdi"]),
+    p("Ignition Switch Assembly", "Ignition", "85119000", 28.0, ["Minda"], ["ignition switch"]),
+    p("Magneto / Stator Coil", "Ignition", "85112090", 28.0, ["Minda", "Bosch"], ["stator coil", "magneto"]),
+    p("Pickup / Pulse Coil", "Ignition", "85112090", 28.0, [], ["pickup coil"]),
+    # ---- Oils & Fluids ----
+    p("Engine Oil (Petrol)", "Oils & Fluids", "27101990", 18.0, ["Castrol", "Mobil", "Motul", "Shell"], ["engine oil"]),
+    p("Engine Oil (Diesel)", "Oils & Fluids", "27101990", 18.0, ["Castrol", "Mobil", "Shell"], ["diesel oil"]),
+    p("Gear Oil", "Oils & Fluids", "27101990", 18.0, ["Castrol", "Motul", "Shell"], ["gear oil", "transmission oil"]),
+    p("Brake Fluid (DOT 3/4)", "Oils & Fluids", "38190090", 18.0, ["Bosch", "Castrol", "Motul"], ["brake fluid", "dot4"]),
+    p("Engine Coolant", "Oils & Fluids", "38200000", 18.0, ["Castrol", "Motul", "Shell"], ["coolant", "antifreeze"]),
+    p("Power Steering Fluid", "Oils & Fluids", "38190090", 18.0, ["Castrol", "Shell"], ["steering fluid"]),
+    p("Fork Oil", "Oils & Fluids", "27101990", 18.0, ["Motul", "Castrol"], ["fork oil", "shocker oil"]),
+    p("Chain Spray / Lube", "Oils & Fluids", "34039900", 18.0, ["Motul", "3M"], ["chain spray"]),
+    p("Grease", "Oils & Fluids", "27101990", 18.0, ["Castrol", "Shell"], ["grease"]),
+    p("Screen Wash", "Oils & Fluids", "34029099", 18.0, ["3M", "Shell"], ["screen wash"]),
+    # ---- Electrical (more) ----
+    p("Alternator", "Electrical", "85115000", 28.0, ["Bosch", "Lucas-TVS", "Denso"], ["alternator"]),
+    p("Starter Motor", "Electrical", "85114000", 28.0, ["Bosch", "Lucas-TVS", "Denso"], ["starter", "self motor"]),
+    p("Automotive Relay", "Electrical", "85364100", 18.0, ["Bosch", "Hella"], ["relay"]),
+    p("Fuse Box / Fuse Set", "Electrical", "85361010", 18.0, ["Bosch"], ["fuse"]),
+    p("Wiring Harness", "Electrical", "85443000", 18.0, ["Minda"], ["harness", "wiring"]),
+    p("Horn (12V)", "Electrical", "85123010", 28.0, ["Bosch", "Hella", "Minda"], ["horn"]),
+    p("Oxygen / Lambda Sensor", "Electrical", "90271000", 18.0, ["Bosch", "Denso"], ["o2 sensor", "lambda"]),
+    p("MAP / MAF Sensor", "Electrical", "90268090", 18.0, ["Bosch", "Denso"], ["map sensor", "maf"]),
+    p("Crank / Speed Sensor", "Electrical", "90318000", 18.0, ["Bosch", "Denso"], ["crank sensor", "speed sensor"]),
+    p("Wiper Motor", "Electrical", "85013100", 18.0, ["Lucas-TVS", "Minda"], ["wiper motor"]),
+    p("Fuel Level Sensor", "Electrical", "90261090", 18.0, [], ["fuel sensor"]),
+    p("Combination Switch", "Electrical", "85365090", 18.0, ["Minda"], ["combi switch"]),
+    # ---- Lighting (more) ----
+    p("Headlight Assembly", "Lighting", "85122010", 28.0, ["Lumax", "Varroc", "Minda"], ["headlight"]),
+    p("Tail Light Assembly", "Lighting", "85122020", 28.0, ["Lumax", "Varroc"], ["tail light"]),
+    p("Indicator / Turn Signal Assembly", "Lighting", "85122010", 28.0, ["Lumax", "Varroc"], ["indicator"]),
+    p("Fog Lamp Assembly", "Lighting", "85122010", 28.0, ["Lumax", "Varroc", "Hella"], ["fog lamp"]),
+    p("Hazard Warning Switch", "Lighting", "85365090", 18.0, ["Minda"], ["hazard switch"]),
+    p("LED Light Bar", "Lighting", "94054090", 18.0, [], ["led bar"]),
+    # ---- Filters (more) ----
+    p("Transmission Filter Kit", "Filters", "84212900", 28.0, ["Bosch", "Mann"], ["transmission filter"]),
+    p("Hydraulic Filter", "Filters", "84212900", 28.0, [], ["hydraulic filter"]),
+    p("Oil Breather Element", "Filters", "84213990", 28.0, [], ["breather element"]),
+    # ---- Exhaust (more) ----
+    p("Silencer / Muffler", "Exhaust", "87089200", 28.0, [], ["silencer", "muffler"]),
+    p("Catalytic Converter", "Exhaust", "84213990", 28.0, [], ["cat converter", "catalyst"]),
+    p("Exhaust Manifold", "Exhaust", "87089200", 28.0, [], ["manifold"]),
+    p("Downpipe", "Exhaust", "87089200", 28.0, [], ["down pipe"]),
+    # ---- Wheels & Hubs (more) ----
+    p("Alloy Wheel", "Wheels & Hubs", "87087000", 28.0, [], ["alloy", "rim"]),
+    p("Steel Rim", "Wheels & Hubs", "87087000", 28.0, [], ["rim"]),
+    p("Wheel Stud / Bolt", "Wheels & Hubs", "73181500", 18.0, [], ["wheel bolt", "stud"]),
+    p("Wheel Nut", "Wheels & Hubs", "73181600", 18.0, [], ["wheel nut", "lug nut"]),
+    # ---- Body Parts (more) ----
+    p("Front Bumper", "Body Parts", "87081090", 28.0, [], ["bumper"]),
+    p("Rear Bumper", "Body Parts", "87081090", 28.0, [], ["bumper"]),
+    p("Bonnet / Hood", "Body Parts", "87082900", 28.0, [], ["bonnet", "hood"]),
+    p("Front Fender", "Body Parts", "87082900", 28.0, [], ["fender", "mudguard"]),
+    p("Door Handle", "Body Parts", "87082900", 28.0, [], ["door handle"]),
+    p("ORVM Mirror", "Body Parts", "70091090", 28.0, [], ["orvm", "side mirror"]),
+    # ---- Bearings & Seals (more) ----
+    p("Front Wheel Bearing", "Bearings & Seals", "84821090", 18.0, ["SKF", "Timken", "NBC"], ["wheel bearing"]),
+    p("Rear Wheel Bearing", "Bearings & Seals", "84821090", 18.0, ["SKF", "Timken", "NBC"], ["wheel bearing"]),
+    p("Clutch Release Bearing Kit", "Bearings & Seals", "84828000", 18.0, ["SKF", "NBC"], ["release bearing"]),
+    p("Crankshaft Oil Seal", "Bearings & Seals", "84879000", 18.0, ["NOK"], ["crank seal"]),
+    p("Wheel Hub Seal", "Bearings & Seals", "84879000", 18.0, ["NOK"], ["hub seal"]),
+    # ---- Accessories (more) ----
+    p("Car Floor Mat", "Accessories", "57039090", 18.0, [], ["floor mat", "matting"]),
+    p("Seat Cover", "Accessories", "94012000", 28.0, [], ["seat cover"]),
+    p("Steering Wheel Cover", "Accessories", "87089400", 28.0, [], ["steering cover"]),
+    p("Mud Flap Set", "Accessories", "40169990", 18.0, [], ["mud flap"]),
+    p("Sun Shade", "Accessories", "63079090", 18.0, [], ["sun shade"]),
+    p("Rear View Camera", "Accessories", "85258900", 18.0, [], ["reverse camera", "parking camera"]),
+    p("Parking Sensor Kit", "Accessories", "90318000", 18.0, [], ["parking sensor"]),
+    p("Dash Camera", "Accessories", "85258900", 18.0, [], ["dashcam", "dash cam"]),
+    p("Tyre Inflator", "Accessories", "84148090", 28.0, [], ["inflator", "air pump"]),
+    p("Car Vacuum Cleaner", "Accessories", "85081100", 18.0, [], ["vacuum cleaner"]),
+]
+
+
+def sp(name, category, mrp, cost, stock, reorder, hsn, gst, brand=None, keywords=None):
+    """Helper to build one starter-catalog part (seeded into the DB on first run)."""
+    return {
+        "name": name,
+        "category": category,
+        "mrp": mrp,
+        "sellingPrice": mrp,
+        "costPrice": cost,
+        "stockQty": stock,
+        "reorderLevel": reorder,
+        "hsnCode": hsn,
+        "gstPercent": gst,
+        "brand": brand or None,
+        "keywords": keywords or [],
+    }
+
+
+# Curated starter inventory — imported into the parts table on first launch so
+# the catalog isn't empty. Prices are indicative Indian-market figures.
+STARTER_PARTS = [
+    sp("Engine Oil (Petrol) 1L", "Oils & Fluids", 550.0, 410.0, 24, 8, "27101990", 18.0, "Castrol", ["engine oil"]),
+    sp("Engine Oil (Diesel) 1L", "Oils & Fluids", 620.0, 470.0, 16, 6, "27101990", 18.0, "Mobil", ["engine oil"]),
+    sp("Gear Oil 1L", "Oils & Fluids", 480.0, 350.0, 12, 6, "27101990", 18.0, "Motul", ["gear oil"]),
+    sp("Engine Coolant 1L", "Oils & Fluids", 320.0, 230.0, 18, 6, "38200000", 18.0, "Castrol", ["coolant"]),
+    sp("Brake Fluid 250ml", "Oils & Fluids", 190.0, 130.0, 20, 8, "38190090", 18.0, "Bosch", ["brake fluid"]),
+    sp("Chain Spray 200ml", "Oils & Fluids", 350.0, 250.0, 14, 6, "34039900", 18.0, "Motul", ["chain lube"]),
+    sp("Spark Plug", "Ignition", 240.0, 160.0, 40, 12, "85111000", 28.0, "NGK", ["plug"]),
+    sp("Ignition Coil", "Ignition", 1250.0, 900.0, 8, 3, "85113000", 28.0, "Bosch", ["coil"]),
+    sp("Car Battery 35Ah", "Batteries", 5200.0, 4300.0, 6, 2, "85071000", 28.0, "Amaron", ["battery"]),
+    sp("Two-Wheeler Battery 5Ah", "Batteries", 1450.0, 1100.0, 10, 4, "85071000", 28.0, "Exide", ["battery"]),
+    sp("Headlight Bulb H4", "Lighting", 180.0, 110.0, 30, 10, "85392100", 28.0, "Philips", ["headlight bulb"]),
+    sp("LED Headlight Bulb", "Lighting", 650.0, 470.0, 15, 5, "85395000", 28.0, "Osram", ["led bulb"]),
+    sp("Indicator Bulb", "Lighting", 45.0, 25.0, 50, 20, "85392100", 28.0, "Philips", ["indicator bulb"]),
+    sp("Tail Light Bulb", "Lighting", 40.0, 22.0, 50, 20, "85392100", 28.0, "Osram", ["tail bulb"]),
+    sp("Front Brake Pads", "Brakes", 1350.0, 980.0, 12, 4, "87083000", 28.0, "Bosch", ["brake pad"]),
+    sp("Rear Brake Pads", "Brakes", 1200.0, 860.0, 10, 4, "87083000", 28.0, "Bosch", ["brake pad"]),
+    sp("Brake Shoes", "Brakes", 850.0, 600.0, 10, 4, "87083000", 28.0, "TVS Girling", ["brake shoe"]),
+    sp("Brake Disc / Rotor", "Brakes", 1900.0, 1400.0, 8, 3, "87083000", 28.0, "Bosch", ["rotor"]),
+    sp("Air Filter", "Filters", 420.0, 300.0, 20, 8, "84213100", 28.0, "Bosch", ["air filter"]),
+    sp("Oil Filter", "Filters", 260.0, 180.0, 24, 8, "84212300", 28.0, "Bosch", ["oil filter"]),
+    sp("Fuel Filter", "Filters", 320.0, 220.0, 18, 6, "84212300", 28.0, "Bosch", ["fuel filter"]),
+    sp("Cabin Air Filter", "Filters", 480.0, 340.0, 10, 4, "84213100", 28.0, "Mann", ["cabin filter"]),
+    sp("Wiper Blade", "Electrical", 350.0, 240.0, 16, 6, "85124000", 28.0, "Bosch", ["wiper"]),
+    sp("Horn 12V", "Electrical", 420.0, 300.0, 12, 4, "85123010", 28.0, "Bosch", ["horn"]),
+    sp("Clutch Plate", "Clutch", 1650.0, 1200.0, 8, 3, "87089300", 28.0, "Valeo", ["clutch plate"]),
+    sp("Clutch Pressure Plate", "Clutch", 2100.0, 1550.0, 6, 2, "87089300", 28.0, "Luk", ["pressure plate"]),
+    sp("Clutch Cable", "Clutch", 220.0, 150.0, 15, 6, "87089300", 28.0, "Rolon", ["clutch cable"]),
+    sp("Accelerator Cable", "Clutch", 200.0, 135.0, 15, 6, "87089300", 28.0, "Rolon", ["accelerator cable"]),
+    sp("Timing Chain Kit", "Engine", 2400.0, 1750.0, 5, 2, "73151100", 18.0, "Rolon", ["timing chain"]),
+    sp("Cylinder Head Gasket", "Engine", 850.0, 600.0, 10, 4, "84841090", 18.0, "Goetze", ["head gasket"]),
+    sp("Engine Overhaul Gasket Kit", "Engine", 2800.0, 2050.0, 4, 2, "84849000", 18.0, "Goetze", ["gasket set"]),
+    sp("Piston Ring Set", "Engine", 1150.0, 820.0, 8, 3, "84099990", 28.0, "Goetze", ["piston rings"]),
+    sp("Water Pump", "Engine", 1650.0, 1200.0, 6, 2, "84133090", 28.0, "Bosch", ["coolant pump"]),
+    sp("Fuel Pump", "Engine", 2400.0, 1750.0, 5, 2, "84133090", 28.0, "Bosch", ["fuel pump"]),
+    sp("Shock Absorber (Front)", "Suspension", 1500.0, 1100.0, 8, 3, "87088000", 28.0, "Gabriel", ["shocker"]),
+    sp("Shock Absorber (Rear)", "Suspension", 1400.0, 1020.0, 8, 3, "87088000", 28.0, "Gabriel", ["shocker"]),
+    sp("Lower Arm Assembly", "Suspension", 1900.0, 1400.0, 6, 2, "87088000", 28.0, "Rane", ["lower arm"]),
+    sp("Radiator", "Cooling", 3200.0, 2400.0, 3, 1, "87089100", 28.0, "Valeo", ["radiator"]),
+    sp("Thermostat", "Cooling", 480.0, 330.0, 10, 4, "90321090", 28.0, "Bosch", ["thermostat"]),
+    sp("AC Gas Refill 340g", "Air Conditioning", 850.0, 620.0, 10, 4, "29034500", 28.0, [], ["ac gas", "refrigerant"]),
+    sp("Serpentine Belt", "Belts & Hoses", 650.0, 470.0, 10, 4, "40103990", 18.0, "Gates", ["fan belt"]),
+    sp("Radiator Hose", "Belts & Hoses", 380.0, 260.0, 12, 4, "40093100", 18.0, "Gates", ["radiator hose"]),
+    sp("Car Tyre 165/80 R14", "Tyres", 4200.0, 3600.0, 6, 2, "40111010", 28.0, "MRF", ["tyre", "tire"]),
+    sp("Two-Wheeler Tyre 90/90-17", "Tyres", 1600.0, 1320.0, 8, 3, "40114010", 28.0, "MRF", ["tyre"]),
+    sp("Tyre Tube", "Tyres", 280.0, 190.0, 20, 8, "40131020", 28.0, "MRF", ["tube"]),
+    sp("Car Shampoo 500ml", "Car Care", 240.0, 160.0, 24, 8, "34029099", 18.0, "3M", ["shampoo"]),
+    sp("Car Wax 200g", "Car Care", 350.0, 250.0, 12, 4, "34059090", 18.0, "Formula 1", ["wax"]),
+    sp("Microfibre Cloth", "Car Care", 120.0, 70.0, 40, 12, "63071090", 18.0, [], ["cloth"]),
+    sp("Car Stereo / Head Unit", "Audio & Infotainment", 6500.0, 5200.0, 3, 1, "85272100", 18.0, "Sony", ["stereo"]),
+    sp("Car Speaker 6.5\"", "Audio & Infotainment", 1450.0, 1050.0, 6, 2, "85182900", 18.0, "JBL", ["speaker"]),
+    sp("Helmet (ISI)", "Accessories", 1100.0, 800.0, 10, 4, "65061090", 18.0, "Studds", ["helmet"]),
+    sp("Car Floor Mat Set", "Accessories", 900.0, 650.0, 6, 2, "57039090", 18.0, [], ["floor mat"]),
+    sp("Mechanic Tool Kit", "Tools", 2400.0, 1750.0, 4, 2, "82060090", 18.0, [], ["tool kit"]),
+]
+
 
 def validate():
     categories = CATEGORIES + CATEGORIES_EXTRA
     vehicles = VEHICLES + VEHICLES_EXTRA
-    parts = PARTS + PARTS_EXTRA
+    parts = PARTS + PARTS_EXTRA + PARTS_EXTRA2
     category_names = {c["name"] for c in categories}
     assert len(category_names) == len(categories), "Duplicate category names"
     for part in parts:
@@ -782,7 +972,9 @@ def validate():
     for veh in vehicles:
         assert veh["yearFrom"] <= veh["yearTo"], f"Bad year range for {veh['make']} {veh['model']}"
         assert veh["fuelTypes"], f"No fuels for {veh['make']} {veh['model']}"
-    print(f"OK: {len(vehicles)} vehicles, {len(categories)} categories, {len(parts)} parts")
+    for starter in STARTER_PARTS:
+        assert starter["category"] in category_names, f"Unknown starter category {starter['category']!r} in {starter['name']!r}"
+    print(f"OK: {len(vehicles)} vehicles, {len(categories)} categories, {len(parts)} parts, {len(STARTER_PARTS)} starter parts")
 
 
 def write(name, data):
@@ -802,7 +994,8 @@ def main():
     )
     write("vehicles.json", vehicles)
     write("categories.json", CATEGORIES + CATEGORIES_EXTRA)
-    write("parts_reference.json", PARTS + PARTS_EXTRA)
+    write("parts_reference.json", PARTS + PARTS_EXTRA + PARTS_EXTRA2)
+    write("starter_parts.json", STARTER_PARTS)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,799 @@
+[
+  {
+    "name": "Engine Oil (Petrol) 1L",
+    "category": "Oils & Fluids",
+    "mrp": 550.0,
+    "sellingPrice": 550.0,
+    "costPrice": 410.0,
+    "stockQty": 24,
+    "reorderLevel": 8,
+    "hsnCode": "27101990",
+    "gstPercent": 18.0,
+    "brand": "Castrol",
+    "keywords": [
+      "engine oil"
+    ]
+  },
+  {
+    "name": "Engine Oil (Diesel) 1L",
+    "category": "Oils & Fluids",
+    "mrp": 620.0,
+    "sellingPrice": 620.0,
+    "costPrice": 470.0,
+    "stockQty": 16,
+    "reorderLevel": 6,
+    "hsnCode": "27101990",
+    "gstPercent": 18.0,
+    "brand": "Mobil",
+    "keywords": [
+      "engine oil"
+    ]
+  },
+  {
+    "name": "Gear Oil 1L",
+    "category": "Oils & Fluids",
+    "mrp": 480.0,
+    "sellingPrice": 480.0,
+    "costPrice": 350.0,
+    "stockQty": 12,
+    "reorderLevel": 6,
+    "hsnCode": "27101990",
+    "gstPercent": 18.0,
+    "brand": "Motul",
+    "keywords": [
+      "gear oil"
+    ]
+  },
+  {
+    "name": "Engine Coolant 1L",
+    "category": "Oils & Fluids",
+    "mrp": 320.0,
+    "sellingPrice": 320.0,
+    "costPrice": 230.0,
+    "stockQty": 18,
+    "reorderLevel": 6,
+    "hsnCode": "38200000",
+    "gstPercent": 18.0,
+    "brand": "Castrol",
+    "keywords": [
+      "coolant"
+    ]
+  },
+  {
+    "name": "Brake Fluid 250ml",
+    "category": "Oils & Fluids",
+    "mrp": 190.0,
+    "sellingPrice": 190.0,
+    "costPrice": 130.0,
+    "stockQty": 20,
+    "reorderLevel": 8,
+    "hsnCode": "38190090",
+    "gstPercent": 18.0,
+    "brand": "Bosch",
+    "keywords": [
+      "brake fluid"
+    ]
+  },
+  {
+    "name": "Chain Spray 200ml",
+    "category": "Oils & Fluids",
+    "mrp": 350.0,
+    "sellingPrice": 350.0,
+    "costPrice": 250.0,
+    "stockQty": 14,
+    "reorderLevel": 6,
+    "hsnCode": "34039900",
+    "gstPercent": 18.0,
+    "brand": "Motul",
+    "keywords": [
+      "chain lube"
+    ]
+  },
+  {
+    "name": "Spark Plug",
+    "category": "Ignition",
+    "mrp": 240.0,
+    "sellingPrice": 240.0,
+    "costPrice": 160.0,
+    "stockQty": 40,
+    "reorderLevel": 12,
+    "hsnCode": "85111000",
+    "gstPercent": 28.0,
+    "brand": "NGK",
+    "keywords": [
+      "plug"
+    ]
+  },
+  {
+    "name": "Ignition Coil",
+    "category": "Ignition",
+    "mrp": 1250.0,
+    "sellingPrice": 1250.0,
+    "costPrice": 900.0,
+    "stockQty": 8,
+    "reorderLevel": 3,
+    "hsnCode": "85113000",
+    "gstPercent": 28.0,
+    "brand": "Bosch",
+    "keywords": [
+      "coil"
+    ]
+  },
+  {
+    "name": "Car Battery 35Ah",
+    "category": "Batteries",
+    "mrp": 5200.0,
+    "sellingPrice": 5200.0,
+    "costPrice": 4300.0,
+    "stockQty": 6,
+    "reorderLevel": 2,
+    "hsnCode": "85071000",
+    "gstPercent": 28.0,
+    "brand": "Amaron",
+    "keywords": [
+      "battery"
+    ]
+  },
+  {
+    "name": "Two-Wheeler Battery 5Ah",
+    "category": "Batteries",
+    "mrp": 1450.0,
+    "sellingPrice": 1450.0,
+    "costPrice": 1100.0,
+    "stockQty": 10,
+    "reorderLevel": 4,
+    "hsnCode": "85071000",
+    "gstPercent": 28.0,
+    "brand": "Exide",
+    "keywords": [
+      "battery"
+    ]
+  },
+  {
+    "name": "Headlight Bulb H4",
+    "category": "Lighting",
+    "mrp": 180.0,
+    "sellingPrice": 180.0,
+    "costPrice": 110.0,
+    "stockQty": 30,
+    "reorderLevel": 10,
+    "hsnCode": "85392100",
+    "gstPercent": 28.0,
+    "brand": "Philips",
+    "keywords": [
+      "headlight bulb"
+    ]
+  },
+  {
+    "name": "LED Headlight Bulb",
+    "category": "Lighting",
+    "mrp": 650.0,
+    "sellingPrice": 650.0,
+    "costPrice": 470.0,
+    "stockQty": 15,
+    "reorderLevel": 5,
+    "hsnCode": "85395000",
+    "gstPercent": 28.0,
+    "brand": "Osram",
+    "keywords": [
+      "led bulb"
+    ]
+  },
+  {
+    "name": "Indicator Bulb",
+    "category": "Lighting",
+    "mrp": 45.0,
+    "sellingPrice": 45.0,
+    "costPrice": 25.0,
+    "stockQty": 50,
+    "reorderLevel": 20,
+    "hsnCode": "85392100",
+    "gstPercent": 28.0,
+    "brand": "Philips",
+    "keywords": [
+      "indicator bulb"
+    ]
+  },
+  {
+    "name": "Tail Light Bulb",
+    "category": "Lighting",
+    "mrp": 40.0,
+    "sellingPrice": 40.0,
+    "costPrice": 22.0,
+    "stockQty": 50,
+    "reorderLevel": 20,
+    "hsnCode": "85392100",
+    "gstPercent": 28.0,
+    "brand": "Osram",
+    "keywords": [
+      "tail bulb"
+    ]
+  },
+  {
+    "name": "Front Brake Pads",
+    "category": "Brakes",
+    "mrp": 1350.0,
+    "sellingPrice": 1350.0,
+    "costPrice": 980.0,
+    "stockQty": 12,
+    "reorderLevel": 4,
+    "hsnCode": "87083000",
+    "gstPercent": 28.0,
+    "brand": "Bosch",
+    "keywords": [
+      "brake pad"
+    ]
+  },
+  {
+    "name": "Rear Brake Pads",
+    "category": "Brakes",
+    "mrp": 1200.0,
+    "sellingPrice": 1200.0,
+    "costPrice": 860.0,
+    "stockQty": 10,
+    "reorderLevel": 4,
+    "hsnCode": "87083000",
+    "gstPercent": 28.0,
+    "brand": "Bosch",
+    "keywords": [
+      "brake pad"
+    ]
+  },
+  {
+    "name": "Brake Shoes",
+    "category": "Brakes",
+    "mrp": 850.0,
+    "sellingPrice": 850.0,
+    "costPrice": 600.0,
+    "stockQty": 10,
+    "reorderLevel": 4,
+    "hsnCode": "87083000",
+    "gstPercent": 28.0,
+    "brand": "TVS Girling",
+    "keywords": [
+      "brake shoe"
+    ]
+  },
+  {
+    "name": "Brake Disc / Rotor",
+    "category": "Brakes",
+    "mrp": 1900.0,
+    "sellingPrice": 1900.0,
+    "costPrice": 1400.0,
+    "stockQty": 8,
+    "reorderLevel": 3,
+    "hsnCode": "87083000",
+    "gstPercent": 28.0,
+    "brand": "Bosch",
+    "keywords": [
+      "rotor"
+    ]
+  },
+  {
+    "name": "Air Filter",
+    "category": "Filters",
+    "mrp": 420.0,
+    "sellingPrice": 420.0,
+    "costPrice": 300.0,
+    "stockQty": 20,
+    "reorderLevel": 8,
+    "hsnCode": "84213100",
+    "gstPercent": 28.0,
+    "brand": "Bosch",
+    "keywords": [
+      "air filter"
+    ]
+  },
+  {
+    "name": "Oil Filter",
+    "category": "Filters",
+    "mrp": 260.0,
+    "sellingPrice": 260.0,
+    "costPrice": 180.0,
+    "stockQty": 24,
+    "reorderLevel": 8,
+    "hsnCode": "84212300",
+    "gstPercent": 28.0,
+    "brand": "Bosch",
+    "keywords": [
+      "oil filter"
+    ]
+  },
+  {
+    "name": "Fuel Filter",
+    "category": "Filters",
+    "mrp": 320.0,
+    "sellingPrice": 320.0,
+    "costPrice": 220.0,
+    "stockQty": 18,
+    "reorderLevel": 6,
+    "hsnCode": "84212300",
+    "gstPercent": 28.0,
+    "brand": "Bosch",
+    "keywords": [
+      "fuel filter"
+    ]
+  },
+  {
+    "name": "Cabin Air Filter",
+    "category": "Filters",
+    "mrp": 480.0,
+    "sellingPrice": 480.0,
+    "costPrice": 340.0,
+    "stockQty": 10,
+    "reorderLevel": 4,
+    "hsnCode": "84213100",
+    "gstPercent": 28.0,
+    "brand": "Mann",
+    "keywords": [
+      "cabin filter"
+    ]
+  },
+  {
+    "name": "Wiper Blade",
+    "category": "Electrical",
+    "mrp": 350.0,
+    "sellingPrice": 350.0,
+    "costPrice": 240.0,
+    "stockQty": 16,
+    "reorderLevel": 6,
+    "hsnCode": "85124000",
+    "gstPercent": 28.0,
+    "brand": "Bosch",
+    "keywords": [
+      "wiper"
+    ]
+  },
+  {
+    "name": "Horn 12V",
+    "category": "Electrical",
+    "mrp": 420.0,
+    "sellingPrice": 420.0,
+    "costPrice": 300.0,
+    "stockQty": 12,
+    "reorderLevel": 4,
+    "hsnCode": "85123010",
+    "gstPercent": 28.0,
+    "brand": "Bosch",
+    "keywords": [
+      "horn"
+    ]
+  },
+  {
+    "name": "Clutch Plate",
+    "category": "Clutch",
+    "mrp": 1650.0,
+    "sellingPrice": 1650.0,
+    "costPrice": 1200.0,
+    "stockQty": 8,
+    "reorderLevel": 3,
+    "hsnCode": "87089300",
+    "gstPercent": 28.0,
+    "brand": "Valeo",
+    "keywords": [
+      "clutch plate"
+    ]
+  },
+  {
+    "name": "Clutch Pressure Plate",
+    "category": "Clutch",
+    "mrp": 2100.0,
+    "sellingPrice": 2100.0,
+    "costPrice": 1550.0,
+    "stockQty": 6,
+    "reorderLevel": 2,
+    "hsnCode": "87089300",
+    "gstPercent": 28.0,
+    "brand": "Luk",
+    "keywords": [
+      "pressure plate"
+    ]
+  },
+  {
+    "name": "Clutch Cable",
+    "category": "Clutch",
+    "mrp": 220.0,
+    "sellingPrice": 220.0,
+    "costPrice": 150.0,
+    "stockQty": 15,
+    "reorderLevel": 6,
+    "hsnCode": "87089300",
+    "gstPercent": 28.0,
+    "brand": "Rolon",
+    "keywords": [
+      "clutch cable"
+    ]
+  },
+  {
+    "name": "Accelerator Cable",
+    "category": "Clutch",
+    "mrp": 200.0,
+    "sellingPrice": 200.0,
+    "costPrice": 135.0,
+    "stockQty": 15,
+    "reorderLevel": 6,
+    "hsnCode": "87089300",
+    "gstPercent": 28.0,
+    "brand": "Rolon",
+    "keywords": [
+      "accelerator cable"
+    ]
+  },
+  {
+    "name": "Timing Chain Kit",
+    "category": "Engine",
+    "mrp": 2400.0,
+    "sellingPrice": 2400.0,
+    "costPrice": 1750.0,
+    "stockQty": 5,
+    "reorderLevel": 2,
+    "hsnCode": "73151100",
+    "gstPercent": 18.0,
+    "brand": "Rolon",
+    "keywords": [
+      "timing chain"
+    ]
+  },
+  {
+    "name": "Cylinder Head Gasket",
+    "category": "Engine",
+    "mrp": 850.0,
+    "sellingPrice": 850.0,
+    "costPrice": 600.0,
+    "stockQty": 10,
+    "reorderLevel": 4,
+    "hsnCode": "84841090",
+    "gstPercent": 18.0,
+    "brand": "Goetze",
+    "keywords": [
+      "head gasket"
+    ]
+  },
+  {
+    "name": "Engine Overhaul Gasket Kit",
+    "category": "Engine",
+    "mrp": 2800.0,
+    "sellingPrice": 2800.0,
+    "costPrice": 2050.0,
+    "stockQty": 4,
+    "reorderLevel": 2,
+    "hsnCode": "84849000",
+    "gstPercent": 18.0,
+    "brand": "Goetze",
+    "keywords": [
+      "gasket set"
+    ]
+  },
+  {
+    "name": "Piston Ring Set",
+    "category": "Engine",
+    "mrp": 1150.0,
+    "sellingPrice": 1150.0,
+    "costPrice": 820.0,
+    "stockQty": 8,
+    "reorderLevel": 3,
+    "hsnCode": "84099990",
+    "gstPercent": 28.0,
+    "brand": "Goetze",
+    "keywords": [
+      "piston rings"
+    ]
+  },
+  {
+    "name": "Water Pump",
+    "category": "Engine",
+    "mrp": 1650.0,
+    "sellingPrice": 1650.0,
+    "costPrice": 1200.0,
+    "stockQty": 6,
+    "reorderLevel": 2,
+    "hsnCode": "84133090",
+    "gstPercent": 28.0,
+    "brand": "Bosch",
+    "keywords": [
+      "coolant pump"
+    ]
+  },
+  {
+    "name": "Fuel Pump",
+    "category": "Engine",
+    "mrp": 2400.0,
+    "sellingPrice": 2400.0,
+    "costPrice": 1750.0,
+    "stockQty": 5,
+    "reorderLevel": 2,
+    "hsnCode": "84133090",
+    "gstPercent": 28.0,
+    "brand": "Bosch",
+    "keywords": [
+      "fuel pump"
+    ]
+  },
+  {
+    "name": "Shock Absorber (Front)",
+    "category": "Suspension",
+    "mrp": 1500.0,
+    "sellingPrice": 1500.0,
+    "costPrice": 1100.0,
+    "stockQty": 8,
+    "reorderLevel": 3,
+    "hsnCode": "87088000",
+    "gstPercent": 28.0,
+    "brand": "Gabriel",
+    "keywords": [
+      "shocker"
+    ]
+  },
+  {
+    "name": "Shock Absorber (Rear)",
+    "category": "Suspension",
+    "mrp": 1400.0,
+    "sellingPrice": 1400.0,
+    "costPrice": 1020.0,
+    "stockQty": 8,
+    "reorderLevel": 3,
+    "hsnCode": "87088000",
+    "gstPercent": 28.0,
+    "brand": "Gabriel",
+    "keywords": [
+      "shocker"
+    ]
+  },
+  {
+    "name": "Lower Arm Assembly",
+    "category": "Suspension",
+    "mrp": 1900.0,
+    "sellingPrice": 1900.0,
+    "costPrice": 1400.0,
+    "stockQty": 6,
+    "reorderLevel": 2,
+    "hsnCode": "87088000",
+    "gstPercent": 28.0,
+    "brand": "Rane",
+    "keywords": [
+      "lower arm"
+    ]
+  },
+  {
+    "name": "Radiator",
+    "category": "Cooling",
+    "mrp": 3200.0,
+    "sellingPrice": 3200.0,
+    "costPrice": 2400.0,
+    "stockQty": 3,
+    "reorderLevel": 1,
+    "hsnCode": "87089100",
+    "gstPercent": 28.0,
+    "brand": "Valeo",
+    "keywords": [
+      "radiator"
+    ]
+  },
+  {
+    "name": "Thermostat",
+    "category": "Cooling",
+    "mrp": 480.0,
+    "sellingPrice": 480.0,
+    "costPrice": 330.0,
+    "stockQty": 10,
+    "reorderLevel": 4,
+    "hsnCode": "90321090",
+    "gstPercent": 28.0,
+    "brand": "Bosch",
+    "keywords": [
+      "thermostat"
+    ]
+  },
+  {
+    "name": "AC Gas Refill 340g",
+    "category": "Air Conditioning",
+    "mrp": 850.0,
+    "sellingPrice": 850.0,
+    "costPrice": 620.0,
+    "stockQty": 10,
+    "reorderLevel": 4,
+    "hsnCode": "29034500",
+    "gstPercent": 28.0,
+    "brand": null,
+    "keywords": [
+      "ac gas",
+      "refrigerant"
+    ]
+  },
+  {
+    "name": "Serpentine Belt",
+    "category": "Belts & Hoses",
+    "mrp": 650.0,
+    "sellingPrice": 650.0,
+    "costPrice": 470.0,
+    "stockQty": 10,
+    "reorderLevel": 4,
+    "hsnCode": "40103990",
+    "gstPercent": 18.0,
+    "brand": "Gates",
+    "keywords": [
+      "fan belt"
+    ]
+  },
+  {
+    "name": "Radiator Hose",
+    "category": "Belts & Hoses",
+    "mrp": 380.0,
+    "sellingPrice": 380.0,
+    "costPrice": 260.0,
+    "stockQty": 12,
+    "reorderLevel": 4,
+    "hsnCode": "40093100",
+    "gstPercent": 18.0,
+    "brand": "Gates",
+    "keywords": [
+      "radiator hose"
+    ]
+  },
+  {
+    "name": "Car Tyre 165/80 R14",
+    "category": "Tyres",
+    "mrp": 4200.0,
+    "sellingPrice": 4200.0,
+    "costPrice": 3600.0,
+    "stockQty": 6,
+    "reorderLevel": 2,
+    "hsnCode": "40111010",
+    "gstPercent": 28.0,
+    "brand": "MRF",
+    "keywords": [
+      "tyre",
+      "tire"
+    ]
+  },
+  {
+    "name": "Two-Wheeler Tyre 90/90-17",
+    "category": "Tyres",
+    "mrp": 1600.0,
+    "sellingPrice": 1600.0,
+    "costPrice": 1320.0,
+    "stockQty": 8,
+    "reorderLevel": 3,
+    "hsnCode": "40114010",
+    "gstPercent": 28.0,
+    "brand": "MRF",
+    "keywords": [
+      "tyre"
+    ]
+  },
+  {
+    "name": "Tyre Tube",
+    "category": "Tyres",
+    "mrp": 280.0,
+    "sellingPrice": 280.0,
+    "costPrice": 190.0,
+    "stockQty": 20,
+    "reorderLevel": 8,
+    "hsnCode": "40131020",
+    "gstPercent": 28.0,
+    "brand": "MRF",
+    "keywords": [
+      "tube"
+    ]
+  },
+  {
+    "name": "Car Shampoo 500ml",
+    "category": "Car Care",
+    "mrp": 240.0,
+    "sellingPrice": 240.0,
+    "costPrice": 160.0,
+    "stockQty": 24,
+    "reorderLevel": 8,
+    "hsnCode": "34029099",
+    "gstPercent": 18.0,
+    "brand": "3M",
+    "keywords": [
+      "shampoo"
+    ]
+  },
+  {
+    "name": "Car Wax 200g",
+    "category": "Car Care",
+    "mrp": 350.0,
+    "sellingPrice": 350.0,
+    "costPrice": 250.0,
+    "stockQty": 12,
+    "reorderLevel": 4,
+    "hsnCode": "34059090",
+    "gstPercent": 18.0,
+    "brand": "Formula 1",
+    "keywords": [
+      "wax"
+    ]
+  },
+  {
+    "name": "Microfibre Cloth",
+    "category": "Car Care",
+    "mrp": 120.0,
+    "sellingPrice": 120.0,
+    "costPrice": 70.0,
+    "stockQty": 40,
+    "reorderLevel": 12,
+    "hsnCode": "63071090",
+    "gstPercent": 18.0,
+    "brand": null,
+    "keywords": [
+      "cloth"
+    ]
+  },
+  {
+    "name": "Car Stereo / Head Unit",
+    "category": "Audio & Infotainment",
+    "mrp": 6500.0,
+    "sellingPrice": 6500.0,
+    "costPrice": 5200.0,
+    "stockQty": 3,
+    "reorderLevel": 1,
+    "hsnCode": "85272100",
+    "gstPercent": 18.0,
+    "brand": "Sony",
+    "keywords": [
+      "stereo"
+    ]
+  },
+  {
+    "name": "Car Speaker 6.5\"",
+    "category": "Audio & Infotainment",
+    "mrp": 1450.0,
+    "sellingPrice": 1450.0,
+    "costPrice": 1050.0,
+    "stockQty": 6,
+    "reorderLevel": 2,
+    "hsnCode": "85182900",
+    "gstPercent": 18.0,
+    "brand": "JBL",
+    "keywords": [
+      "speaker"
+    ]
+  },
+  {
+    "name": "Helmet (ISI)",
+    "category": "Accessories",
+    "mrp": 1100.0,
+    "sellingPrice": 1100.0,
+    "costPrice": 800.0,
+    "stockQty": 10,
+    "reorderLevel": 4,
+    "hsnCode": "65061090",
+    "gstPercent": 18.0,
+    "brand": "Studds",
+    "keywords": [
+      "helmet"
+    ]
+  },
+  {
+    "name": "Car Floor Mat Set",
+    "category": "Accessories",
+    "mrp": 900.0,
+    "sellingPrice": 900.0,
+    "costPrice": 650.0,
+    "stockQty": 6,
+    "reorderLevel": 2,
+    "hsnCode": "57039090",
+    "gstPercent": 18.0,
+    "brand": null,
+    "keywords": [
+      "floor mat"
+    ]
+  },
+  {
+    "name": "Mechanic Tool Kit",
+    "category": "Tools",
+    "mrp": 2400.0,
+    "sellingPrice": 2400.0,
+    "costPrice": 1750.0,
+    "stockQty": 4,
+    "reorderLevel": 2,
+    "hsnCode": "82060090",
+    "gstPercent": 18.0,
+    "brand": null,
+    "keywords": [
+      "tool kit"
+    ]
+  }
+]

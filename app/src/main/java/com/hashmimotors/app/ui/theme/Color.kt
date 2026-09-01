@@ -17,6 +17,10 @@ val AccentIndigo = Color(0xFF6366F1)
 val AccentBlue = Color(0xFF3B82F6)
 val AccentGreen = Color(0xFF10B981)
 val AccentOrange = Color(0xFFF97316)
+val AccentRose = Color(0xFFF43F5E)
+val AccentTeal = Color(0xFF14B8A6)
+val AccentViolet = Color(0xFF8B5CF6)
+val AccentGold = Color(0xFFF5B942)
 
 // Premium accent highlights
 val PremiumGold = Color(0xFFF5B942)

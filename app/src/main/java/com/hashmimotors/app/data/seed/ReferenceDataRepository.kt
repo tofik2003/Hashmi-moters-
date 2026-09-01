@@ -24,6 +24,7 @@ class ReferenceDataRepository @Inject constructor(
     val vehicles: List<SeedVehicle> by lazy { loadList("seed/vehicles.json", SeedVehicle.serializer()) }
     val categories: List<SeedCategory> by lazy { loadList("seed/categories.json", SeedCategory.serializer()) }
     val partsReference: List<SeedPartReference> by lazy { loadList("seed/parts_reference.json", SeedPartReference.serializer()) }
+    val starterParts: List<SeedStarterPart> by lazy { loadList("seed/starter_parts.json", SeedStarterPart.serializer()) }
 
     /**
      * Lightweight search over the common-parts reference catalog.

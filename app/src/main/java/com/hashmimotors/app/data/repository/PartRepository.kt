@@ -1,13 +1,16 @@
 package com.hashmimotors.app.data.repository
 
+import com.hashmimotors.app.data.local.CategoryDao
 import com.hashmimotors.app.data.local.PartDao
 import com.hashmimotors.app.data.local.PartEntity
 import com.hashmimotors.app.data.local.StockMovementDao
 import com.hashmimotors.app.data.local.StockMovementEntity
+import com.hashmimotors.app.data.seed.ReferenceDataRepository
 import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.domain.model.StockMovementType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,7 +21,9 @@ import javax.inject.Singleton
 @Singleton
 class PartRepository @Inject constructor(
     private val partDao: PartDao,
-    private val stockMovementDao: StockMovementDao
+    private val stockMovementDao: StockMovementDao,
+    private val categoryDao: CategoryDao,
+    private val referenceDataRepository: ReferenceDataRepository
 ) {
     fun getAllParts(): Flow<List<Part>> = partDao.getAll().map { list ->
         list.map { it.toDomain() }
@@ -117,6 +122,43 @@ class PartRepository @Inject constructor(
 
     fun getRecentMovements(limit: Int = 50): Flow<List<StockMovementEntity>> =
         stockMovementDao.getRecent(limit)
+
+    /**
+     * Seeds a curated starter inventory into the parts table on first launch so
+     * the catalog is populated out of the box. Categories are linked by name
+     * (they are seeded before parts by [CategoryRepository.ensureSeeded]).
+     */
+    suspend fun ensureSeeded() {
+        if (partDao.countOnce() > 0) return
+        val categoryIdByName = categoryDao.getAllOnce().associateBy { it.name }
+        val now = System.currentTimeMillis()
+        val starters = referenceDataRepository.starterParts.mapIndexed { index, seed ->
+            Part(
+                sku = String.format(Locale.US, "ST-%04d", index + 1),
+                name = seed.name,
+                oemNumbers = emptyList(),
+                brand = seed.brand,
+                categoryId = categoryIdByName[seed.category]?.id,
+                mrp = seed.mrp,
+                sellingPrice = if (seed.sellingPrice > 0.0) seed.sellingPrice else seed.mrp,
+                costPrice = seed.costPrice,
+                gstPercent = seed.gstPercent,
+                hsnCode = seed.hsnCode,
+                stockQty = seed.stockQty,
+                reorderLevel = seed.reorderLevel,
+                supplierId = null,
+                photoPaths = emptyList(),
+                barcode = null,
+                notes = null,
+                active = true,
+                createdAt = now,
+                updatedAt = now
+            )
+        }
+        if (starters.isNotEmpty()) {
+            partDao.insertAll(starters.map { it.toEntity() })
+        }
+    }
 }
 
 // ============================================

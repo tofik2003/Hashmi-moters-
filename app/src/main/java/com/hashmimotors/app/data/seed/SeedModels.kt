@@ -38,3 +38,22 @@ data class SeedPartReference(
     val brands: List<String> = emptyList(),
     val keywords: List<String> = emptyList()
 )
+
+/**
+ * A curated starter-catalog entry that is imported into the parts table on
+ * first launch (so the inventory isn't empty out of the box).
+ */
+@Serializable
+data class SeedStarterPart(
+    val name: String,
+    val category: String,
+    val mrp: Double = 0.0,
+    val sellingPrice: Double = 0.0,
+    val costPrice: Double? = null,
+    val stockQty: Int = 0,
+    val reorderLevel: Int = 5,
+    val hsnCode: String? = null,
+    val gstPercent: Double = 0.0,
+    val brand: String? = null,
+    val keywords: List<String> = emptyList()
+)

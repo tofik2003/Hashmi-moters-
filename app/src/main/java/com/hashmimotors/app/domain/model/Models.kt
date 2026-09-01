@@ -245,7 +245,7 @@ enum class ThemeMode { LIGHT, DARK, AUTO }
 enum class BackgroundStyle { GRADIENT_PARTICLES, SOLID }
 
 @Serializable
-enum class AccentColorType { INDIGO, BLUE, GREEN, ORANGE }
+enum class AccentColorType { INDIGO, BLUE, GREEN, ORANGE, ROSE, TEAL, VIOLET, GOLD }
 
 @Serializable
 enum class AnimationSpeed { NORMAL, REDUCED }
