@@ -188,6 +188,12 @@ interface InvoiceDao {
     @Query("SELECT COALESCE(SUM(grandTotal), 0) FROM invoices WHERE date >= :startOfDay AND date < :endOfDay")
     fun totalForDay(startOfDay: Long, endOfDay: Long): Flow<Double>
 
+    @Query("SELECT COALESCE(SUM(grandTotal), 0) FROM invoices WHERE date >= :start AND date < :end")
+    fun totalForRange(start: Long, end: Long): Flow<Double>
+
+    @Query("SELECT COUNT(*) FROM invoices WHERE date >= :start AND date < :end")
+    fun countForRange(start: Long, end: Long): Flow<Int>
+
     @Query("SELECT COALESCE(SUM(grandTotal), 0) FROM invoices WHERE date >= :startOfDay AND date < :endOfDay AND status = 'PAID'")
     fun paidTotalForDay(startOfDay: Long, endOfDay: Long): Flow<Double>
 

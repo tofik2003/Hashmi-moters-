@@ -47,6 +47,24 @@ class InvoiceRepository @Inject constructor(
         return invoiceDao.countForDay(start, end)
     }
 
+    /** Sum of quantities across all lines of today's invoices. */
+    fun getTodayItemsSold(): Flow<Int> {
+        val (start, end) = todayRange()
+        return invoiceDao.getForDay(start, end).map { list ->
+            list.sumOf { invoice -> invoice.lines.sumOf { it.qty } }
+        }
+    }
+
+    fun getMonthSalesTotal(): Flow<Double> {
+        val (start, end) = monthRange()
+        return invoiceDao.totalForRange(start, end)
+    }
+
+    fun getMonthBillCount(): Flow<Int> {
+        val (start, end) = monthRange()
+        return invoiceDao.countForRange(start, end)
+    }
+
     suspend fun saveInvoice(invoice: Invoice) {
         invoiceDao.insert(invoice.toEntity())
     }
@@ -63,6 +81,19 @@ class InvoiceRepository @Inject constructor(
         cal.set(java.util.Calendar.MILLISECOND, 0)
         val start = cal.timeInMillis
         val end = start + 24L * 60 * 60 * 1000
+        return start to end
+    }
+
+    private fun monthRange(): Pair<Long, Long> {
+        val cal = java.util.Calendar.getInstance()
+        cal.set(java.util.Calendar.DAY_OF_MONTH, 1)
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 0)
+        cal.set(java.util.Calendar.MINUTE, 0)
+        cal.set(java.util.Calendar.SECOND, 0)
+        cal.set(java.util.Calendar.MILLISECOND, 0)
+        val start = cal.timeInMillis
+        cal.add(java.util.Calendar.MONTH, 1)
+        val end = cal.timeInMillis
         return start to end
     }
 

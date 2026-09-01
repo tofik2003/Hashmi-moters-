@@ -34,17 +34,44 @@ class ReportsViewModel @Inject constructor(
     val uiState: StateFlow<ReportsUiState> = combine(
         invoiceRepository.getTodaySalesTotal(),
         invoiceRepository.getTodayBillCount(),
-        partRepository.getPartCount(),
-        partRepository.getLowStockCount(),
-        partRepository.getTotalStockValue()
-    ) { today, bills, totalParts, lowStock, stockValue ->
+        invoiceRepository.getTodayItemsSold(),
+        invoiceRepository.getMonthSalesTotal(),
+        invoiceRepository.getMonthBillCount()
+    ) { todaySales, todayBills, todayItems, monthSales, monthBills ->
+        SalesAgg(todaySales, todayBills, todayItems, monthSales, monthBills)
+    }.combine(
+        combine(
+            partRepository.getPartCount(),
+            partRepository.getLowStockCount(),
+            partRepository.getTotalStockValue()
+        ) { totalParts, lowStock, stockValue ->
+            StockAgg(totalParts, lowStock, stockValue)
+        }
+    ) { sales, stock ->
         ReportsUiState(
-            todaySales = today,
-            todayBills = bills,
-            totalParts = totalParts,
-            lowStockCount = lowStock,
-            stockValue = stockValue,
-            avgBillValue = if (bills > 0) today / bills else 0.0
+            todaySales = sales.todaySales,
+            todayBills = sales.todayBills,
+            todayItems = sales.todayItems,
+            monthSales = sales.monthSales,
+            monthBills = sales.monthBills,
+            totalParts = stock.totalParts,
+            lowStockCount = stock.lowStockCount,
+            stockValue = stock.stockValue,
+            avgBillValue = if (sales.monthBills > 0) sales.monthSales / sales.monthBills else 0.0
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ReportsUiState())
+
+    private data class SalesAgg(
+        val todaySales: Double,
+        val todayBills: Int,
+        val todayItems: Int,
+        val monthSales: Double,
+        val monthBills: Int
+    )
+
+    private data class StockAgg(
+        val totalParts: Int,
+        val lowStockCount: Int,
+        val stockValue: Double
+    )
 }
