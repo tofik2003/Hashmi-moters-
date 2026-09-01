@@ -1,10 +1,10 @@
 package com.hashmimotors.app.util
 
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.parseToJsonElement
 
 /**
  * A structured product payload decoded from a scanned QR/barcode.
@@ -63,30 +63,58 @@ object QrProductParser {
 
     // ------------------------------------------------------------------ JSON
 
+    /** Mirrors the JSON shape above; every field is lenient (any JSON type). */
+    @Serializable
+    private data class QrJsonPayload(
+        val name: JsonElement? = null,
+        val title: JsonElement? = null,
+        val product: JsonElement? = null,
+        val item: JsonElement? = null,
+        val description: JsonElement? = null,
+        val price: JsonElement? = null,
+        val mrp: JsonElement? = null,
+        val rate: JsonElement? = null,
+        val amount: JsonElement? = null,
+        val cost: JsonElement? = null,
+        val sku: JsonElement? = null,
+        val code: JsonElement? = null,
+        val id: JsonElement? = null,
+        val itemCode: JsonElement? = null,
+        val barcode: JsonElement? = null,
+        val ean: JsonElement? = null,
+        val upc: JsonElement? = null,
+        val gtin: JsonElement? = null,
+        val qty: JsonElement? = null,
+        val quantity: JsonElement? = null
+    )
+
     private fun parseJson(v: String): QrProduct? {
-        val root = runCatching { json.parseToJsonElement(v).jsonObject }.getOrNull() ?: return null
-        val name = jsonString(root, listOf("name", "title", "product", "item", "description")) ?: return null
-        val mrp = jsonNumber(root, listOf("price", "mrp", "rate", "amount", "cost"))
-        val sku = jsonString(root, listOf("sku", "code", "id", "itemCode"))
-        val barcode = jsonString(root, listOf("barcode", "ean", "upc", "gtin"))
-        val qty = jsonInt(root, listOf("qty", "quantity")) ?: 1
+        val root = runCatching { json.decodeFromString(QrJsonPayload.serializer(), v) }.getOrNull()
+            ?: return null
+        val name = asString(
+            root.name ?: root.title ?: root.product ?: root.item ?: root.description
+        ) ?: return null
+        val mrp = asNumber(root.price ?: root.mrp ?: root.rate ?: root.amount ?: root.cost)
+        val sku = asString(root.sku ?: root.code ?: root.id ?: root.itemCode)
+        val barcode = asString(root.barcode ?: root.ean ?: root.upc ?: root.gtin)
+        val qty = asInt(root.qty ?: root.quantity) ?: 1
         return QrProduct(name = name, mrp = mrp, sku = sku, barcode = barcode, qty = qty.coerceAtLeast(1))
     }
 
-    private fun jsonString(root: JsonObject, keys: List<String>): String? =
-        keys.firstNotNullOfOrNull { key ->
-            (root[key] as? JsonPrimitive)?.contentOrNull?.takeIf { it.isNotBlank() }
-        }
+    private fun asString(el: JsonElement?): String? = when (el) {
+        is JsonPrimitive -> if (el is JsonNull) null else el.content.takeIf { it.isNotBlank() }
+        else -> null
+    }
 
-    private fun jsonNumber(root: JsonObject, keys: List<String>): Double? =
-        keys.firstNotNullOfOrNull { key ->
-            (root[key] as? JsonPrimitive)?.contentOrNull?.let { parseMoney(it) }
-        }
+    private fun asNumber(el: JsonElement?): Double? = when (el) {
+        is JsonPrimitive -> if (el is JsonNull) null else parseMoney(el.content)
+        else -> null
+    }
 
-    private fun jsonInt(root: JsonObject, keys: List<String>): Int? =
-        keys.firstNotNullOfOrNull { key ->
-            (root[key] as? JsonPrimitive)?.contentOrNull?.let { parseQty(it) }
-        }
+    private fun asInt(el: JsonElement?): Int? = when (el) {
+        is JsonPrimitive -> if (el is JsonNull) null else parseQty(el.content)
+        else -> null
+    }
 
     // ------------------------------------------------------------- key=value
 
