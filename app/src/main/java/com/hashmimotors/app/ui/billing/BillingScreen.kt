@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DocumentScanner
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Card
@@ -51,6 +52,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.InvoiceLine
 import com.hashmimotors.app.ui.catalog.CatalogViewModel
 import com.hashmimotors.app.ui.catalog.PartListItem
+import com.hashmimotors.app.ui.scanner.BillScanBus
 
 @Composable
 fun BillingScreen(
@@ -58,7 +60,8 @@ fun BillingScreen(
     catalogViewModel: CatalogViewModel = hiltViewModel(),
     onBack: () -> Unit,
     onSaved: (String) -> Unit,
-    onAddItem: () -> Unit
+    onAddItem: () -> Unit,
+    onScanBill: () -> Unit = {}
 ) {
     val state by billingViewModel.state.collectAsState()
     val catalogState by catalogViewModel.uiState.collectAsState()
@@ -67,6 +70,17 @@ fun BillingScreen(
     var billDiscountText by remember { mutableStateOf("0") }
     var notes by remember { mutableStateOf("") }
     var showPartPicker by remember { mutableStateOf(false) }
+
+    // Consume scanned bill items published by the scanner
+    val pendingScan by BillScanBus.items.collectAsState()
+    androidx.compose.runtime.LaunchedEffect(pendingScan) {
+        if (pendingScan.isNotEmpty()) {
+            pendingScan.forEach { line ->
+                billingViewModel.addAdHocLine(line.name, line.qty, if (line.rate > 0.0) line.rate else line.amount)
+            }
+            BillScanBus.consume()
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -82,6 +96,16 @@ fun BillingScreen(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.weight(1f))
+                TextButton(onClick = onScanBill) {
+                    Icon(
+                        Icons.Filled.DocumentScanner,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(text = "Scan Bill", color = MaterialTheme.colorScheme.primary)
+                }
             }
             Spacer(modifier = Modifier.height(16.dp))
 

@@ -1,5 +1,46 @@
 [
   {
+    "make": "Ather",
+    "model": "450S",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Ather",
+    "model": "450X",
+    "variants": [
+      "Plus",
+      "Pro"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Ather",
+    "model": "Rizta",
+    "variants": [
+      "S",
+      "Z"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
     "make": "Audi",
     "model": "A4",
     "variants": [
@@ -56,6 +97,19 @@
     "yearTo": 2025,
     "fuelTypes": [
       "Petrol"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Audi",
+    "model": "Q6 e-tron",
+    "variants": [
+      "Quattro"
+    ],
+    "yearFrom": 2025,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
     ],
     "bodyType": "SUV"
   },
@@ -143,6 +197,20 @@
   },
   {
     "make": "Bajaj",
+    "model": "Pulsar 125",
+    "variants": [
+      "Drum",
+      "Disc"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Bajaj",
     "model": "Pulsar 150",
     "variants": [
       "Standard",
@@ -157,11 +225,51 @@
   },
   {
     "make": "Bajaj",
+    "model": "Pulsar 220",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2007,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Bajaj",
     "model": "Pulsar 220F",
     "variants": [
       "Standard"
     ],
     "yearFrom": 2007,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Bajaj",
+    "model": "Pulsar N160",
+    "variants": [
+      "Single ABS",
+      "Dual ABS"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Bajaj",
+    "model": "Pulsar N250",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2021,
     "yearTo": 2025,
     "fuelTypes": [
       "Petrol"
@@ -252,6 +360,32 @@
       "Diesel"
     ],
     "bodyType": "Sedan"
+  },
+  {
+    "make": "BMW",
+    "model": "i7",
+    "variants": [
+      "xDrive60"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "BMW",
+    "model": "iX1",
+    "variants": [
+      "xDrive30"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Compact SUV"
   },
   {
     "make": "BMW",
@@ -355,6 +489,20 @@
       "EV"
     ],
     "bodyType": "Sedan"
+  },
+  {
+    "make": "BYD",
+    "model": "Sealion 7",
+    "variants": [
+      "Premium",
+      "Performance"
+    ],
+    "yearFrom": 2025,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "SUV"
   },
   {
     "make": "Chevrolet",
@@ -665,6 +813,21 @@
   },
   {
     "make": "Hero",
+    "model": "Destini 125",
+    "variants": [
+      "LX",
+      "VX",
+      "ZX"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Hero",
     "model": "Glamour",
     "variants": [
       "Kick",
@@ -706,6 +869,20 @@
   },
   {
     "make": "Hero",
+    "model": "Maestro Edge 125",
+    "variants": [
+      "Drum",
+      "Disc"
+    ],
+    "yearFrom": 2017,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Hero",
     "model": "Passion Pro",
     "variants": [
       "Pro",
@@ -735,12 +912,39 @@
   },
   {
     "make": "Hero",
+    "model": "Splendor+ XTEC",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Hero",
     "model": "Xpulse 200",
     "variants": [
       "Xpulse",
       "Xpulse 200 4V"
     ],
     "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Hero",
+    "model": "Xtreme 125R",
+    "variants": [
+      "Drum",
+      "Disc"
+    ],
+    "yearFrom": 2024,
     "yearTo": 2025,
     "fuelTypes": [
       "Petrol"
@@ -757,6 +961,21 @@
       "H-Smart"
     ],
     "yearFrom": 2001,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Honda",
+    "model": "Activa 125",
+    "variants": [
+      "Drum",
+      "Disc",
+      "H-Smart"
+    ],
+    "yearFrom": 2014,
     "yearTo": 2025,
     "fuelTypes": [
       "Petrol"
@@ -794,6 +1013,19 @@
       "Petrol"
     ],
     "bodyType": "Hatchback"
+  },
+  {
+    "make": "Honda",
+    "model": "CB200X",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
   },
   {
     "make": "Honda",
@@ -920,12 +1152,40 @@
   },
   {
     "make": "Honda",
+    "model": "Shine 125",
+    "variants": [
+      "Drum",
+      "Disc"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Honda",
     "model": "SP 125",
     "variants": [
       "Drum",
       "Disc"
     ],
     "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Honda",
+    "model": "SP 160",
+    "variants": [
+      "Single Disc",
+      "Double Disc"
+    ],
+    "yearFrom": 2023,
     "yearTo": 2025,
     "fuelTypes": [
       "Petrol"
@@ -1011,6 +1271,38 @@
       "Diesel"
     ],
     "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Hyundai",
+    "model": "Creta Electric",
+    "variants": [
+      "Executive",
+      "Smart",
+      "Premium"
+    ],
+    "yearFrom": 2025,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Hyundai",
+    "model": "Exter",
+    "variants": [
+      "EX",
+      "S",
+      "SX",
+      "SX(O)"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Micro SUV"
   },
   {
     "make": "Hyundai",
@@ -1286,6 +1578,85 @@
     "bodyType": "Compact SUV"
   },
   {
+    "make": "KTM",
+    "model": "Adventure 250",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "KTM",
+    "model": "Adventure 390",
+    "variants": [
+      "Standard",
+      "X"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "KTM",
+    "model": "Duke 200",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2012,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "KTM",
+    "model": "Duke 390",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2013,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "KTM",
+    "model": "RC 200",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "KTM",
+    "model": "RC 390",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
     "make": "Land Rover",
     "model": "Defender",
     "variants": [
@@ -1481,6 +1852,20 @@
     "yearTo": 2025,
     "fuelTypes": [
       "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "Scorpio Classic",
+    "variants": [
+      "S",
+      "S11"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
       "Diesel"
     ],
     "bodyType": "SUV"
@@ -1731,6 +2116,21 @@
       "CNG"
     ],
     "bodyType": "Sedan"
+  },
+  {
+    "make": "Maruti",
+    "model": "e Vitara",
+    "variants": [
+      "Delta",
+      "Zeta",
+      "Alpha"
+    ],
+    "yearFrom": 2025,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "SUV"
   },
   {
     "make": "Maruti",
@@ -1993,6 +2393,34 @@
   },
   {
     "make": "Mercedes-Benz",
+    "model": "EQB",
+    "variants": [
+      "250+",
+      "350"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Mercedes-Benz",
+    "model": "EQS",
+    "variants": [
+      "450+",
+      "580"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Mercedes-Benz",
     "model": "GLA",
     "variants": [
       "200",
@@ -2083,6 +2511,19 @@
       "EV"
     ],
     "bodyType": "Hatchback"
+  },
+  {
+    "make": "MG",
+    "model": "Cyberster",
+    "variants": [
+      "Roadster"
+    ],
+    "yearFrom": 2025,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Convertible"
   },
   {
     "make": "MG",
@@ -2200,6 +2641,32 @@
     "bodyType": "Compact SUV"
   },
   {
+    "make": "Ola",
+    "model": "S1 Air",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Ola",
+    "model": "S1 Pro",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
     "make": "Renault",
     "model": "Duster",
     "variants": [
@@ -2310,6 +2777,19 @@
   },
   {
     "make": "Royal Enfield",
+    "model": "Guerrilla 450",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Royal Enfield",
     "model": "Himalayan",
     "variants": [
       "Standard",
@@ -2358,6 +2838,32 @@
       "Supernova"
     ],
     "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Royal Enfield",
+    "model": "Shotgun 650",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Royal Enfield",
+    "model": "Super Meteor 650",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2023,
     "yearTo": 2025,
     "fuelTypes": [
       "Petrol"
@@ -2475,6 +2981,19 @@
   },
   {
     "make": "Suzuki",
+    "model": "Avenis",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Suzuki",
     "model": "Burgman Street",
     "variants": [
       "Standard"
@@ -2503,6 +3022,19 @@
   {
     "make": "Suzuki",
     "model": "Gixxer 250",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Suzuki",
+    "model": "Gixxer SF 250",
     "variants": [
       "Standard"
     ],
@@ -2646,6 +3178,22 @@
     "yearTo": 2025,
     "fuelTypes": [
       "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Tata",
+    "model": "Sierra",
+    "variants": [
+      "Pure",
+      "Adventure",
+      "Accomplished"
+    ],
+    "yearFrom": 2025,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "EV"
     ],
     "bodyType": "SUV"
   },
@@ -2916,6 +3464,33 @@
   },
   {
     "make": "TVS",
+    "model": "Apache RTR 310",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "TVS",
+    "model": "iQube",
+    "variants": [
+      "STD",
+      "S"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "TVS",
     "model": "Jupiter",
     "variants": [
       "STD",
@@ -2943,6 +3518,20 @@
       "Petrol"
     ],
     "bodyType": "Scooter"
+  },
+  {
+    "make": "TVS",
+    "model": "Radeon",
+    "variants": [
+      "Drum",
+      "Disc"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
   },
   {
     "make": "TVS",
@@ -3066,6 +3655,20 @@
   },
   {
     "make": "Volvo",
+    "model": "EX40",
+    "variants": [
+      "Plus",
+      "Ultimate"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Volvo",
     "model": "S90",
     "variants": [
       "Momentum",
@@ -3129,6 +3732,20 @@
   },
   {
     "make": "Yamaha",
+    "model": "Aerox 155",
+    "variants": [
+      "Standard",
+      "MotoGP"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Yamaha",
     "model": "Fascino",
     "variants": [
       "Standard",
@@ -3158,6 +3775,20 @@
   },
   {
     "make": "Yamaha",
+    "model": "FZ-S FI",
+    "variants": [
+      "Standard",
+      "V3"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Yamaha",
     "model": "MT-15",
     "variants": [
       "Standard",
@@ -3179,6 +3810,19 @@
       "R15M"
     ],
     "yearFrom": 2008,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Yamaha",
+    "model": "R15S",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2023,
     "yearTo": 2025,
     "fuelTypes": [
       "Petrol"

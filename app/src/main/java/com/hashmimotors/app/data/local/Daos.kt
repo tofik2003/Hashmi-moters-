@@ -25,6 +25,7 @@ interface PartDao {
         AND (name LIKE '%' || :query || '%'
              OR sku LIKE '%' || :query || '%'
              OR brand LIKE '%' || :query || '%'
+             OR barcode LIKE '%' || :query || '%'
              OR oemNumbers LIKE '%' || :query || '%')
         ORDER BY name ASC
     """)

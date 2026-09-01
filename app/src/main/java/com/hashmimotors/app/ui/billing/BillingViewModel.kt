@@ -87,6 +87,34 @@ class BillingViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Add a line that came from the bill scanner (no catalog part backing it).
+     */
+    fun addAdHocLine(name: String, qty: Int, rate: Double) {
+        if (name.isBlank() || qty <= 0) return
+        val newLine = InvoiceLine(
+            partId = "scanned-${java.util.UUID.randomUUID()}",
+            partSnapshot = PartSnapshot(name = name.trim()),
+            qty = qty,
+            rate = rate,
+            discountPct = 0.0,
+            lineTotal = rate * qty
+        )
+        _state.update { current ->
+            val existing = current.lines.find { it.partSnapshot.name.equals(name.trim(), ignoreCase = true) }
+            val newLines = if (existing != null) {
+                current.lines.map {
+                    if (it.partSnapshot.name.equals(name.trim(), ignoreCase = true)) {
+                        it.copy(qty = it.qty + qty, lineTotal = (it.qty + qty) * it.rate)
+                    } else it
+                }
+            } else {
+                current.lines + newLine
+            }
+            current.copy(lines = newLines)
+        }
+    }
+
     fun updateLineQty(index: Int, newQty: Int) {
         if (newQty <= 0) {
             removeLine(index)

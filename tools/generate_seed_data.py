@@ -550,14 +550,239 @@ PARTS = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# EXTRA DATA — layered on top of the core lists above.
+# ---------------------------------------------------------------------------
+CATEGORIES_EXTRA = [
+    {"name": "Tyres", "icon": "tire", "defaultHsn": "40111090", "defaultGstPercent": 28.0},
+    {"name": "Car Care", "icon": "care", "defaultHsn": "34029099", "defaultGstPercent": 18.0},
+    {"name": "Locks & Keys", "icon": "lock", "defaultHsn": "83012000", "defaultGstPercent": 18.0},
+    {"name": "Audio & Infotainment", "icon": "audio", "defaultHsn": "85182900", "defaultGstPercent": 18.0},
+]
+
+VEHICLES_EXTRA = [
+    # Four-wheelers
+    v("Tata", "Sierra", ["Pure", "Adventure", "Accomplished"], 2025, 2025, ["Petrol", "EV"], "SUV"),
+    v("Maruti", "e Vitara", ["Delta", "Zeta", "Alpha"], 2025, 2025, ["EV"], "SUV"),
+    v("Hyundai", "Creta Electric", ["Executive", "Smart", "Premium"], 2025, 2025, ["EV"], "Compact SUV"),
+    v("Mahindra", "Scorpio Classic", ["S", "S11"], 2021, 2025, ["Diesel"], "SUV"),
+    v("MG", "Cyberster", ["Roadster"], 2025, 2025, ["EV"], "Convertible"),
+    v("BYD", "Sealion 7", ["Premium", "Performance"], 2025, 2025, ["EV"], "SUV"),
+    v("Mercedes-Benz", "EQS", ["450+", "580"], 2023, 2025, ["EV"], "Sedan"),
+    v("Mercedes-Benz", "EQB", ["250+", "350"], 2023, 2025, ["EV"], "SUV"),
+    v("BMW", "iX1", ["xDrive30"], 2024, 2025, ["EV"], "Compact SUV"),
+    v("BMW", "i7", ["xDrive60"], 2023, 2025, ["EV"], "Sedan"),
+    v("Audi", "Q6 e-tron", ["Quattro"], 2025, 2025, ["EV"], "SUV"),
+    v("Volvo", "EX40", ["Plus", "Ultimate"], 2024, 2025, ["EV"], "Compact SUV"),
+    v("Hyundai", "Exter", ["EX", "S", "SX", "SX(O)"], 2023, 2025, ["Petrol", "CNG"], "Micro SUV"),
+    # Two-wheelers (more)
+    v("Hero", "Xtreme 125R", ["Drum", "Disc"], 2024, 2025, ["Petrol"], "Motorcycle"),
+    v("Hero", "Maestro Edge 125", ["Drum", "Disc"], 2017, 2025, ["Petrol"], "Scooter"),
+    v("Hero", "Destini 125", ["LX", "VX", "ZX"], 2018, 2025, ["Petrol"], "Scooter"),
+    v("Hero", "Splendor+ XTEC", ["Standard"], 2022, 2025, ["Petrol"], "Motorcycle"),
+    v("Honda", "Activa 125", ["Drum", "Disc", "H-Smart"], 2014, 2025, ["Petrol"], "Scooter"),
+    v("Honda", "Shine 125", ["Drum", "Disc"], 2019, 2025, ["Petrol"], "Motorcycle"),
+    v("Honda", "SP 160", ["Single Disc", "Double Disc"], 2023, 2025, ["Petrol"], "Motorcycle"),
+    v("Honda", "CB200X", ["Standard"], 2021, 2025, ["Petrol"], "Motorcycle"),
+    v("TVS", "iQube", ["STD", "S"], 2020, 2025, ["EV"], "Scooter"),
+    v("TVS", "Apache RTR 310", ["Standard"], 2023, 2025, ["Petrol"], "Motorcycle"),
+    v("TVS", "Radeon", ["Drum", "Disc"], 2018, 2025, ["Petrol"], "Motorcycle"),
+    v("Bajaj", "Pulsar 125", ["Drum", "Disc"], 2019, 2025, ["Petrol"], "Motorcycle"),
+    v("Bajaj", "Pulsar N160", ["Single ABS", "Dual ABS"], 2022, 2025, ["Petrol"], "Motorcycle"),
+    v("Bajaj", "Pulsar N250", ["Standard"], 2021, 2025, ["Petrol"], "Motorcycle"),
+    v("Bajaj", "Pulsar 220", ["Standard"], 2007, 2025, ["Petrol"], "Motorcycle"),
+    v("Suzuki", "Avenis", ["Standard"], 2022, 2025, ["Petrol"], "Scooter"),
+    v("Suzuki", "Gixxer SF 250", ["Standard"], 2019, 2025, ["Petrol"], "Motorcycle"),
+    v("Yamaha", "Aerox 155", ["Standard", "MotoGP"], 2021, 2025, ["Petrol"], "Scooter"),
+    v("Yamaha", "R15S", ["Standard"], 2023, 2025, ["Petrol"], "Motorcycle"),
+    v("Yamaha", "FZ-S FI", ["Standard", "V3"], 2019, 2025, ["Petrol"], "Motorcycle"),
+    v("Royal Enfield", "Super Meteor 650", ["Standard"], 2023, 2025, ["Petrol"], "Motorcycle"),
+    v("Royal Enfield", "Shotgun 650", ["Standard"], 2024, 2025, ["Petrol"], "Motorcycle"),
+    v("Royal Enfield", "Guerrilla 450", ["Standard"], 2024, 2025, ["Petrol"], "Motorcycle"),
+    v("KTM", "Duke 200", ["Standard"], 2012, 2025, ["Petrol"], "Motorcycle"),
+    v("KTM", "Duke 390", ["Standard"], 2013, 2025, ["Petrol"], "Motorcycle"),
+    v("KTM", "RC 200", ["Standard"], 2018, 2025, ["Petrol"], "Motorcycle"),
+    v("KTM", "RC 390", ["Standard"], 2018, 2025, ["Petrol"], "Motorcycle"),
+    v("KTM", "Adventure 250", ["Standard"], 2023, 2025, ["Petrol"], "Motorcycle"),
+    v("KTM", "Adventure 390", ["Standard", "X"], 2019, 2025, ["Petrol"], "Motorcycle"),
+    v("Ola", "S1 Air", ["Standard"], 2022, 2025, ["EV"], "Scooter"),
+    v("Ola", "S1 Pro", ["Standard"], 2022, 2025, ["EV"], "Scooter"),
+    v("Ather", "450X", ["Plus", "Pro"], 2021, 2025, ["EV"], "Scooter"),
+    v("Ather", "450S", ["Standard"], 2023, 2025, ["EV"], "Scooter"),
+    v("Ather", "Rizta", ["S", "Z"], 2024, 2025, ["EV"], "Scooter"),
+]
+
+PARTS_EXTRA = [
+    # ---- Tyres ----
+    p("Car Tyre", "Tyres", "40111010", 28.0, ["MRF", "CEAT", "Apollo", "JK Tyre", "Bridgestone", "Michelin"], ["tyre", "tire"]),
+    p("Two-Wheeler Tyre", "Tyres", "40114010", 28.0, ["MRF", "CEAT", "Apollo", "JK Tyre"], ["tyre", "tire"]),
+    p("Tubeless Tyre", "Tyres", "40111010", 28.0, ["MRF", "CEAT", "Apollo", "Bridgestone"], ["tubeless"]),
+    p("Tyre Tube", "Tyres", "40131020", 28.0, ["MRF", "CEAT", "JK Tyre"], ["tube", "inner tube"]),
+    p("Tyre Valve", "Tyres", "40169990", 18.0, [], ["valve"]),
+    p("Wheel Balancing Weight", "Tyres", "87087000", 28.0, [], ["balancing weight"]),
+    p("Tyre Pressure Gauge", "Tyres", "90262000", 28.0, [], ["pressure gauge"]),
+    p("Puncture Repair Kit", "Tyres", "82060090", 18.0, [], ["puncture kit"]),
+    # ---- Car Care ----
+    p("Car Shampoo", "Car Care", "34029099", 18.0, ["3M", "Formula 1", "Armor All"], ["shampoo", "wash"]),
+    p("Car Wax", "Car Care", "34059090", 18.0, ["3M", "Formula 1", "Turtle Wax"], ["wax", "polish"]),
+    p("Tyre Polish", "Car Care", "34059090", 18.0, ["3M", "Formula 1"], ["tyre shine"]),
+    p("Dashboard Polish", "Car Care", "34059090", 18.0, ["3M", "Formula 1"], ["dashboard"]),
+    p("Interior Cleaner", "Car Care", "34029099", 18.0, ["3M", "Formula 1"], ["interior"]),
+    p("Glass Cleaner", "Car Care", "34029099", 18.0, ["3M", "Formula 1"], ["glass cleaner"]),
+    p("Microfibre Cloth", "Car Care", "63071090", 18.0, [], ["microfiber", "cloth"]),
+    p("Car Polish Compound", "Car Care", "34059090", 18.0, ["3M", "Formula 1"], ["compound", "rubbing"]),
+    p("Rust Remover", "Car Care", "34029099", 18.0, ["WD-40"], ["rust"]),
+    p("Silicone Spray", "Car Care", "34039900", 18.0, ["3M", "WD-40"], ["silicone"]),
+    # ---- Locks & Keys ----
+    p("Ignition Lock Set", "Locks & Keys", "83012000", 18.0, ["Minda", "JMA"], ["ignition lock"]),
+    p("Door Lock Assembly", "Locks & Keys", "83012000", 18.0, ["Minda", "JMA"], ["door lock"]),
+    p("Fuel Tank Cap Lock", "Locks & Keys", "83012000", 18.0, [], ["tank cap", "fuel lock"]),
+    p("Handle Lock Set", "Locks & Keys", "83012000", 18.0, ["Minda"], ["handle lock"]),
+    p("Steering Lock", "Locks & Keys", "83012000", 18.0, ["Minda"], ["steering lock"]),
+    p("Car Key Shell / Remote", "Locks & Keys", "85269200", 18.0, [], ["key shell", "key fob"]),
+    p("Central Lock Kit", "Locks & Keys", "83012000", 18.0, ["Minda", "Autocop"], ["central lock"]),
+    p("Gear Lock", "Locks & Keys", "83012000", 18.0, ["Autocop"], ["gear lock"]),
+    # ---- Audio & Infotainment ----
+    p("Car Stereo / Head Unit", "Audio & Infotainment", "85272100", 18.0, ["Sony", "Pioneer", "JVC", "Blaupunkt"], ["head unit", "stereo", "music system"]),
+    p("Car Speaker", "Audio & Infotainment", "85182900", 18.0, ["Sony", "Pioneer", "JBL", "Infinity"], ["speaker", "woofer"]),
+    p("Car Subwoofer", "Audio & Infotainment", "85182900", 18.0, ["JBL", "Sony", "Pioneer"], ["subwoofer", "bass tube"]),
+    p("Car Amplifier", "Audio & Infotainment", "85184000", 18.0, ["Sony", "Pioneer", "JBL"], ["amplifier", "amp"]),
+    p("FM Antenna", "Audio & Infotainment", "85291029", 18.0, [], ["antenna", "aerial"]),
+    p("USB/AUX Port", "Audio & Infotainment", "85366990", 18.0, [], ["usb port"]),
+    p("Android Auto Screen", "Audio & Infotainment", "85285900", 18.0, ["Sony", "Pioneer", "Blaupunkt"], ["android auto", "carplay"]),
+    # ---- Engine (more) ----
+    p("Cylinder Block", "Engine", "84099199", 28.0, [], ["block"]),
+    p("Piston Assembly", "Engine", "84099199", 28.0, ["Mahle", "Goetze"], ["piston"]),
+    p("Timing Chain Tensioner", "Engine", "84099990", 28.0, [], ["tensioner"]),
+    p("Engine Valve Kit", "Engine", "84099199", 28.0, [], ["valve kit"]),
+    p("Valve Guide", "Engine", "84099990", 28.0, [], ["valve guide"]),
+    p("Crankcase Breather", "Engine", "84099199", 28.0, [], ["breather"]),
+    p("Oil Dipstick", "Engine", "87089900", 28.0, [], ["dipstick"]),
+    p("Oil Pan / Sump", "Engine", "84099199", 28.0, [], ["sump", "oil pan"]),
+    p("Engine Gasket Set", "Engine", "84849000", 18.0, ["Goetze", "Perfect Circle"], ["gasket set"]),
+    p("Throttle Body", "Engine", "84818090", 28.0, ["Bosch", "Denso"], ["throttle"]),
+    p("EGR Valve", "Engine", "84818090", 28.0, ["Bosch", "Denso"], ["egr"]),
+    p("PCV Valve", "Engine", "84818090", 28.0, ["Bosch"], ["pcv"]),
+    p("Intake Manifold", "Engine", "84099199", 28.0, [], ["manifold"]),
+    p("Exhaust Manifold Gasket", "Engine", "84841090", 18.0, ["Goetze"], ["manifold gasket"]),
+    # ---- Brakes (more) ----
+    p("Brake Line / Pipe", "Brakes", "87083000", 28.0, [], ["brake line"]),
+    p("Brake Caliper Pin Kit", "Brakes", "87083000", 28.0, [], ["caliper pin"]),
+    p("Brake Pad Sensor", "Brakes", "90318000", 28.0, ["Bosch", "TRW"], ["pad sensor"]),
+    p("Handbrake Cable", "Brakes", "87083000", 28.0, [], ["handbrake cable", "parking brake"]),
+    p("Brake Fluid Reservoir", "Brakes", "87083000", 28.0, [], ["reservoir"]),
+    p("Brake Disc Shield", "Brakes", "87083000", 28.0, [], ["disc shield"]),
+    p("Vacuum Pump (Brake)", "Brakes", "84141090", 28.0, [], ["vacuum pump"]),
+    # ---- Suspension (more) ----
+    p("Lower Arm Bush", "Suspension", "87088000", 28.0, [], ["arm bush", "control arm bush"]),
+    p("Torsion Bar", "Suspension", "87088000", 28.0, [], ["torsion"]),
+    p("Suspension Bush Kit", "Suspension", "87088000", 28.0, [], ["bush kit"]),
+    p("Wheel Hub Knuckle", "Suspension", "87089900", 28.0, [], ["knuckle"]),
+    p("Steering Damper", "Suspension", "87089400", 28.0, ["Ohlins", "Showa"], ["steering damper"]),
+    p("Fork Oil Seal", "Suspension", "84879000", 18.0, ["NOK"], ["fork seal"]),
+    p("Front Fork Assembly", "Suspension", "87088000", 28.0, ["Showa", "Endurance"], ["fork"]),
+    # ---- Filters (more) ----
+    p("Air Filter (Two-Wheeler)", "Filters", "84213100", 28.0, ["Bosch", "Mahle", "K&N"], ["air filter"]),
+    p("Cabin Air Filter", "Filters", "84213100", 28.0, ["Bosch", "Mann"], ["cabin filter", "pollen"]),
+    p("Fuel Pump Filter", "Filters", "84212300", 28.0, [], ["pump filter"]),
+    p("Oil Filter (Two-Wheeler)", "Filters", "84212300", 28.0, ["Bosch", "Mahle"], ["oil filter"]),
+    p("Air Cleaner Element", "Filters", "84213100", 28.0, [], ["cleaner element"]),
+    p("Crankcase Filter", "Filters", "84213990", 28.0, [], ["crankcase filter"]),
+    # ---- Electrical (more) ----
+    p("Starter Relay / Solenoid", "Electrical", "85364100", 18.0, ["Bosch", "Lucas-TVS"], ["starter relay", "solenoid"]),
+    p("Regulator Rectifier", "Electrical", "85044090", 28.0, ["Lucas-TVS", "Minda"], ["regulator", "rectifier"]),
+    p("CDI / Igniter Unit", "Electrical", "85119000", 28.0, ["Minda", "Bosch"], ["cdi", "igniter"]),
+    p("Indicator Flasher Relay", "Electrical", "85364100", 18.0, ["Minda"], ["flasher"]),
+    p("Power Window Motor", "Electrical", "85013100", 18.0, ["Minda", "Valeo"], ["window motor"]),
+    p("Power Window Switch", "Electrical", "85365090", 18.0, ["Minda"], ["window switch"]),
+    p("Wiper Switch", "Electrical", "85365090", 18.0, ["Minda"], ["wiper switch"]),
+    p("Headlight Switch", "Electrical", "85365090", 18.0, ["Minda"], ["headlight switch"]),
+    p("Neutral Switch", "Electrical", "85365090", 18.0, [], ["neutral switch"]),
+    p("Side Stand Switch", "Electrical", "85365090", 18.0, [], ["side stand switch"]),
+    p("Starter Relay Solenoid", "Electrical", "85364100", 18.0, [], ["solenoid"]),
+    # ---- Lighting (more) ----
+    p("DRL / Daytime Running Light", "Lighting", "85122010", 28.0, ["Lumax", "Varroc"], ["drl"]),
+    p("Headlight Bulb (LED)", "Lighting", "85395000", 28.0, ["Osram", "Philips", "Lumax"], ["led bulb"]),
+    p("Tail Light Bulb", "Lighting", "85392100", 28.0, ["Osram", "Philips"], ["tail bulb"]),
+    p("Turn Signal Bulb", "Lighting", "85392100", 28.0, ["Osram", "Philips"], ["indicator bulb"]),
+    p("Number Plate Light", "Lighting", "85122020", 28.0, ["Lumax"], ["number plate light"]),
+    p("Headlight Glass / Lens", "Lighting", "70071100", 28.0, [], ["headlight lens"]),
+    # ---- Cooling (more) ----
+    p("Radiator Hose Kit", "Cooling", "40093100", 18.0, ["Gates"], ["radiator hose"]),
+    p("Coolant Reservoir Tank", "Cooling", "87089100", 28.0, [], ["coolant tank", "reservoir"]),
+    p("Radiator Fan Shroud", "Cooling", "87089100", 28.0, [], ["fan shroud"]),
+    p("Water Pump Gasket", "Cooling", "84841090", 18.0, ["Goetze"], ["pump gasket"]),
+    p("Temperature Sender Unit", "Cooling", "90259000", 28.0, ["Bosch"], ["temp sender"]),
+    # ---- AC (more) ----
+    p("AC Blower Motor", "Air Conditioning", "85013100", 18.0, ["Subros", "Valeo"], ["blower motor"]),
+    p("AC Condenser Fan", "Air Conditioning", "84145990", 28.0, ["Subros"], ["condenser fan"]),
+    p("AC Pressure Switch", "Air Conditioning", "85365090", 18.0, ["Denso"], ["pressure switch"]),
+    p("AC Filter Dryer", "Air Conditioning", "84159000", 28.0, ["Denso"], ["dryer", "drier"]),
+    # ---- Belts & Hoses (more) ----
+    p("Timing Belt Tensioner", "Belts & Hoses", "84835090", 28.0, ["Gates", "Ina"], ["belt tensioner"]),
+    p("Idler Pulley", "Belts & Hoses", "84835090", 28.0, ["Gates", "Ina"], ["idler pulley", "tensioner pulley"]),
+    p("Oil Cooler Hose", "Belts & Hoses", "40093100", 18.0, ["Gates"], ["oil hose"]),
+    p("Intercooler Hose", "Belts & Hoses", "40093100", 18.0, ["Gates"], ["intercooler hose"]),
+    # ---- Body Parts (more) ----
+    p("Bumper Bracket", "Body Parts", "87081090", 28.0, [], ["bumper bracket"]),
+    p("Fender Liner", "Body Parts", "87082900", 28.0, [], ["fender liner", "mud guard"]),
+    p("Radiator Support", "Body Parts", "87082900", 28.0, [], ["radiator support"]),
+    p("Engine Guard / Skid Plate", "Body Parts", "87082900", 28.0, [], ["skid plate", "engine guard"]),
+    p("Hood Latch", "Body Parts", "83012000", 18.0, [], ["bonnet latch"]),
+    p("Door Check Stopper", "Body Parts", "87082900", 28.0, [], ["door stopper"]),
+    p("Roof Ditch Moulding", "Body Parts", "87082900", 28.0, [], ["moulding"]),
+    # ---- Glass (more) ----
+    p("Windshield Moulding", "Glass", "40169990", 18.0, [], ["windshield moulding"]),
+    p("Power Window Regulator", "Glass", "87082900", 28.0, ["Minda", "Valeo"], ["window regulator"]),
+    p("Window Beading / Weatherstrip", "Glass", "40169990", 18.0, [], ["beading", "weatherstrip"]),
+    # ---- Exhaust (more) ----
+    p("Exhaust Gasket", "Exhaust", "84841090", 18.0, ["Goetze"], ["exhaust gasket"]),
+    p("Exhaust Clamp", "Exhaust", "73269099", 18.0, [], ["clamp"]),
+    p("Silencer Mount Bracket", "Exhaust", "87089200", 28.0, [], ["silencer bracket"]),
+    # ---- Wheels & Hubs (more) ----
+    p("Wheel Bearing Kit", "Wheels & Hubs", "84821090", 18.0, ["SKF", "Timken", "NBC"], ["bearing kit"]),
+    p("Hub Grease Cap", "Wheels & Hubs", "87087000", 28.0, [], ["grease cap"]),
+    p("Axle Nut", "Wheels & Hubs", "73181600", 18.0, [], ["axle nut"]),
+    p("Spoke Kit", "Wheels & Hubs", "87141090", 28.0, [], ["spokes"]),
+    # ---- Bearings & Seals (more) ----
+    p("Steering Bearing Kit", "Bearings & Seals", "84821090", 18.0, ["SKF", "NBC"], ["steering bearing", "cone set"]),
+    p("Clutch Hub Bearing", "Bearings & Seals", "84828000", 18.0, ["SKF", "NBC"], ["clutch bearing"]),
+    p("Camshaft Oil Seal", "Bearings & Seals", "84879000", 18.0, ["NOK"], ["camshaft seal"]),
+    p("Valve Stem Oil Seal", "Bearings & Seals", "84879000", 18.0, ["NOK"], ["valve stem seal"]),
+    # ---- Accessories (more) ----
+    p("Bike Cover", "Accessories", "63079090", 18.0, [], ["bike cover"]),
+    p("Helmet", "Accessories", "65061090", 18.0, ["Studds", "Vega", "Steelbird"], ["helmet"]),
+    p("Riding Gloves", "Accessories", "62160010", 18.0, [], ["gloves"]),
+    p("Phone Charger (Car)", "Accessories", "85044010", 18.0, [], ["car charger"]),
+    p("USB Cable", "Accessories", "85444220", 18.0, [], ["usb cable"]),
+    p("Emergency Triangle", "Accessories", "85122090", 28.0, [], ["triangle", "warning triangle"]),
+    p("First Aid Kit", "Accessories", "30065000", 18.0, [], ["first aid"]),
+    p("Tow Rope", "Accessories", "56074900", 18.0, [], ["tow rope"]),
+    p("Jump Starter", "Accessories", "85044090", 28.0, [], ["jump starter", "power bank"]),
+    p("Air Freshener", "Accessories", "33074900", 18.0, ["Ambi Pur", "Godrej"], ["freshener", "perfume"]),
+    # ---- Tools (more) ----
+    p("Mechanic Tool Kit", "Tools", "82060090", 18.0, [], ["tool kit"]),
+    p("Torx Bit Set", "Tools", "82079090", 18.0, [], ["torx"]),
+    p("Allen Key Set", "Tools", "82041110", 18.0, [], ["allen key", "hex key"]),
+    p("Feeler Gauge", "Tools", "90173029", 18.0, [], ["feeler gauge"]),
+    p("Oil Filter Remover", "Tools", "82055990", 18.0, [], ["oil filter wrench"]),
+    p("Chain Lube", "Tools", "34039900", 18.0, ["Motul", "3M"], ["chain lube", "chain spray"]),
+    p("Chain Cleaner", "Tools", "34029099", 18.0, ["Motul", "3M"], ["chain cleaner"]),
+]
+
+
 def validate():
-    category_names = {c["name"] for c in CATEGORIES}
-    for part in PARTS:
+    categories = CATEGORIES + CATEGORIES_EXTRA
+    vehicles = VEHICLES + VEHICLES_EXTRA
+    parts = PARTS + PARTS_EXTRA
+    category_names = {c["name"] for c in categories}
+    assert len(category_names) == len(categories), "Duplicate category names"
+    for part in parts:
         assert part["category"] in category_names, f"Unknown category {part['category']!r} in {part['name']!r}"
-    for veh in VEHICLES:
+    for veh in vehicles:
         assert veh["yearFrom"] <= veh["yearTo"], f"Bad year range for {veh['make']} {veh['model']}"
         assert veh["fuelTypes"], f"No fuels for {veh['make']} {veh['model']}"
-    print(f"OK: {len(VEHICLES)} vehicles, {len(CATEGORIES)} categories, {len(PARTS)} parts")
+    print(f"OK: {len(vehicles)} vehicles, {len(categories)} categories, {len(parts)} parts")
 
 
 def write(name, data):
@@ -571,10 +796,13 @@ def write(name, data):
 
 def main():
     validate()
-    vehicles = sorted(VEHICLES, key=lambda x: (x["make"].lower(), x["model"].lower(), x["yearFrom"]))
+    vehicles = sorted(
+        VEHICLES + VEHICLES_EXTRA,
+        key=lambda x: (x["make"].lower(), x["model"].lower(), x["yearFrom"])
+    )
     write("vehicles.json", vehicles)
-    write("categories.json", CATEGORIES)
-    write("parts_reference.json", PARTS)
+    write("categories.json", CATEGORIES + CATEGORIES_EXTRA)
+    write("parts_reference.json", PARTS + PARTS_EXTRA)
 
 
 if __name__ == "__main__":

@@ -52,9 +52,18 @@ fun SearchScreen(
     onPartClick: (String) -> Unit,
     onAddPartClick: () -> Unit,
     onScanClick: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    scannedBarcode: String = "",
+    onBarcodeConsumed: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
+
+    androidx.compose.runtime.LaunchedEffect(scannedBarcode) {
+        if (scannedBarcode.isNotBlank()) {
+            viewModel.onSearchChange(scannedBarcode)
+            onBarcodeConsumed()
+        }
+    }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Spacer(modifier = Modifier.height(24.dp))

@@ -130,5 +130,29 @@
     "icon": "tool",
     "defaultHsn": "82055990",
     "defaultGstPercent": 18.0
+  },
+  {
+    "name": "Tyres",
+    "icon": "tire",
+    "defaultHsn": "40111090",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Car Care",
+    "icon": "care",
+    "defaultHsn": "34029099",
+    "defaultGstPercent": 18.0
+  },
+  {
+    "name": "Locks & Keys",
+    "icon": "lock",
+    "defaultHsn": "83012000",
+    "defaultGstPercent": 18.0
+  },
+  {
+    "name": "Audio & Infotainment",
+    "icon": "audio",
+    "defaultHsn": "85182900",
+    "defaultGstPercent": 18.0
   }
 ]

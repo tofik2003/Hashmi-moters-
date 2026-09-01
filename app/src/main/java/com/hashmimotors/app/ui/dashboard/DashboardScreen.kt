@@ -232,7 +232,7 @@ fun DashboardScreen(
                 )
                 StatTile(
                     label = "Stock Value",
-                    value = "₹${\"%,.0f\".format(state.totalStockValue)}",
+                    value = "₹${"%,.0f".format(state.totalStockValue)}",
                     icon = Icons.Filled.BarChart,
                     accent = Color(0xFF34D399),
                     modifier = Modifier.weight(1f)
@@ -246,7 +246,7 @@ fun DashboardScreen(
             ) {
                 StatTile(
                     label = "This Week",
-                    value = "₹${\"%,.0f\".format(state.weekTotal)}",
+                    value = "₹${"%,.0f".format(state.weekTotal)}",
                     icon = Icons.Filled.Receipt,
                     accent = Color(0xFFA78BFA),
                     modifier = Modifier.weight(1f)
@@ -281,7 +281,7 @@ fun DashboardScreen(
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text = "₹${\"%,.0f\".format(state.weekTotal)}",
+                            text = "₹${"%,.0f".format(state.weekTotal)}",
                             color = PremiumGold,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold

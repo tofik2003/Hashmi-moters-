@@ -38,6 +38,9 @@ import com.hashmimotors.app.ui.inventory.AddStockScreen
 import com.hashmimotors.app.ui.inventory.InventoryScreen
 import com.hashmimotors.app.ui.onboarding.OnboardingScreen
 import com.hashmimotors.app.ui.reports.ReportsScreen
+import com.hashmimotors.app.ui.scanner.BarcodeScannerScreen
+import com.hashmimotors.app.ui.scanner.BillScanBus
+import com.hashmimotors.app.ui.scanner.BillScannerScreen
 import com.hashmimotors.app.ui.settings.SettingsScreen
 import com.hashmimotors.app.ui.shop.ShopSetupScreen
 import com.hashmimotors.app.ui.splash.SplashScreen
@@ -66,6 +69,8 @@ object Routes {
     const val ADD_STOCK = "add_stock"
     const val REPORTS = "reports"
     const val CUSTOMERS = "customers"
+    const val SCAN_BARCODE = "scan_barcode"
+    const val SCAN_BILL = "scan_bill/{openBillOnAdd}"
 }
 
 @HiltViewModel
@@ -164,17 +169,48 @@ fun HashmiMotorsMainScreen(
                     onReports = { navController.navigate(Routes.REPORTS) },
                     onHistory = { navController.navigate(Routes.INVOICE_HISTORY) },
                     onSettings = { navController.navigate(Routes.SETTINGS) },
-                    onCustomers = { navController.navigate(Routes.CUSTOMERS) }
+                    onCustomers = { navController.navigate(Routes.CUSTOMERS) },
+                    onScanBill = { navController.navigate("scan_bill/true") }
                 )
             }
             composable(Routes.SETTINGS) {
                 SettingsScreen(onBack = { navController.popBackStack() })
             }
-            composable(Routes.SEARCH) {
+            composable(Routes.SEARCH) { entry ->
+                val barcode = entry.savedStateHandle.getStateFlow("scanned_barcode", "")
+                    .collectAsStateWithLifecycle()
                 SearchScreen(
                     onPartClick = { id -> navController.navigate("edit_part/$id") },
                     onAddPartClick = { navController.navigate(Routes.ADD_PART) },
-                    onScanClick = { },
+                    onScanClick = { navController.navigate(Routes.SCAN_BARCODE) },
+                    onBack = { navController.popBackStack() },
+                    scannedBarcode = barcode.value,
+                    onBarcodeConsumed = { entry.savedStateHandle["scanned_barcode"] = "" }
+                )
+            }
+            composable(Routes.SCAN_BARCODE) {
+                BarcodeScannerScreen(
+                    onBarcode = { value ->
+                        navController.previousBackStackEntry?.savedStateHandle?.set("scanned_barcode", value)
+                        navController.popBackStack()
+                    },
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(
+                Routes.SCAN_BILL,
+                arguments = listOf(navArgument("openBillOnAdd") { type = NavType.BoolType })
+            ) { backStackEntry ->
+                val openBillOnAdd = backStackEntry.arguments?.getBoolean("openBillOnAdd") ?: false
+                BillScannerScreen(
+                    onAddToBill = { lines ->
+                        BillScanBus.publish(lines)
+                        if (openBillOnAdd) {
+                            navController.navigate(Routes.NEW_BILL)
+                        } else {
+                            navController.popBackStack()
+                        }
+                    },
                     onBack = { navController.popBackStack() }
                 )
             }
@@ -204,7 +240,8 @@ fun HashmiMotorsMainScreen(
                             popUpTo(Routes.NEW_BILL) { inclusive = true }
                         }
                     },
-                    onAddItem = { }
+                    onAddItem = { },
+                    onScanBill = { navController.navigate("scan_bill/false") }
                 )
             }
             composable(
@@ -240,7 +277,7 @@ fun HashmiMotorsMainScreen(
             composable(Routes.FITMENT_WIZARD) {
                 FitmentScreen(
                     onBack = { navController.popBackStack() },
-                    onVehicleSelected = { }
+                    onVehicleSelected = { navController.navigate(Routes.SEARCH) }
                 )
             }
             composable(Routes.REPORTS) {

@@ -2389,5 +2389,1605 @@
     "keywords": [
       "inspection lamp"
     ]
+  },
+  {
+    "name": "Car Tyre",
+    "category": "Tyres",
+    "hsnCode": "40111010",
+    "gstPercent": 28.0,
+    "brands": [
+      "MRF",
+      "CEAT",
+      "Apollo",
+      "JK Tyre",
+      "Bridgestone",
+      "Michelin"
+    ],
+    "keywords": [
+      "tyre",
+      "tire"
+    ]
+  },
+  {
+    "name": "Two-Wheeler Tyre",
+    "category": "Tyres",
+    "hsnCode": "40114010",
+    "gstPercent": 28.0,
+    "brands": [
+      "MRF",
+      "CEAT",
+      "Apollo",
+      "JK Tyre"
+    ],
+    "keywords": [
+      "tyre",
+      "tire"
+    ]
+  },
+  {
+    "name": "Tubeless Tyre",
+    "category": "Tyres",
+    "hsnCode": "40111010",
+    "gstPercent": 28.0,
+    "brands": [
+      "MRF",
+      "CEAT",
+      "Apollo",
+      "Bridgestone"
+    ],
+    "keywords": [
+      "tubeless"
+    ]
+  },
+  {
+    "name": "Tyre Tube",
+    "category": "Tyres",
+    "hsnCode": "40131020",
+    "gstPercent": 28.0,
+    "brands": [
+      "MRF",
+      "CEAT",
+      "JK Tyre"
+    ],
+    "keywords": [
+      "tube",
+      "inner tube"
+    ]
+  },
+  {
+    "name": "Tyre Valve",
+    "category": "Tyres",
+    "hsnCode": "40169990",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "valve"
+    ]
+  },
+  {
+    "name": "Wheel Balancing Weight",
+    "category": "Tyres",
+    "hsnCode": "87087000",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "balancing weight"
+    ]
+  },
+  {
+    "name": "Tyre Pressure Gauge",
+    "category": "Tyres",
+    "hsnCode": "90262000",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "pressure gauge"
+    ]
+  },
+  {
+    "name": "Puncture Repair Kit",
+    "category": "Tyres",
+    "hsnCode": "82060090",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "puncture kit"
+    ]
+  },
+  {
+    "name": "Car Shampoo",
+    "category": "Car Care",
+    "hsnCode": "34029099",
+    "gstPercent": 18.0,
+    "brands": [
+      "3M",
+      "Formula 1",
+      "Armor All"
+    ],
+    "keywords": [
+      "shampoo",
+      "wash"
+    ]
+  },
+  {
+    "name": "Car Wax",
+    "category": "Car Care",
+    "hsnCode": "34059090",
+    "gstPercent": 18.0,
+    "brands": [
+      "3M",
+      "Formula 1",
+      "Turtle Wax"
+    ],
+    "keywords": [
+      "wax",
+      "polish"
+    ]
+  },
+  {
+    "name": "Tyre Polish",
+    "category": "Car Care",
+    "hsnCode": "34059090",
+    "gstPercent": 18.0,
+    "brands": [
+      "3M",
+      "Formula 1"
+    ],
+    "keywords": [
+      "tyre shine"
+    ]
+  },
+  {
+    "name": "Dashboard Polish",
+    "category": "Car Care",
+    "hsnCode": "34059090",
+    "gstPercent": 18.0,
+    "brands": [
+      "3M",
+      "Formula 1"
+    ],
+    "keywords": [
+      "dashboard"
+    ]
+  },
+  {
+    "name": "Interior Cleaner",
+    "category": "Car Care",
+    "hsnCode": "34029099",
+    "gstPercent": 18.0,
+    "brands": [
+      "3M",
+      "Formula 1"
+    ],
+    "keywords": [
+      "interior"
+    ]
+  },
+  {
+    "name": "Glass Cleaner",
+    "category": "Car Care",
+    "hsnCode": "34029099",
+    "gstPercent": 18.0,
+    "brands": [
+      "3M",
+      "Formula 1"
+    ],
+    "keywords": [
+      "glass cleaner"
+    ]
+  },
+  {
+    "name": "Microfibre Cloth",
+    "category": "Car Care",
+    "hsnCode": "63071090",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "microfiber",
+      "cloth"
+    ]
+  },
+  {
+    "name": "Car Polish Compound",
+    "category": "Car Care",
+    "hsnCode": "34059090",
+    "gstPercent": 18.0,
+    "brands": [
+      "3M",
+      "Formula 1"
+    ],
+    "keywords": [
+      "compound",
+      "rubbing"
+    ]
+  },
+  {
+    "name": "Rust Remover",
+    "category": "Car Care",
+    "hsnCode": "34029099",
+    "gstPercent": 18.0,
+    "brands": [
+      "WD-40"
+    ],
+    "keywords": [
+      "rust"
+    ]
+  },
+  {
+    "name": "Silicone Spray",
+    "category": "Car Care",
+    "hsnCode": "34039900",
+    "gstPercent": 18.0,
+    "brands": [
+      "3M",
+      "WD-40"
+    ],
+    "keywords": [
+      "silicone"
+    ]
+  },
+  {
+    "name": "Ignition Lock Set",
+    "category": "Locks & Keys",
+    "hsnCode": "83012000",
+    "gstPercent": 18.0,
+    "brands": [
+      "Minda",
+      "JMA"
+    ],
+    "keywords": [
+      "ignition lock"
+    ]
+  },
+  {
+    "name": "Door Lock Assembly",
+    "category": "Locks & Keys",
+    "hsnCode": "83012000",
+    "gstPercent": 18.0,
+    "brands": [
+      "Minda",
+      "JMA"
+    ],
+    "keywords": [
+      "door lock"
+    ]
+  },
+  {
+    "name": "Fuel Tank Cap Lock",
+    "category": "Locks & Keys",
+    "hsnCode": "83012000",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "tank cap",
+      "fuel lock"
+    ]
+  },
+  {
+    "name": "Handle Lock Set",
+    "category": "Locks & Keys",
+    "hsnCode": "83012000",
+    "gstPercent": 18.0,
+    "brands": [
+      "Minda"
+    ],
+    "keywords": [
+      "handle lock"
+    ]
+  },
+  {
+    "name": "Steering Lock",
+    "category": "Locks & Keys",
+    "hsnCode": "83012000",
+    "gstPercent": 18.0,
+    "brands": [
+      "Minda"
+    ],
+    "keywords": [
+      "steering lock"
+    ]
+  },
+  {
+    "name": "Car Key Shell / Remote",
+    "category": "Locks & Keys",
+    "hsnCode": "85269200",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "key shell",
+      "key fob"
+    ]
+  },
+  {
+    "name": "Central Lock Kit",
+    "category": "Locks & Keys",
+    "hsnCode": "83012000",
+    "gstPercent": 18.0,
+    "brands": [
+      "Minda",
+      "Autocop"
+    ],
+    "keywords": [
+      "central lock"
+    ]
+  },
+  {
+    "name": "Gear Lock",
+    "category": "Locks & Keys",
+    "hsnCode": "83012000",
+    "gstPercent": 18.0,
+    "brands": [
+      "Autocop"
+    ],
+    "keywords": [
+      "gear lock"
+    ]
+  },
+  {
+    "name": "Car Stereo / Head Unit",
+    "category": "Audio & Infotainment",
+    "hsnCode": "85272100",
+    "gstPercent": 18.0,
+    "brands": [
+      "Sony",
+      "Pioneer",
+      "JVC",
+      "Blaupunkt"
+    ],
+    "keywords": [
+      "head unit",
+      "stereo",
+      "music system"
+    ]
+  },
+  {
+    "name": "Car Speaker",
+    "category": "Audio & Infotainment",
+    "hsnCode": "85182900",
+    "gstPercent": 18.0,
+    "brands": [
+      "Sony",
+      "Pioneer",
+      "JBL",
+      "Infinity"
+    ],
+    "keywords": [
+      "speaker",
+      "woofer"
+    ]
+  },
+  {
+    "name": "Car Subwoofer",
+    "category": "Audio & Infotainment",
+    "hsnCode": "85182900",
+    "gstPercent": 18.0,
+    "brands": [
+      "JBL",
+      "Sony",
+      "Pioneer"
+    ],
+    "keywords": [
+      "subwoofer",
+      "bass tube"
+    ]
+  },
+  {
+    "name": "Car Amplifier",
+    "category": "Audio & Infotainment",
+    "hsnCode": "85184000",
+    "gstPercent": 18.0,
+    "brands": [
+      "Sony",
+      "Pioneer",
+      "JBL"
+    ],
+    "keywords": [
+      "amplifier",
+      "amp"
+    ]
+  },
+  {
+    "name": "FM Antenna",
+    "category": "Audio & Infotainment",
+    "hsnCode": "85291029",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "antenna",
+      "aerial"
+    ]
+  },
+  {
+    "name": "USB/AUX Port",
+    "category": "Audio & Infotainment",
+    "hsnCode": "85366990",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "usb port"
+    ]
+  },
+  {
+    "name": "Android Auto Screen",
+    "category": "Audio & Infotainment",
+    "hsnCode": "85285900",
+    "gstPercent": 18.0,
+    "brands": [
+      "Sony",
+      "Pioneer",
+      "Blaupunkt"
+    ],
+    "keywords": [
+      "android auto",
+      "carplay"
+    ]
+  },
+  {
+    "name": "Cylinder Block",
+    "category": "Engine",
+    "hsnCode": "84099199",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "block"
+    ]
+  },
+  {
+    "name": "Piston Assembly",
+    "category": "Engine",
+    "hsnCode": "84099199",
+    "gstPercent": 28.0,
+    "brands": [
+      "Mahle",
+      "Goetze"
+    ],
+    "keywords": [
+      "piston"
+    ]
+  },
+  {
+    "name": "Timing Chain Tensioner",
+    "category": "Engine",
+    "hsnCode": "84099990",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "tensioner"
+    ]
+  },
+  {
+    "name": "Engine Valve Kit",
+    "category": "Engine",
+    "hsnCode": "84099199",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "valve kit"
+    ]
+  },
+  {
+    "name": "Valve Guide",
+    "category": "Engine",
+    "hsnCode": "84099990",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "valve guide"
+    ]
+  },
+  {
+    "name": "Crankcase Breather",
+    "category": "Engine",
+    "hsnCode": "84099199",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "breather"
+    ]
+  },
+  {
+    "name": "Oil Dipstick",
+    "category": "Engine",
+    "hsnCode": "87089900",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "dipstick"
+    ]
+  },
+  {
+    "name": "Oil Pan / Sump",
+    "category": "Engine",
+    "hsnCode": "84099199",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "sump",
+      "oil pan"
+    ]
+  },
+  {
+    "name": "Engine Gasket Set",
+    "category": "Engine",
+    "hsnCode": "84849000",
+    "gstPercent": 18.0,
+    "brands": [
+      "Goetze",
+      "Perfect Circle"
+    ],
+    "keywords": [
+      "gasket set"
+    ]
+  },
+  {
+    "name": "Throttle Body",
+    "category": "Engine",
+    "hsnCode": "84818090",
+    "gstPercent": 28.0,
+    "brands": [
+      "Bosch",
+      "Denso"
+    ],
+    "keywords": [
+      "throttle"
+    ]
+  },
+  {
+    "name": "EGR Valve",
+    "category": "Engine",
+    "hsnCode": "84818090",
+    "gstPercent": 28.0,
+    "brands": [
+      "Bosch",
+      "Denso"
+    ],
+    "keywords": [
+      "egr"
+    ]
+  },
+  {
+    "name": "PCV Valve",
+    "category": "Engine",
+    "hsnCode": "84818090",
+    "gstPercent": 28.0,
+    "brands": [
+      "Bosch"
+    ],
+    "keywords": [
+      "pcv"
+    ]
+  },
+  {
+    "name": "Intake Manifold",
+    "category": "Engine",
+    "hsnCode": "84099199",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "manifold"
+    ]
+  },
+  {
+    "name": "Exhaust Manifold Gasket",
+    "category": "Engine",
+    "hsnCode": "84841090",
+    "gstPercent": 18.0,
+    "brands": [
+      "Goetze"
+    ],
+    "keywords": [
+      "manifold gasket"
+    ]
+  },
+  {
+    "name": "Brake Line / Pipe",
+    "category": "Brakes",
+    "hsnCode": "87083000",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "brake line"
+    ]
+  },
+  {
+    "name": "Brake Caliper Pin Kit",
+    "category": "Brakes",
+    "hsnCode": "87083000",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "caliper pin"
+    ]
+  },
+  {
+    "name": "Brake Pad Sensor",
+    "category": "Brakes",
+    "hsnCode": "90318000",
+    "gstPercent": 28.0,
+    "brands": [
+      "Bosch",
+      "TRW"
+    ],
+    "keywords": [
+      "pad sensor"
+    ]
+  },
+  {
+    "name": "Handbrake Cable",
+    "category": "Brakes",
+    "hsnCode": "87083000",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "handbrake cable",
+      "parking brake"
+    ]
+  },
+  {
+    "name": "Brake Fluid Reservoir",
+    "category": "Brakes",
+    "hsnCode": "87083000",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "reservoir"
+    ]
+  },
+  {
+    "name": "Brake Disc Shield",
+    "category": "Brakes",
+    "hsnCode": "87083000",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "disc shield"
+    ]
+  },
+  {
+    "name": "Vacuum Pump (Brake)",
+    "category": "Brakes",
+    "hsnCode": "84141090",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "vacuum pump"
+    ]
+  },
+  {
+    "name": "Lower Arm Bush",
+    "category": "Suspension",
+    "hsnCode": "87088000",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "arm bush",
+      "control arm bush"
+    ]
+  },
+  {
+    "name": "Torsion Bar",
+    "category": "Suspension",
+    "hsnCode": "87088000",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "torsion"
+    ]
+  },
+  {
+    "name": "Suspension Bush Kit",
+    "category": "Suspension",
+    "hsnCode": "87088000",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "bush kit"
+    ]
+  },
+  {
+    "name": "Wheel Hub Knuckle",
+    "category": "Suspension",
+    "hsnCode": "87089900",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "knuckle"
+    ]
+  },
+  {
+    "name": "Steering Damper",
+    "category": "Suspension",
+    "hsnCode": "87089400",
+    "gstPercent": 28.0,
+    "brands": [
+      "Ohlins",
+      "Showa"
+    ],
+    "keywords": [
+      "steering damper"
+    ]
+  },
+  {
+    "name": "Fork Oil Seal",
+    "category": "Suspension",
+    "hsnCode": "84879000",
+    "gstPercent": 18.0,
+    "brands": [
+      "NOK"
+    ],
+    "keywords": [
+      "fork seal"
+    ]
+  },
+  {
+    "name": "Front Fork Assembly",
+    "category": "Suspension",
+    "hsnCode": "87088000",
+    "gstPercent": 28.0,
+    "brands": [
+      "Showa",
+      "Endurance"
+    ],
+    "keywords": [
+      "fork"
+    ]
+  },
+  {
+    "name": "Air Filter (Two-Wheeler)",
+    "category": "Filters",
+    "hsnCode": "84213100",
+    "gstPercent": 28.0,
+    "brands": [
+      "Bosch",
+      "Mahle",
+      "K&N"
+    ],
+    "keywords": [
+      "air filter"
+    ]
+  },
+  {
+    "name": "Cabin Air Filter",
+    "category": "Filters",
+    "hsnCode": "84213100",
+    "gstPercent": 28.0,
+    "brands": [
+      "Bosch",
+      "Mann"
+    ],
+    "keywords": [
+      "cabin filter",
+      "pollen"
+    ]
+  },
+  {
+    "name": "Fuel Pump Filter",
+    "category": "Filters",
+    "hsnCode": "84212300",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "pump filter"
+    ]
+  },
+  {
+    "name": "Oil Filter (Two-Wheeler)",
+    "category": "Filters",
+    "hsnCode": "84212300",
+    "gstPercent": 28.0,
+    "brands": [
+      "Bosch",
+      "Mahle"
+    ],
+    "keywords": [
+      "oil filter"
+    ]
+  },
+  {
+    "name": "Air Cleaner Element",
+    "category": "Filters",
+    "hsnCode": "84213100",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "cleaner element"
+    ]
+  },
+  {
+    "name": "Crankcase Filter",
+    "category": "Filters",
+    "hsnCode": "84213990",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "crankcase filter"
+    ]
+  },
+  {
+    "name": "Starter Relay / Solenoid",
+    "category": "Electrical",
+    "hsnCode": "85364100",
+    "gstPercent": 18.0,
+    "brands": [
+      "Bosch",
+      "Lucas-TVS"
+    ],
+    "keywords": [
+      "starter relay",
+      "solenoid"
+    ]
+  },
+  {
+    "name": "Regulator Rectifier",
+    "category": "Electrical",
+    "hsnCode": "85044090",
+    "gstPercent": 28.0,
+    "brands": [
+      "Lucas-TVS",
+      "Minda"
+    ],
+    "keywords": [
+      "regulator",
+      "rectifier"
+    ]
+  },
+  {
+    "name": "CDI / Igniter Unit",
+    "category": "Electrical",
+    "hsnCode": "85119000",
+    "gstPercent": 28.0,
+    "brands": [
+      "Minda",
+      "Bosch"
+    ],
+    "keywords": [
+      "cdi",
+      "igniter"
+    ]
+  },
+  {
+    "name": "Indicator Flasher Relay",
+    "category": "Electrical",
+    "hsnCode": "85364100",
+    "gstPercent": 18.0,
+    "brands": [
+      "Minda"
+    ],
+    "keywords": [
+      "flasher"
+    ]
+  },
+  {
+    "name": "Power Window Motor",
+    "category": "Electrical",
+    "hsnCode": "85013100",
+    "gstPercent": 18.0,
+    "brands": [
+      "Minda",
+      "Valeo"
+    ],
+    "keywords": [
+      "window motor"
+    ]
+  },
+  {
+    "name": "Power Window Switch",
+    "category": "Electrical",
+    "hsnCode": "85365090",
+    "gstPercent": 18.0,
+    "brands": [
+      "Minda"
+    ],
+    "keywords": [
+      "window switch"
+    ]
+  },
+  {
+    "name": "Wiper Switch",
+    "category": "Electrical",
+    "hsnCode": "85365090",
+    "gstPercent": 18.0,
+    "brands": [
+      "Minda"
+    ],
+    "keywords": [
+      "wiper switch"
+    ]
+  },
+  {
+    "name": "Headlight Switch",
+    "category": "Electrical",
+    "hsnCode": "85365090",
+    "gstPercent": 18.0,
+    "brands": [
+      "Minda"
+    ],
+    "keywords": [
+      "headlight switch"
+    ]
+  },
+  {
+    "name": "Neutral Switch",
+    "category": "Electrical",
+    "hsnCode": "85365090",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "neutral switch"
+    ]
+  },
+  {
+    "name": "Side Stand Switch",
+    "category": "Electrical",
+    "hsnCode": "85365090",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "side stand switch"
+    ]
+  },
+  {
+    "name": "Starter Relay Solenoid",
+    "category": "Electrical",
+    "hsnCode": "85364100",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "solenoid"
+    ]
+  },
+  {
+    "name": "DRL / Daytime Running Light",
+    "category": "Lighting",
+    "hsnCode": "85122010",
+    "gstPercent": 28.0,
+    "brands": [
+      "Lumax",
+      "Varroc"
+    ],
+    "keywords": [
+      "drl"
+    ]
+  },
+  {
+    "name": "Headlight Bulb (LED)",
+    "category": "Lighting",
+    "hsnCode": "85395000",
+    "gstPercent": 28.0,
+    "brands": [
+      "Osram",
+      "Philips",
+      "Lumax"
+    ],
+    "keywords": [
+      "led bulb"
+    ]
+  },
+  {
+    "name": "Tail Light Bulb",
+    "category": "Lighting",
+    "hsnCode": "85392100",
+    "gstPercent": 28.0,
+    "brands": [
+      "Osram",
+      "Philips"
+    ],
+    "keywords": [
+      "tail bulb"
+    ]
+  },
+  {
+    "name": "Turn Signal Bulb",
+    "category": "Lighting",
+    "hsnCode": "85392100",
+    "gstPercent": 28.0,
+    "brands": [
+      "Osram",
+      "Philips"
+    ],
+    "keywords": [
+      "indicator bulb"
+    ]
+  },
+  {
+    "name": "Number Plate Light",
+    "category": "Lighting",
+    "hsnCode": "85122020",
+    "gstPercent": 28.0,
+    "brands": [
+      "Lumax"
+    ],
+    "keywords": [
+      "number plate light"
+    ]
+  },
+  {
+    "name": "Headlight Glass / Lens",
+    "category": "Lighting",
+    "hsnCode": "70071100",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "headlight lens"
+    ]
+  },
+  {
+    "name": "Radiator Hose Kit",
+    "category": "Cooling",
+    "hsnCode": "40093100",
+    "gstPercent": 18.0,
+    "brands": [
+      "Gates"
+    ],
+    "keywords": [
+      "radiator hose"
+    ]
+  },
+  {
+    "name": "Coolant Reservoir Tank",
+    "category": "Cooling",
+    "hsnCode": "87089100",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "coolant tank",
+      "reservoir"
+    ]
+  },
+  {
+    "name": "Radiator Fan Shroud",
+    "category": "Cooling",
+    "hsnCode": "87089100",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "fan shroud"
+    ]
+  },
+  {
+    "name": "Water Pump Gasket",
+    "category": "Cooling",
+    "hsnCode": "84841090",
+    "gstPercent": 18.0,
+    "brands": [
+      "Goetze"
+    ],
+    "keywords": [
+      "pump gasket"
+    ]
+  },
+  {
+    "name": "Temperature Sender Unit",
+    "category": "Cooling",
+    "hsnCode": "90259000",
+    "gstPercent": 28.0,
+    "brands": [
+      "Bosch"
+    ],
+    "keywords": [
+      "temp sender"
+    ]
+  },
+  {
+    "name": "AC Blower Motor",
+    "category": "Air Conditioning",
+    "hsnCode": "85013100",
+    "gstPercent": 18.0,
+    "brands": [
+      "Subros",
+      "Valeo"
+    ],
+    "keywords": [
+      "blower motor"
+    ]
+  },
+  {
+    "name": "AC Condenser Fan",
+    "category": "Air Conditioning",
+    "hsnCode": "84145990",
+    "gstPercent": 28.0,
+    "brands": [
+      "Subros"
+    ],
+    "keywords": [
+      "condenser fan"
+    ]
+  },
+  {
+    "name": "AC Pressure Switch",
+    "category": "Air Conditioning",
+    "hsnCode": "85365090",
+    "gstPercent": 18.0,
+    "brands": [
+      "Denso"
+    ],
+    "keywords": [
+      "pressure switch"
+    ]
+  },
+  {
+    "name": "AC Filter Dryer",
+    "category": "Air Conditioning",
+    "hsnCode": "84159000",
+    "gstPercent": 28.0,
+    "brands": [
+      "Denso"
+    ],
+    "keywords": [
+      "dryer",
+      "drier"
+    ]
+  },
+  {
+    "name": "Timing Belt Tensioner",
+    "category": "Belts & Hoses",
+    "hsnCode": "84835090",
+    "gstPercent": 28.0,
+    "brands": [
+      "Gates",
+      "Ina"
+    ],
+    "keywords": [
+      "belt tensioner"
+    ]
+  },
+  {
+    "name": "Idler Pulley",
+    "category": "Belts & Hoses",
+    "hsnCode": "84835090",
+    "gstPercent": 28.0,
+    "brands": [
+      "Gates",
+      "Ina"
+    ],
+    "keywords": [
+      "idler pulley",
+      "tensioner pulley"
+    ]
+  },
+  {
+    "name": "Oil Cooler Hose",
+    "category": "Belts & Hoses",
+    "hsnCode": "40093100",
+    "gstPercent": 18.0,
+    "brands": [
+      "Gates"
+    ],
+    "keywords": [
+      "oil hose"
+    ]
+  },
+  {
+    "name": "Intercooler Hose",
+    "category": "Belts & Hoses",
+    "hsnCode": "40093100",
+    "gstPercent": 18.0,
+    "brands": [
+      "Gates"
+    ],
+    "keywords": [
+      "intercooler hose"
+    ]
+  },
+  {
+    "name": "Bumper Bracket",
+    "category": "Body Parts",
+    "hsnCode": "87081090",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "bumper bracket"
+    ]
+  },
+  {
+    "name": "Fender Liner",
+    "category": "Body Parts",
+    "hsnCode": "87082900",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "fender liner",
+      "mud guard"
+    ]
+  },
+  {
+    "name": "Radiator Support",
+    "category": "Body Parts",
+    "hsnCode": "87082900",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "radiator support"
+    ]
+  },
+  {
+    "name": "Engine Guard / Skid Plate",
+    "category": "Body Parts",
+    "hsnCode": "87082900",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "skid plate",
+      "engine guard"
+    ]
+  },
+  {
+    "name": "Hood Latch",
+    "category": "Body Parts",
+    "hsnCode": "83012000",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "bonnet latch"
+    ]
+  },
+  {
+    "name": "Door Check Stopper",
+    "category": "Body Parts",
+    "hsnCode": "87082900",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "door stopper"
+    ]
+  },
+  {
+    "name": "Roof Ditch Moulding",
+    "category": "Body Parts",
+    "hsnCode": "87082900",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "moulding"
+    ]
+  },
+  {
+    "name": "Windshield Moulding",
+    "category": "Glass",
+    "hsnCode": "40169990",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "windshield moulding"
+    ]
+  },
+  {
+    "name": "Power Window Regulator",
+    "category": "Glass",
+    "hsnCode": "87082900",
+    "gstPercent": 28.0,
+    "brands": [
+      "Minda",
+      "Valeo"
+    ],
+    "keywords": [
+      "window regulator"
+    ]
+  },
+  {
+    "name": "Window Beading / Weatherstrip",
+    "category": "Glass",
+    "hsnCode": "40169990",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "beading",
+      "weatherstrip"
+    ]
+  },
+  {
+    "name": "Exhaust Gasket",
+    "category": "Exhaust",
+    "hsnCode": "84841090",
+    "gstPercent": 18.0,
+    "brands": [
+      "Goetze"
+    ],
+    "keywords": [
+      "exhaust gasket"
+    ]
+  },
+  {
+    "name": "Exhaust Clamp",
+    "category": "Exhaust",
+    "hsnCode": "73269099",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "clamp"
+    ]
+  },
+  {
+    "name": "Silencer Mount Bracket",
+    "category": "Exhaust",
+    "hsnCode": "87089200",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "silencer bracket"
+    ]
+  },
+  {
+    "name": "Wheel Bearing Kit",
+    "category": "Wheels & Hubs",
+    "hsnCode": "84821090",
+    "gstPercent": 18.0,
+    "brands": [
+      "SKF",
+      "Timken",
+      "NBC"
+    ],
+    "keywords": [
+      "bearing kit"
+    ]
+  },
+  {
+    "name": "Hub Grease Cap",
+    "category": "Wheels & Hubs",
+    "hsnCode": "87087000",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "grease cap"
+    ]
+  },
+  {
+    "name": "Axle Nut",
+    "category": "Wheels & Hubs",
+    "hsnCode": "73181600",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "axle nut"
+    ]
+  },
+  {
+    "name": "Spoke Kit",
+    "category": "Wheels & Hubs",
+    "hsnCode": "87141090",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "spokes"
+    ]
+  },
+  {
+    "name": "Steering Bearing Kit",
+    "category": "Bearings & Seals",
+    "hsnCode": "84821090",
+    "gstPercent": 18.0,
+    "brands": [
+      "SKF",
+      "NBC"
+    ],
+    "keywords": [
+      "steering bearing",
+      "cone set"
+    ]
+  },
+  {
+    "name": "Clutch Hub Bearing",
+    "category": "Bearings & Seals",
+    "hsnCode": "84828000",
+    "gstPercent": 18.0,
+    "brands": [
+      "SKF",
+      "NBC"
+    ],
+    "keywords": [
+      "clutch bearing"
+    ]
+  },
+  {
+    "name": "Camshaft Oil Seal",
+    "category": "Bearings & Seals",
+    "hsnCode": "84879000",
+    "gstPercent": 18.0,
+    "brands": [
+      "NOK"
+    ],
+    "keywords": [
+      "camshaft seal"
+    ]
+  },
+  {
+    "name": "Valve Stem Oil Seal",
+    "category": "Bearings & Seals",
+    "hsnCode": "84879000",
+    "gstPercent": 18.0,
+    "brands": [
+      "NOK"
+    ],
+    "keywords": [
+      "valve stem seal"
+    ]
+  },
+  {
+    "name": "Bike Cover",
+    "category": "Accessories",
+    "hsnCode": "63079090",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "bike cover"
+    ]
+  },
+  {
+    "name": "Helmet",
+    "category": "Accessories",
+    "hsnCode": "65061090",
+    "gstPercent": 18.0,
+    "brands": [
+      "Studds",
+      "Vega",
+      "Steelbird"
+    ],
+    "keywords": [
+      "helmet"
+    ]
+  },
+  {
+    "name": "Riding Gloves",
+    "category": "Accessories",
+    "hsnCode": "62160010",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "gloves"
+    ]
+  },
+  {
+    "name": "Phone Charger (Car)",
+    "category": "Accessories",
+    "hsnCode": "85044010",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "car charger"
+    ]
+  },
+  {
+    "name": "USB Cable",
+    "category": "Accessories",
+    "hsnCode": "85444220",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "usb cable"
+    ]
+  },
+  {
+    "name": "Emergency Triangle",
+    "category": "Accessories",
+    "hsnCode": "85122090",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "triangle",
+      "warning triangle"
+    ]
+  },
+  {
+    "name": "First Aid Kit",
+    "category": "Accessories",
+    "hsnCode": "30065000",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "first aid"
+    ]
+  },
+  {
+    "name": "Tow Rope",
+    "category": "Accessories",
+    "hsnCode": "56074900",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "tow rope"
+    ]
+  },
+  {
+    "name": "Jump Starter",
+    "category": "Accessories",
+    "hsnCode": "85044090",
+    "gstPercent": 28.0,
+    "brands": [],
+    "keywords": [
+      "jump starter",
+      "power bank"
+    ]
+  },
+  {
+    "name": "Air Freshener",
+    "category": "Accessories",
+    "hsnCode": "33074900",
+    "gstPercent": 18.0,
+    "brands": [
+      "Ambi Pur",
+      "Godrej"
+    ],
+    "keywords": [
+      "freshener",
+      "perfume"
+    ]
+  },
+  {
+    "name": "Mechanic Tool Kit",
+    "category": "Tools",
+    "hsnCode": "82060090",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "tool kit"
+    ]
+  },
+  {
+    "name": "Torx Bit Set",
+    "category": "Tools",
+    "hsnCode": "82079090",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "torx"
+    ]
+  },
+  {
+    "name": "Allen Key Set",
+    "category": "Tools",
+    "hsnCode": "82041110",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "allen key",
+      "hex key"
+    ]
+  },
+  {
+    "name": "Feeler Gauge",
+    "category": "Tools",
+    "hsnCode": "90173029",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "feeler gauge"
+    ]
+  },
+  {
+    "name": "Oil Filter Remover",
+    "category": "Tools",
+    "hsnCode": "82055990",
+    "gstPercent": 18.0,
+    "brands": [],
+    "keywords": [
+      "oil filter wrench"
+    ]
+  },
+  {
+    "name": "Chain Lube",
+    "category": "Tools",
+    "hsnCode": "34039900",
+    "gstPercent": 18.0,
+    "brands": [
+      "Motul",
+      "3M"
+    ],
+    "keywords": [
+      "chain lube",
+      "chain spray"
+    ]
+  },
+  {
+    "name": "Chain Cleaner",
+    "category": "Tools",
+    "hsnCode": "34029099",
+    "gstPercent": 18.0,
+    "brands": [
+      "Motul",
+      "3M"
+    ],
+    "keywords": [
+      "chain cleaner"
+    ]
   }
 ]

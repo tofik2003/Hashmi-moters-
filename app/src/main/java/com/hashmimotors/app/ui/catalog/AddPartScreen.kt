@@ -1,5 +1,8 @@
 package com.hashmimotors.app.ui.catalog
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +48,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.ui.components.AnimatedBigButton
 
@@ -68,10 +72,17 @@ fun AddPartScreen(
     var gstPercent by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
     var barcode by remember { mutableStateOf("") }
+    var photoPaths by remember { mutableStateOf<List<String>>(emptyList()) }
     var saving by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
 
     val state by viewModel.uiState.collectAsState()
+
+    val photoPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { photoPaths = (photoPaths + it.toString()).distinct() }
+    }
 
     LaunchedEffect(partId, state.parts) {
         partId?.let { id ->
@@ -89,6 +100,7 @@ fun AddPartScreen(
                 gstPercent = if (part.gstPercent > 0.0) part.gstPercent.toString() else ""
                 notes = part.notes ?: ""
                 barcode = part.barcode ?: ""
+                photoPaths = part.photoPaths
             }
         }
     }
@@ -114,7 +126,7 @@ fun AddPartScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Photo placeholder
+            // Photo
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -123,22 +135,32 @@ fun AddPartScreen(
                         color = Color.White.copy(alpha = 0.1f),
                         shape = RoundedCornerShape(16.dp)
                     )
-                    .clickable { /* TODO: open camera/gallery */ },
+                    .clickable { photoPicker.launch("image/*") },
                 contentAlignment = Alignment.Center
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        Icons.Filled.PhotoCamera,
-                        contentDescription = null,
-                        tint = Color.White.copy(alpha = 0.5f),
-                        modifier = Modifier
+                val photo = photoPaths.firstOrNull()
+                if (photo != null) {
+                    AsyncImage(
+                        model = photo,
+                        contentDescription = "Part photo",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = androidx.compose.ui.layout.ContentScale.Crop
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Tap to add photo",
-                        color = Color.White.copy(alpha = 0.5f),
-                        fontSize = 12.sp
-                    )
+                } else {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            Icons.Filled.PhotoCamera,
+                            contentDescription = null,
+                            tint = Color.White.copy(alpha = 0.5f),
+                            modifier = Modifier
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = if (photoPaths.isEmpty()) "Tap to add photo" else "Tap to change photo",
+                            color = Color.White.copy(alpha = 0.5f),
+                            fontSize = 12.sp
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -410,6 +432,7 @@ fun AddPartScreen(
                             stockQty = stockQty.toIntOrNull() ?: 0,
                             reorderLevel = reorderLevel.toIntOrNull() ?: 5,
                             barcode = barcode.ifBlank { null },
+                            photoPaths = photoPaths,
                             notes = notes.ifBlank { null }
                         )
                     )
