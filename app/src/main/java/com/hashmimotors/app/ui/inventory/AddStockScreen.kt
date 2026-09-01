@@ -50,6 +50,7 @@ fun AddStockScreen(
     onSaved: () -> Unit
 ) {
     val state by catalogViewModel.uiState.collectAsState()
+    val searchQuery by catalogViewModel.searchQuery.collectAsState()
     val invState by inventoryViewModel.uiState.collectAsState()
     var selectedPartId by remember { mutableStateOf<String?>(null) }
     var qty by remember { mutableStateOf("") }
@@ -76,7 +77,7 @@ fun AddStockScreen(
         if (selectedPart == null) {
             // Search + list
             OutlinedTextField(
-                value = state.searchQuery,
+                value = searchQuery,
                 onValueChange = { catalogViewModel.onSearchChange(it) },
                 placeholder = { Text("Search part to add stock...") },
                 modifier = Modifier.fillMaxWidth(),

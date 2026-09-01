@@ -54,6 +54,10 @@ class BillingViewModel @Inject constructor(
     private val _state = MutableStateFlow(BillingUiState())
     val state: StateFlow<BillingUiState> = _state.asStateFlow()
 
+    /** Exact barcode lookup so a scanned item can be added to the bill. */
+    suspend fun findByBarcode(barcode: String): Part? =
+        partRepo.findByBarcodeOnce(barcode)
+
     fun addPart(part: Part, qty: Int = 1) {
         if (qty <= 0) return
         val snapshot = PartSnapshot(

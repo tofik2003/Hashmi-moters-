@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -39,6 +40,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,13 +53,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.hashmimotors.app.domain.model.Part
 import com.hashmimotors.app.ui.components.AnimatedBigButton
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddPartScreen(
     partId: String? = null,
+    prefillBarcode: String? = null,
     viewModel: CatalogViewModel = hiltViewModel(),
     onBack: () -> Unit,
-    onSaved: () -> Unit
+    onSaved: () -> Unit,
+    onScanBarcode: () -> Unit = {},
+    scannedBarcode: String = "",
+    onBarcodeConsumed: () -> Unit = {}
 ) {
     var name by remember { mutableStateOf("") }
     var sku by remember { mutableStateOf("") }
@@ -66,6 +73,7 @@ fun AddPartScreen(
     var categoryId by remember { mutableStateOf<String?>(null) }
     var mrp by remember { mutableStateOf("") }
     var sellingPrice by remember { mutableStateOf("") }
+    var costPrice by remember { mutableStateOf("") }
     var stockQty by remember { mutableStateOf("0") }
     var reorderLevel by remember { mutableStateOf("5") }
     var hsnCode by remember { mutableStateOf("") }
@@ -75,8 +83,11 @@ fun AddPartScreen(
     var photoPaths by remember { mutableStateOf<List<String>>(emptyList()) }
     var saving by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
+    var warning by remember { mutableStateOf<String?>(null) }
+    var initialized by remember { mutableStateOf(false) }
 
     val state by viewModel.uiState.collectAsState()
+    val scope = rememberCoroutineScope()
 
     val photoPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
@@ -94,6 +105,7 @@ fun AddPartScreen(
                 categoryId = part.categoryId
                 mrp = part.mrp.toString()
                 sellingPrice = part.sellingPrice.toString()
+                costPrice = part.costPrice?.toString() ?: ""
                 stockQty = part.stockQty.toString()
                 reorderLevel = part.reorderLevel.toString()
                 hsnCode = part.hsnCode ?: ""
@@ -101,7 +113,32 @@ fun AddPartScreen(
                 notes = part.notes ?: ""
                 barcode = part.barcode ?: ""
                 photoPaths = part.photoPaths
+                initialized = true
             }
+        }
+    }
+
+    // Auto-generate SKU & barcode for brand-new parts.
+    LaunchedEffect(partId) {
+        if (partId == null && !initialized) {
+            sku = viewModel.nextSku()
+            barcode = viewModel.generateBarcode()
+            initialized = true
+        }
+    }
+
+    // Pre-fill barcode when launched with one (e.g. "add part with this barcode").
+    LaunchedEffect(prefillBarcode) {
+        if (!prefillBarcode.isNullOrBlank() && barcode.isBlank()) {
+            barcode = prefillBarcode
+        }
+    }
+
+    // Barcode scanned from the camera while editing this form.
+    LaunchedEffect(scannedBarcode) {
+        if (scannedBarcode.isNotBlank()) {
+            barcode = scannedBarcode
+            onBarcodeConsumed()
         }
     }
 
@@ -319,6 +356,57 @@ fun AddPartScreen(
                     singleLine = true
                 )
             }
+
+            // Selling-price quick sets from MRP
+            val mrpVal = mrp.toDoubleOrNull()
+            if (mrpVal != null && mrpVal > 0.0) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "Set price:",
+                        color = Color.White.copy(alpha = 0.6f),
+                        fontSize = 12.sp,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                    listOf(0 to "MRP", 5 to "−5%", 10 to "−10%", 15 to "−15%", 20 to "−20%").forEach { (pct, label) ->
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(Color.White.copy(alpha = 0.1f))
+                                .clickable {
+                                    val discount = mrpVal * pct / 100.0
+                                    sellingPrice = String.format(java.util.Locale.US, "%.2f", mrpVal - discount)
+                                }
+                                .padding(horizontal = 10.dp, vertical = 6.dp)
+                        ) {
+                            Text(label, color = Color.White.copy(alpha = 0.85f), fontSize = 12.sp)
+                        }
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Cost price + live margin
+            OutlinedTextField(
+                value = costPrice,
+                onValueChange = { costPrice = it },
+                label = { Text("Cost Price (optional)") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                singleLine = true
+            )
+            val costVal = costPrice.toDoubleOrNull()
+            val priceValNow = sellingPrice.toDoubleOrNull()
+            if (costVal != null && priceValNow != null && priceValNow > 0.0) {
+                val margin = ((priceValNow - costVal) / priceValNow * 100.0)
+                Spacer(modifier = Modifier.height(6.dp))
+                Text(
+                    text = "Margin: ${String.format(java.util.Locale.US, "%.1f", margin)}%",
+                    color = if (margin >= 0.0) Color(0xFF34D399) else Color(0xFFFF6B6B),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
             Spacer(modifier = Modifier.height(12.dp))
 
             // Stock row
@@ -371,7 +459,16 @@ fun AddPartScreen(
                 onValueChange = { barcode = it },
                 label = { Text("Barcode (EAN/UPC/Code-128)") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                trailingIcon = {
+                    IconButton(onClick = onScanBarcode) {
+                        Icon(
+                            Icons.Filled.QrCodeScanner,
+                            contentDescription = "Scan barcode",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -383,6 +480,16 @@ fun AddPartScreen(
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 2
             )
+
+            // Warning (non-blocking duplicate name)
+            if (warning != null) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = warning ?: "",
+                    color = Color(0xFFFFA000),
+                    fontSize = 13.sp
+                )
+            }
 
             // Error
             if (error != null) {
@@ -402,41 +509,78 @@ fun AddPartScreen(
                 icon = Icons.Filled.Save,
                 enabled = !saving && name.isNotBlank() && mrp.isNotBlank() && sellingPrice.isNotBlank(),
                 onClick = {
-                    error = null
-                    val mrpVal = mrp.toDoubleOrNull()
-                    val priceVal = sellingPrice.toDoubleOrNull()
-                    if (mrpVal == null || priceVal == null) {
-                        error = "Please enter valid prices"
-                        return@AnimatedBigButton
-                    }
-                    if (priceVal > mrpVal) {
-                        error = "Our price cannot be higher than MRP"
-                        return@AnimatedBigButton
-                    }
-                    saving = true
-                    val oemList = oemNumbersText.split(",")
-                        .map { it.trim() }
-                        .filter { it.isNotBlank() }
-                    viewModel.savePart(
-                        Part(
-                            id = partId ?: java.util.UUID.randomUUID().toString(),
-                            sku = sku.trim(),
-                            name = name.trim(),
-                            oemNumbers = oemList,
-                            brand = brand.ifBlank { null },
-                            categoryId = categoryId,
-                            mrp = mrpVal,
-                            sellingPrice = priceVal,
-                            gstPercent = gstPercent.toDoubleOrNull()?.coerceAtLeast(0.0) ?: 0.0,
-                            hsnCode = hsnCode.ifBlank { null },
-                            stockQty = stockQty.toIntOrNull() ?: 0,
-                            reorderLevel = reorderLevel.toIntOrNull() ?: 5,
-                            barcode = barcode.ifBlank { null },
-                            photoPaths = photoPaths,
-                            notes = notes.ifBlank { null }
+                    scope.launch {
+                        error = null
+                        warning = null
+                        val trimmedName = name.trim()
+                        val trimmedSku = sku.trim()
+                        val trimmedBarcode = barcode.trim()
+                        val mrpVal = mrp.toDoubleOrNull()
+                        val priceVal = sellingPrice.toDoubleOrNull()
+
+                        if (trimmedName.isBlank()) {
+                            error = "Part name is required"
+                            return@launch
+                        }
+                        if (mrpVal == null || mrpVal <= 0.0) {
+                            error = "Please enter a valid MRP"
+                            return@launch
+                        }
+                        if (priceVal == null || priceVal <= 0.0) {
+                            error = "Please enter a valid selling price"
+                            return@launch
+                        }
+                        if (priceVal > mrpVal) {
+                            error = "Our price cannot be higher than MRP"
+                            return@launch
+                        }
+
+                        // Duplicate detection (exact SKU / barcode block, name warns)
+                        if (trimmedSku.isNotBlank()) {
+                            val dup = viewModel.findBySku(trimmedSku)
+                            if (dup != null && dup.id != partId) {
+                                error = "SKU \"$trimmedSku\" is already used by ${dup.name}"
+                                return@launch
+                            }
+                        }
+                        if (trimmedBarcode.isNotBlank()) {
+                            val dup = viewModel.findByBarcode(trimmedBarcode)
+                            if (dup != null && dup.id != partId) {
+                                error = "Barcode \"$trimmedBarcode\" is already used by ${dup.name}"
+                                return@launch
+                            }
+                        }
+                        val dupName = viewModel.findByName(trimmedName)
+                        if (dupName != null && dupName.id != partId) {
+                            warning = "A part named \"$trimmedName\" already exists — saving will create a duplicate."
+                        }
+
+                        saving = true
+                        val oemList = oemNumbersText.split(",")
+                            .map { it.trim() }
+                            .filter { it.isNotBlank() }
+                        viewModel.savePart(
+                            Part(
+                                id = partId ?: java.util.UUID.randomUUID().toString(),
+                                sku = trimmedSku.ifBlank { viewModel.nextSku() },
+                                name = trimmedName,
+                                oemNumbers = oemList,
+                                brand = brand.ifBlank { null },
+                                categoryId = categoryId,
+                                mrp = mrpVal,
+                                sellingPrice = priceVal,
+                                costPrice = costPrice.toDoubleOrNull(),
+                                gstPercent = gstPercent.toDoubleOrNull()?.coerceAtLeast(0.0) ?: 0.0,
+                                hsnCode = hsnCode.ifBlank { null },
+                                stockQty = stockQty.toIntOrNull() ?: 0,
+                                reorderLevel = reorderLevel.toIntOrNull() ?: 5,
+                                barcode = trimmedBarcode.ifBlank { null },
+                                photoPaths = photoPaths,
+                                notes = notes.ifBlank { null }
+                            )
                         )
-                    )
-                    onSaved()
+                        onSaved()
+                    }
                 }
             )
             Spacer(modifier = Modifier.height(40.dp))

@@ -123,6 +123,22 @@ class PartRepository @Inject constructor(
     fun getRecentMovements(limit: Int = 50): Flow<List<StockMovementEntity>> =
         stockMovementDao.getRecent(limit)
 
+    /** Exact barcode lookup (used by barcode scanner routing). */
+    suspend fun findByBarcodeOnce(barcode: String): Part? =
+        partDao.findByBarcodeOnce(barcode.trim())?.toDomain()
+
+    /** Exact SKU lookup (used for duplicate detection). */
+    suspend fun findBySkuOnce(sku: String): Part? =
+        partDao.findBySkuOnce(sku.trim())?.toDomain()
+
+    /** Exact name lookup (used for duplicate detection). */
+    suspend fun findByNameOnce(name: String): Part? =
+        partDao.findByNameOnce(name.trim())?.toDomain()
+
+    /** Next sequential auto SKU, e.g. HM-000053. */
+    suspend fun nextSku(): String =
+        String.format(Locale.US, "HM-%06d", partDao.countOnce() + 1)
+
     /**
      * Seeds a curated starter inventory into the parts table on first launch so
      * the catalog is populated out of the box. Categories are linked by name

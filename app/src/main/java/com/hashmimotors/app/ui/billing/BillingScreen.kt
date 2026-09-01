@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DocumentScanner
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -61,15 +62,20 @@ fun BillingScreen(
     onBack: () -> Unit,
     onSaved: (String) -> Unit,
     onAddItem: () -> Unit,
-    onScanBill: () -> Unit = {}
+    onScanBill: () -> Unit = {},
+    onScanBarcode: () -> Unit = {},
+    scannedBarcode: String = "",
+    onBarcodeConsumed: () -> Unit = {}
 ) {
     val state by billingViewModel.state.collectAsState()
     val catalogState by catalogViewModel.uiState.collectAsState()
+    val searchQuery by catalogViewModel.searchQuery.collectAsState()
     var customerName by remember { mutableStateOf("Walk-in Customer") }
     var customerPhone by remember { mutableStateOf("") }
     var billDiscountText by remember { mutableStateOf("0") }
     var notes by remember { mutableStateOf("") }
     var showPartPicker by remember { mutableStateOf(false) }
+    var scanNotice by remember { mutableStateOf<String?>(null) }
 
     // Consume scanned bill items published by the scanner
     val pendingScan by BillScanBus.items.collectAsState()
@@ -79,6 +85,20 @@ fun BillingScreen(
                 billingViewModel.addAdHocLine(line.name, line.qty, if (line.rate > 0.0) line.rate else line.amount)
             }
             BillScanBus.consume()
+        }
+    }
+
+    // Add a barcode-scanned part straight to the bill.
+    androidx.compose.runtime.LaunchedEffect(scannedBarcode) {
+        if (scannedBarcode.isNotBlank()) {
+            val part = billingViewModel.findByBarcode(scannedBarcode)
+            if (part != null) {
+                billingViewModel.addPart(part, qty = 1)
+                scanNotice = "Added: ${part.name}"
+            } else {
+                scanNotice = "No part found for \"$scannedBarcode\""
+            }
+            onBarcodeConsumed()
         }
     }
 
@@ -97,6 +117,13 @@ fun BillingScreen(
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.weight(1f))
+                IconButton(onClick = onScanBarcode) {
+                    Icon(
+                        Icons.Filled.QrCodeScanner,
+                        contentDescription = "Scan item barcode",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
                 TextButton(onClick = onScanBill) {
                     Icon(
                         Icons.Filled.DocumentScanner,
@@ -106,6 +133,14 @@ fun BillingScreen(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(text = "Scan Bill", color = MaterialTheme.colorScheme.primary)
                 }
+            }
+            if (scanNotice != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = scanNotice ?: "",
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontSize = 12.sp
+                )
             }
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -286,7 +321,7 @@ fun BillingScreen(
     if (showPartPicker) {
         PartPickerSheet(
             parts = catalogState.parts,
-            searchQuery = catalogState.searchQuery,
+            searchQuery = searchQuery,
             onSearchChange = { catalogViewModel.onSearchChange(it) },
             onPartClick = { part ->
                 billingViewModel.addPart(part, qty = 1)

@@ -52,6 +52,15 @@ interface PartDao {
     @Query("SELECT SUM(stockQty * mrp) FROM parts WHERE active = 1")
     fun totalStockAtMrp(): Flow<Double?>
 
+    @Query("SELECT * FROM parts WHERE barcode = :barcode AND active = 1 LIMIT 1")
+    suspend fun findByBarcodeOnce(barcode: String): PartEntity?
+
+    @Query("SELECT * FROM parts WHERE sku = :sku AND active = 1 LIMIT 1")
+    suspend fun findBySkuOnce(sku: String): PartEntity?
+
+    @Query("SELECT * FROM parts WHERE name = :name AND active = 1 LIMIT 1")
+    suspend fun findByNameOnce(name: String): PartEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(part: PartEntity)
 

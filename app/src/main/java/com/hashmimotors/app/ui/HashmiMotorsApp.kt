@@ -1,5 +1,6 @@
 package com.hashmimotors.app.ui
 
+import android.net.Uri
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -60,7 +61,7 @@ object Routes {
     const val DASHBOARD = "dashboard"
     const val SETTINGS = "settings"
     const val SEARCH = "search"
-    const val ADD_PART = "add_part"
+    const val ADD_PART = "add_part?barcode={barcode}"
     const val EDIT_PART = "edit_part/{partId}"
     const val FITMENT_WIZARD = "fitment_wizard"
     const val NEW_BILL = "new_bill"
@@ -166,7 +167,7 @@ fun HashmiMotorsMainScreen(
                     onSearch = { navController.navigate(Routes.SEARCH) },
                     onNewBill = { navController.navigate(Routes.NEW_BILL) },
                     onAddStock = { navController.navigate(Routes.ADD_STOCK) },
-                    onAddPart = { navController.navigate(Routes.ADD_PART) },
+                    onAddPart = { navController.navigate("add_part?barcode=") },
                     onFitment = { navController.navigate(Routes.FITMENT_WIZARD) },
                     onInventory = { navController.navigate(Routes.INVENTORY) },
                     onReports = { navController.navigate(Routes.REPORTS) },
@@ -184,7 +185,10 @@ fun HashmiMotorsMainScreen(
                     .collectAsStateWithLifecycle()
                 SearchScreen(
                     onPartClick = { id -> navController.navigate("edit_part/$id") },
-                    onAddPartClick = { navController.navigate(Routes.ADD_PART) },
+                    onAddPartClick = { navController.navigate("add_part?barcode=") },
+                    onAddPartWithBarcode = { value ->
+                        navController.navigate("add_part?barcode=${Uri.encode(value)}")
+                    },
                     onScanClick = { navController.navigate(Routes.SCAN_BARCODE) },
                     onBack = { navController.popBackStack() },
                     scannedBarcode = barcode.value,
@@ -217,11 +221,20 @@ fun HashmiMotorsMainScreen(
                     onBack = { navController.popBackStack() }
                 )
             }
-            composable(Routes.ADD_PART) {
+            composable(
+                Routes.ADD_PART,
+                arguments = listOf(navArgument("barcode") { type = NavType.StringType; defaultValue = "" })
+            ) { entry ->
+                val scanned = entry.savedStateHandle.getStateFlow("scanned_barcode", "")
+                    .collectAsStateWithLifecycle()
                 AddPartScreen(
                     partId = null,
+                    prefillBarcode = entry.arguments?.getString("barcode")?.takeIf { it.isNotBlank() },
                     onBack = { navController.popBackStack() },
-                    onSaved = { navController.popBackStack() }
+                    onSaved = { navController.popBackStack() },
+                    onScanBarcode = { navController.navigate(Routes.SCAN_BARCODE) },
+                    scannedBarcode = scanned.value,
+                    onBarcodeConsumed = { entry.savedStateHandle["scanned_barcode"] = "" }
                 )
             }
             composable(
@@ -229,13 +242,20 @@ fun HashmiMotorsMainScreen(
                 arguments = listOf(navArgument("partId") { type = NavType.StringType })
             ) { backStackEntry ->
                 val partId = backStackEntry.arguments?.getString("partId")
+                val scanned = backStackEntry.savedStateHandle.getStateFlow("scanned_barcode", "")
+                    .collectAsStateWithLifecycle()
                 AddPartScreen(
                     partId = partId,
                     onBack = { navController.popBackStack() },
-                    onSaved = { navController.popBackStack() }
+                    onSaved = { navController.popBackStack() },
+                    onScanBarcode = { navController.navigate(Routes.SCAN_BARCODE) },
+                    scannedBarcode = scanned.value,
+                    onBarcodeConsumed = { backStackEntry.savedStateHandle["scanned_barcode"] = "" }
                 )
             }
-            composable(Routes.NEW_BILL) {
+            composable(Routes.NEW_BILL) { entry ->
+                val scannedItem = entry.savedStateHandle.getStateFlow("scanned_barcode", "")
+                    .collectAsStateWithLifecycle()
                 BillingScreen(
                     onBack = { navController.popBackStack() },
                     onSaved = { invoiceId ->
@@ -244,7 +264,10 @@ fun HashmiMotorsMainScreen(
                         }
                     },
                     onAddItem = { },
-                    onScanBill = { navController.navigate("scan_bill/false") }
+                    onScanBill = { navController.navigate("scan_bill/false") },
+                    onScanBarcode = { navController.navigate(Routes.SCAN_BARCODE) },
+                    scannedBarcode = scannedItem.value,
+                    onBarcodeConsumed = { entry.savedStateHandle["scanned_barcode"] = "" }
                 )
             }
             composable(
