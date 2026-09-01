@@ -82,6 +82,7 @@ fun accentColorFor(type: AccentColorType): Color = when (type) {
 /**
  * Resolve the effective dark-mode flag from the user's theme preference.
  */
+@Composable
 fun resolveDarkTheme(mode: ThemeMode): Boolean = when (mode) {
     ThemeMode.LIGHT -> false
     ThemeMode.DARK -> true
