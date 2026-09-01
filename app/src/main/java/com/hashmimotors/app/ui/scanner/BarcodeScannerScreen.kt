@@ -8,6 +8,7 @@ import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,13 +53,24 @@ import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * Live barcode scanner using CameraX + ML Kit. Calls [onBarcode] once with the
- * first barcode detected, then stops scanning.
+ * Live barcode scanner using CameraX + ML Kit.
+ *
+ * Single mode (default): calls [onBarcode] once with the first barcode
+ * detected, then stops scanning.
+ *
+ * Continuous mode ([continuous] = true): keeps the camera running and calls
+ * [onBarcode] for every new code, with a short cooldown so the same physical
+ * barcode isn't fired repeatedly. Shows a live "n items added" counter plus
+ * [feedback] and a Done button that invokes [onDone] (falls back to [onBack]).
  */
 @Composable
 fun BarcodeScannerScreen(
     onBarcode: (String) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    continuous: Boolean = false,
+    onDone: (() -> Unit)? = null,
+    feedback: String? = null,
+    count: Int = 0
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -78,6 +90,11 @@ fun BarcodeScannerScreen(
     val currentOnBarcode by rememberUpdatedState(onBarcode)
     val found = remember { AtomicBoolean(false) }
 
+    // Cooldown state for continuous scanning (mutated on the main thread by the
+    // image-analysis callback).
+    var lastValue by remember { mutableStateOf("") }
+    var lastTime by remember { mutableStateOf(0L) }
+
     val controller = remember {
         LifecycleCameraController(context).apply {
             setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
@@ -94,8 +111,17 @@ fun BarcodeScannerScreen(
                     scanner.process(image)
                         .addOnSuccessListener { barcodes ->
                             val value = barcodes.firstOrNull()?.rawValue
-                            if (value != null && found.compareAndSet(false, true)) {
-                                currentOnBarcode(value)
+                            if (value != null) {
+                                if (continuous) {
+                                    val now = System.currentTimeMillis()
+                                    if (value != lastValue || now - lastTime >= COOLDOWN_MS) {
+                                        lastValue = value
+                                        lastTime = now
+                                        currentOnBarcode(value)
+                                    }
+                                } else if (found.compareAndSet(false, true)) {
+                                    currentOnBarcode(value)
+                                }
                             }
                         }
                         .addOnCompleteListener { imageProxy.close() }
@@ -156,7 +182,7 @@ fun BarcodeScannerScreen(
                 .padding(horizontal = 8.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = onBack) {
+            IconButton(onClick = { if (continuous && onDone != null) onDone() else onBack() }) {
                 Box(
                     modifier = Modifier
                         .size(40.dp)
@@ -168,14 +194,14 @@ fun BarcodeScannerScreen(
             }
             Spacer(modifier = Modifier.size(8.dp))
             Text(
-                text = "Scan Barcode",
+                text = if (continuous) "Scan Items" else "Scan Barcode",
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
         }
 
-        // Bottom hint
+        // Bottom hint / continuous-scan summary
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -183,20 +209,61 @@ fun BarcodeScannerScreen(
                 .align(Alignment.BottomCenter),
             contentAlignment = Alignment.Center
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(24.dp))
-                    .padding(horizontal = 16.dp, vertical = 10.dp)
-            ) {
-                Icon(Icons.Filled.QrCodeScanner, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
-                Spacer(modifier = Modifier.size(8.dp))
-                Text(
-                    text = "Point at a barcode to search",
-                    color = Color.White,
-                    fontSize = 13.sp
-                )
+            if (continuous) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .background(Color.Black.copy(alpha = 0.6f), RoundedCornerShape(20.dp))
+                        .padding(horizontal = 20.dp, vertical = 16.dp)
+                ) {
+                    if (feedback != null) {
+                        Text(
+                            text = feedback,
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                    }
+                    Text(
+                        text = "$count item${if (count != 1) "s" else ""} added",
+                        color = Color.White.copy(alpha = 0.8f),
+                        fontSize = 13.sp
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Box(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(28.dp))
+                            .clickable { (onDone ?: onBack)() }
+                            .padding(horizontal = 36.dp, vertical = 14.dp)
+                    ) {
+                        Text(
+                            text = "Done",
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(24.dp))
+                        .padding(horizontal = 16.dp, vertical = 10.dp)
+                ) {
+                    Icon(Icons.Filled.QrCodeScanner, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
+                    Spacer(modifier = Modifier.size(8.dp))
+                    Text(
+                        text = "Point at a barcode to search",
+                        color = Color.White,
+                        fontSize = 13.sp
+                    )
+                }
             }
         }
     }
 }
+
+private const val COOLDOWN_MS = 1200L

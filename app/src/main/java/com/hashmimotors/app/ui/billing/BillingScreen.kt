@@ -40,6 +40,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,8 +54,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.hashmimotors.app.domain.model.InvoiceLine
 import com.hashmimotors.app.ui.catalog.CatalogViewModel
 import com.hashmimotors.app.ui.catalog.PartListItem
+import com.hashmimotors.app.ui.scanner.BarcodeScannerScreen
 import com.hashmimotors.app.ui.scanner.BillScanBus
 import com.hashmimotors.app.util.QrProductParser
+import kotlinx.coroutines.launch
 
 @Composable
 fun BillingScreen(
@@ -63,10 +66,7 @@ fun BillingScreen(
     onBack: () -> Unit,
     onSaved: (String) -> Unit,
     onAddItem: () -> Unit,
-    onScanBill: () -> Unit = {},
-    onScanBarcode: () -> Unit = {},
-    scannedBarcode: String = "",
-    onBarcodeConsumed: () -> Unit = {}
+    onScanBill: () -> Unit = {}
 ) {
     val state by billingViewModel.state.collectAsState()
     val catalogState by catalogViewModel.uiState.collectAsState()
@@ -76,7 +76,10 @@ fun BillingScreen(
     var billDiscountText by remember { mutableStateOf("0") }
     var notes by remember { mutableStateOf("") }
     var showPartPicker by remember { mutableStateOf(false) }
-    var scanNotice by remember { mutableStateOf<String?>(null) }
+    var showScanner by remember { mutableStateOf(false) }
+    var scannedCount by remember { mutableStateOf(0) }
+    var scanFeedback by remember { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
 
     // Consume scanned bill items published by the scanner
     val pendingScan by BillScanBus.items.collectAsState()
@@ -89,34 +92,8 @@ fun BillingScreen(
         }
     }
 
-    // Add a scanned code straight to the bill: exact catalog part first, then a
-    // full product payload becomes an ad-hoc line.
-    androidx.compose.runtime.LaunchedEffect(scannedBarcode) {
-        if (scannedBarcode.isNotBlank()) {
-            val part = billingViewModel.findByBarcode(scannedBarcode)
-            when {
-                part != null -> {
-                    billingViewModel.addPart(part, qty = 1)
-                    scanNotice = "Added: ${part.name}"
-                }
-                else -> {
-                    val product = QrProductParser.parse(scannedBarcode)
-                    if (product != null && product.mrp != null) {
-                        val qty = product.qty.coerceAtLeast(1)
-                        billingViewModel.addAdHocLine(product.name, qty, product.mrp)
-                        scanNotice = "Added: ${product.name} × $qty"
-                    } else if (product != null) {
-                        scanNotice = "Parsed \"${product.name}\" but no price found"
-                    } else {
-                        scanNotice = "No part found for \"$scannedBarcode\""
-                    }
-                }
-            }
-            onBarcodeConsumed()
-        }
-    }
-
-    Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Column(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.height(24.dp))
             // Top bar
@@ -131,10 +108,16 @@ fun BillingScreen(
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = onScanBarcode) {
+                IconButton(
+                    onClick = {
+                        scannedCount = 0
+                        scanFeedback = null
+                        showScanner = true
+                    }
+                ) {
                     Icon(
                         Icons.Filled.QrCodeScanner,
-                        contentDescription = "Scan item barcode",
+                        contentDescription = "Scan items (continuous)",
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -147,14 +130,6 @@ fun BillingScreen(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(text = "Scan Bill", color = MaterialTheme.colorScheme.primary)
                 }
-            }
-            if (scanNotice != null) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = scanNotice ?: "",
-                    color = Color.White.copy(alpha = 0.7f),
-                    fontSize = 12.sp
-                )
             }
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -342,6 +317,42 @@ fun BillingScreen(
                 showPartPicker = false
             },
             onDismiss = { showPartPicker = false }
+        )
+    }
+    }
+
+    if (showScanner) {
+        BarcodeScannerScreen(
+            onBarcode = { code ->
+                scope.launch {
+                    val part = billingViewModel.findByBarcode(code)
+                    when {
+                        part != null -> {
+                            billingViewModel.addPart(part, qty = 1)
+                            scannedCount += 1
+                            scanFeedback = "Added ${part.name}"
+                        }
+                        else -> {
+                            val product = QrProductParser.parse(code)
+                            if (product != null && product.mrp != null) {
+                                val qty = product.qty.coerceAtLeast(1)
+                                billingViewModel.addAdHocLine(product.name, qty, product.mrp)
+                                scannedCount += qty
+                                scanFeedback = "Added ${product.name} × $qty"
+                            } else if (product != null) {
+                                scanFeedback = "Parsed \"${product.name}\", no price"
+                            } else {
+                                scanFeedback = "Not found: $code"
+                            }
+                        }
+                    }
+                }
+            },
+            onBack = { showScanner = false },
+            continuous = true,
+            onDone = { showScanner = false },
+            feedback = scanFeedback,
+            count = scannedCount
         )
     }
 }

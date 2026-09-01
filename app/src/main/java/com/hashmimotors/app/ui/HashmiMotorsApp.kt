@@ -269,9 +269,7 @@ fun HashmiMotorsMainScreen(
                     onBarcodeConsumed = { backStackEntry.savedStateHandle["scanned_barcode"] = "" }
                 )
             }
-            composable(Routes.NEW_BILL) { entry ->
-                val scannedItem = entry.savedStateHandle.getStateFlow("scanned_barcode", "")
-                    .collectAsStateWithLifecycle()
+            composable(Routes.NEW_BILL) {
                 BillingScreen(
                     onBack = { navController.popBackStack() },
                     onSaved = { invoiceId ->
@@ -280,10 +278,7 @@ fun HashmiMotorsMainScreen(
                         }
                     },
                     onAddItem = { },
-                    onScanBill = { navController.navigate("scan_bill/false") },
-                    onScanBarcode = { navController.navigate(Routes.SCAN_BARCODE) },
-                    scannedBarcode = scannedItem.value,
-                    onBarcodeConsumed = { entry.savedStateHandle["scanned_barcode"] = "" }
+                    onScanBill = { navController.navigate("scan_bill/false") }
                 )
             }
             composable(
