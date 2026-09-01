@@ -41,6 +41,10 @@ import com.hashmimotors.app.ui.reports.ReportsScreen
 import com.hashmimotors.app.ui.settings.SettingsScreen
 import com.hashmimotors.app.ui.shop.ShopSetupScreen
 import com.hashmimotors.app.ui.splash.SplashScreen
+import com.hashmimotors.app.ui.theme.HashmiMotorsTheme
+import com.hashmimotors.app.ui.theme.accentColorFor
+import com.hashmimotors.app.ui.theme.premiumBackgroundColors
+import com.hashmimotors.app.ui.theme.resolveDarkTheme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -87,21 +91,20 @@ fun HashmiMotorsMainScreen(
     val navController = rememberNavController()
     val settings by viewModel.settings.collectAsStateWithLifecycle(initialValue = AppSettings())
 
+    val darkTheme = resolveDarkTheme(settings.themeMode)
+    val accent = accentColorFor(settings.accentColor)
+    val backgroundColors = premiumBackgroundColors(darkTheme)
+
+    HashmiMotorsTheme(darkTheme = darkTheme, accentColor = accent) {
     Box(modifier = Modifier.fillMaxSize()) {
         if (settings.backgroundStyle == BackgroundStyle.GRADIENT_PARTICLES && settings.animationsEnabled) {
-            AnimatedParticleBackground(modifier = Modifier.fillMaxSize())
+            AnimatedParticleBackground(modifier = Modifier.fillMaxSize(), colors = backgroundColors)
         } else {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                com.hashmimotors.app.ui.theme.GradientStart,
-                                com.hashmimotors.app.ui.theme.GradientMiddle,
-                                com.hashmimotors.app.ui.theme.GradientEnd
-                            )
-                        )
+                        brush = Brush.verticalGradient(colors = backgroundColors)
                     )
             )
         }
@@ -247,5 +250,6 @@ fun HashmiMotorsMainScreen(
                 CustomerListScreen(onBack = { navController.popBackStack() })
             }
         }
+    }
     }
 }

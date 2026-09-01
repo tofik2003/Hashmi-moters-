@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashmimotors.app.data.repository.InvoiceRepository
 import com.hashmimotors.app.data.repository.PartRepository
+import com.hashmimotors.app.data.repository.SalesPoint
 import com.hashmimotors.app.data.repository.ShopRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,8 +19,12 @@ data class DashboardUiState(
     val lowStockCount: Int = 0,
     val totalParts: Int = 0,
     val totalStockValue: Double = 0.0,
-    val shopName: String = "Hashmi Motors"
-)
+    val shopName: String = "Hashmi Motors",
+    val weekSales: List<SalesPoint> = emptyList()
+) {
+    val weekTotal: Double get() = weekSales.sumOf { it.value }
+    val weekAverage: Double get() = if (weekSales.isEmpty()) 0.0 else weekTotal / weekSales.size
+}
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
@@ -32,9 +37,10 @@ class DashboardViewModel @Inject constructor(
         combine(
             invoiceRepo.getTodaySalesTotal(),
             invoiceRepo.getTodayBillCount(),
-            partRepo.getLowStockCount()
-        ) { sales, bills, lowStock ->
-            Triple(sales, bills, lowStock)
+            partRepo.getLowStockCount(),
+            invoiceRepo.getSalesForLastNDays(7)
+        ) { sales, bills, lowStock, week ->
+            Quad(sales, bills, lowStock, week)
         },
         combine(
             partRepo.getPartCount(),
@@ -44,7 +50,7 @@ class DashboardViewModel @Inject constructor(
             Triple(totalParts, stockValue, shop)
         }
     ) { first, second ->
-        val (sales, bills, lowStock) = first
+        val (sales, bills, lowStock, week) = first
         val (totalParts, stockValue, shop) = second
         DashboardUiState(
             todaySales = sales,
@@ -52,7 +58,8 @@ class DashboardViewModel @Inject constructor(
             lowStockCount = lowStock,
             totalParts = totalParts,
             totalStockValue = stockValue,
-            shopName = shop?.name ?: "Hashmi Motors"
+            shopName = shop?.name ?: "Hashmi Motors",
+            weekSales = week
         )
     }.stateIn(
         scope = viewModelScope,
@@ -60,3 +67,5 @@ class DashboardViewModel @Inject constructor(
         initialValue = DashboardUiState()
     )
 }
+
+private data class Quad<A, B, C, D>(val a: A, val b: B, val c: C, val d: D)

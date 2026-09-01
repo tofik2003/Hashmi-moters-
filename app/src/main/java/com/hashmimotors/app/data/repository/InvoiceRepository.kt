@@ -9,8 +9,15 @@ import com.hashmimotors.app.domain.model.InvoiceStatus
 import com.hashmimotors.app.domain.model.InvoiceType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
+
+/** One point on the sales chart. */
+data class SalesPoint(val label: String, val value: Double)
 
 @Singleton
 class InvoiceRepository @Inject constructor(
@@ -57,6 +64,32 @@ class InvoiceRepository @Inject constructor(
         val start = cal.timeInMillis
         val end = start + 24L * 60 * 60 * 1000
         return start to end
+    }
+
+    /**
+     * Sales totals for the last [days] days (including today), with zeros for
+     * missing days. Used by the dashboard chart.
+     */
+    fun getSalesForLastNDays(days: Int): Flow<List<SalesPoint>> {
+        val dayFormatter = SimpleDateFormat("EEE", Locale.getDefault())
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+        val todayStart = cal.timeInMillis
+        val fromMillis = todayStart - (days - 1) * 24L * 60 * 60 * 1000
+        return invoiceDao.dailyTotalsSince(fromMillis).map { list ->
+            val byDay = list.associateBy { it.day }
+            (0 until days).map { i ->
+                val dayMillis = todayStart - (days - 1 - i) * 24L * 60 * 60 * 1000
+                val dayIndex = dayMillis / 86_400_000L
+                SalesPoint(
+                    label = dayFormatter.format(Date(dayMillis)),
+                    value = byDay[dayIndex]?.total ?: 0.0
+                )
+            }
+        }
     }
 }
 

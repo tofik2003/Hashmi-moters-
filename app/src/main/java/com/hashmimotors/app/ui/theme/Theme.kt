@@ -5,16 +5,15 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.hashmimotors.app.domain.model.AccentColorType
+import com.hashmimotors.app.domain.model.ThemeMode
 
 private val LightColorScheme = lightColorScheme(
     primary = LightPrimary,
@@ -70,31 +69,46 @@ private val DarkColorScheme = darkColorScheme(
     outlineVariant = DarkOutlineVariant
 )
 
+/**
+ * Map the user-selected accent color type to a concrete color.
+ */
+fun accentColorFor(type: AccentColorType): Color = when (type) {
+    AccentColorType.INDIGO -> AccentIndigo
+    AccentColorType.BLUE -> AccentBlue
+    AccentColorType.GREEN -> AccentGreen
+    AccentColorType.ORANGE -> AccentOrange
+}
+
+/**
+ * Resolve the effective dark-mode flag from the user's theme preference.
+ */
+fun resolveDarkTheme(mode: ThemeMode): Boolean = when (mode) {
+    ThemeMode.LIGHT -> false
+    ThemeMode.DARK -> true
+    ThemeMode.AUTO -> isSystemInDarkTheme()
+}
+
 @Composable
 fun HashmiMotorsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
     accentColor: Color = AccentIndigo,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }.let { scheme ->
-        // Override primary with user's chosen accent color
-        scheme.copy(primary = accentColor)
-    }
+    val colorScheme = (if (darkTheme) DarkColorScheme else LightColorScheme).copy(
+        primary = accentColor
+    )
 
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+            // Edge-to-edge premium look: transparent bars over the gradient.
+            window.statusBarColor = Color.Transparent.toArgb()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                window.navigationBarColor = Color.Transparent.toArgb()
+            }
+            // The app background is dark in both modes, so always use light status icons.
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
         }
     }
 

@@ -158,6 +158,12 @@ interface FitmentDao {
     suspend fun delete(fitment: FitmentEntity)
 }
 
+/** Aggregated daily sales totals for charts. */
+data class DayTotal(
+    val day: Long,
+    val total: Double
+)
+
 @Dao
 interface InvoiceDao {
     @Query("SELECT * FROM invoices ORDER BY date DESC")
@@ -183,6 +189,15 @@ interface InvoiceDao {
 
     @Query("SELECT COALESCE(SUM(grandTotal), 0) FROM invoices WHERE date >= :startOfDay AND date < :endOfDay AND status = 'PAID'")
     fun paidTotalForDay(startOfDay: Long, endOfDay: Long): Flow<Double>
+
+    @Query("""
+        SELECT CAST(date / 86400000 AS INTEGER) AS day, COALESCE(SUM(grandTotal), 0) AS total
+        FROM invoices
+        WHERE date >= :fromMillis
+        GROUP BY day
+        ORDER BY day ASC
+    """)
+    fun dailyTotalsSince(fromMillis: Long): Flow<List<DayTotal>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(invoice: InvoiceEntity)

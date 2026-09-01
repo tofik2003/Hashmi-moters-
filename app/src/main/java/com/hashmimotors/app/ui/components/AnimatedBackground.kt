@@ -30,7 +30,8 @@ import kotlin.random.Random
  */
 @Composable
 fun AnimatedParticleBackground(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    colors: List<Color> = listOf(GradientStart, GradientMiddle, GradientEnd)
 ) {
     val transition = rememberInfiniteTransition(label = "background")
 
@@ -70,11 +71,7 @@ fun AnimatedParticleBackground(
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(
-                        GradientStart,
-                        GradientMiddle,
-                        GradientEnd
-                    )
+                    colors = colors
                 )
             )
     ) {
@@ -93,12 +90,12 @@ fun AnimatedParticleBackground(
 
         // Soft glow circles that pulse
         drawCircle(
-            color = GradientStart.copy(alpha = 0.2f * pulse),
+            color = colors.first().copy(alpha = 0.25f * pulse),
             radius = size.width * 0.4f,
             center = Offset(size.width * 0.2f, size.height * 0.3f)
         )
         drawCircle(
-            color = GradientEnd.copy(alpha = 0.15f * pulse),
+            color = colors.last().copy(alpha = 0.2f * pulse),
             radius = size.width * 0.5f,
             center = Offset(size.width * 0.8f, size.height * 0.7f)
         )
