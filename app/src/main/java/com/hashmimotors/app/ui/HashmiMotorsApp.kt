@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.hashmimotors.app.data.repository.CategoryRepository
 import com.hashmimotors.app.data.repository.SettingsRepository
+import com.hashmimotors.app.data.repository.VehicleRepository
 import com.hashmimotors.app.domain.model.AppSettings
 import com.hashmimotors.app.domain.model.BackgroundStyle
 import com.hashmimotors.app.ui.billing.BillingScreen
@@ -66,13 +67,15 @@ object Routes {
 @HiltViewModel
 class AppShellViewModel @Inject constructor(
     settingsRepository: SettingsRepository,
-    categoryRepository: CategoryRepository
+    categoryRepository: CategoryRepository,
+    vehicleRepository: VehicleRepository
 ) : ViewModel() {
     val settings = settingsRepository.getSettings()
 
     init {
         viewModelScope.launch {
             categoryRepository.ensureSeeded()
+            vehicleRepository.ensureSeeded()
         }
     }
 }

@@ -12,6 +12,7 @@ A personal-use Android app for managing a spare parts shop. Built for shop owner
 - 🎨 **Polished UI** — Animated backgrounds, bounce buttons, confetti, sound effects
 - 📥 **7 SKU Import Methods** — Manual, CSV, Google Sheets, OCR, AI, barcode, voice
 - 🌐 **Web Enrichment** — On-demand part suggestions from public catalogs (optional)
+- 📚 **Bundled Reference Data** — 200+ vehicle fitment records, 22 part categories, ~200 common parts with HSN/GST auto-fill (offline, from free/public sources)
 
 ## 🏗️ Tech Stack
 

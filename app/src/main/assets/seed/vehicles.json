@@ -1,0 +1,3215 @@
+[
+  {
+    "make": "Audi",
+    "model": "A4",
+    "variants": [
+      "Premium",
+      "Premium Plus",
+      "Technology"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Audi",
+    "model": "A6",
+    "variants": [
+      "Premium",
+      "Premium Plus",
+      "Technology"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Audi",
+    "model": "Q3",
+    "variants": [
+      "Premium",
+      "Premium Plus",
+      "Technology"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Audi",
+    "model": "Q5",
+    "variants": [
+      "Premium",
+      "Premium Plus",
+      "Technology"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Audi",
+    "model": "Q7",
+    "variants": [
+      "Premium Plus",
+      "Technology"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Audi",
+    "model": "Q8",
+    "variants": [
+      "Celebration",
+      "Technology"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Bajaj",
+    "model": "Chetak",
+    "variants": [
+      "Premium",
+      "Urbane"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Bajaj",
+    "model": "CT100",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2004,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Bajaj",
+    "model": "Dominar 400",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Bajaj",
+    "model": "Platina 110",
+    "variants": [
+      "Drum",
+      "Disc"
+    ],
+    "yearFrom": 2006,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Bajaj",
+    "model": "Pulsar 150",
+    "variants": [
+      "Standard",
+      "Twin Disc"
+    ],
+    "yearFrom": 2001,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Bajaj",
+    "model": "Pulsar 220F",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2007,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Bajaj",
+    "model": "Pulsar NS160",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2017,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Bajaj",
+    "model": "Pulsar NS200",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2012,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "BMW",
+    "model": "2 Series Gran Coupe",
+    "variants": [
+      "220i"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "BMW",
+    "model": "3 Series",
+    "variants": [
+      "320Ld",
+      "330i",
+      "M340i"
+    ],
+    "yearFrom": 2015,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "BMW",
+    "model": "5 Series",
+    "variants": [
+      "520d",
+      "530i"
+    ],
+    "yearFrom": 2015,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "BMW",
+    "model": "7 Series",
+    "variants": [
+      "740Ld",
+      "740Li"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "BMW",
+    "model": "X1",
+    "variants": [
+      "sDrive20i",
+      "sDrive18d"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "BMW",
+    "model": "X3",
+    "variants": [
+      "xDrive20d",
+      "xDrive30i"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "BMW",
+    "model": "X5",
+    "variants": [
+      "xDrive30d",
+      "xDrive40i"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "BMW",
+    "model": "X7",
+    "variants": [
+      "xDrive30d",
+      "xDrive40i"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "BYD",
+    "model": "Atto 3",
+    "variants": [
+      "Dynamic",
+      "Premium",
+      "Luxury"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "BYD",
+    "model": "e6",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "BYD",
+    "model": "Seal",
+    "variants": [
+      "Dynamic",
+      "Premium",
+      "Performance"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Chevrolet",
+    "model": "Beat",
+    "variants": [
+      "LS",
+      "LT",
+      "LTZ"
+    ],
+    "yearFrom": 2011,
+    "yearTo": 2017,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Chevrolet",
+    "model": "Cruze",
+    "variants": [
+      "LT",
+      "LTZ"
+    ],
+    "yearFrom": 2011,
+    "yearTo": 2017,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Chevrolet",
+    "model": "Sail",
+    "variants": [
+      "LS",
+      "LT",
+      "LTZ"
+    ],
+    "yearFrom": 2013,
+    "yearTo": 2017,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Chevrolet",
+    "model": "Tavera",
+    "variants": [
+      "LS",
+      "LT"
+    ],
+    "yearFrom": 2005,
+    "yearTo": 2017,
+    "fuelTypes": [
+      "Diesel"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "Citroen",
+    "model": "Basalt",
+    "variants": [
+      "You",
+      "Plus",
+      "Max"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Crossover"
+  },
+  {
+    "make": "Citroen",
+    "model": "C3",
+    "variants": [
+      "Live",
+      "Feel",
+      "Shine",
+      "Shine(O)"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Citroen",
+    "model": "C3 Aircross",
+    "variants": [
+      "You",
+      "Plus",
+      "Max"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Citroen",
+    "model": "C5 Aircross",
+    "variants": [
+      "Feel",
+      "Shine"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Citroen",
+    "model": "eC3",
+    "variants": [
+      "Live",
+      "Feel",
+      "Shine"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Datsun",
+    "model": "GO",
+    "variants": [
+      "D",
+      "A",
+      "T"
+    ],
+    "yearFrom": 2014,
+    "yearTo": 2020,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Datsun",
+    "model": "GO+",
+    "variants": [
+      "D",
+      "A",
+      "T"
+    ],
+    "yearFrom": 2015,
+    "yearTo": 2020,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "Datsun",
+    "model": "redi-GO",
+    "variants": [
+      "D",
+      "A",
+      "S"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2022,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Fiat",
+    "model": "Linea",
+    "variants": [
+      "Active",
+      "Dynamic",
+      "Emotion"
+    ],
+    "yearFrom": 2012,
+    "yearTo": 2019,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Fiat",
+    "model": "Punto Evo",
+    "variants": [
+      "Active",
+      "Dynamic",
+      "Emotion"
+    ],
+    "yearFrom": 2012,
+    "yearTo": 2019,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Force",
+    "model": "Gurkha",
+    "variants": [
+      "Xplorer",
+      "Xpedition"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Ford",
+    "model": "Aspire",
+    "variants": [
+      "Trend",
+      "Titanium",
+      "Titanium+"
+    ],
+    "yearFrom": 2015,
+    "yearTo": 2021,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Ford",
+    "model": "EcoSport",
+    "variants": [
+      "Trend",
+      "Titanium",
+      "Titanium+",
+      "S"
+    ],
+    "yearFrom": 2013,
+    "yearTo": 2022,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Ford",
+    "model": "Endeavour",
+    "variants": [
+      "Trend",
+      "Titanium",
+      "Titanium+"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2022,
+    "fuelTypes": [
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Ford",
+    "model": "Figo",
+    "variants": [
+      "Base",
+      "Titanium",
+      "Titanium+"
+    ],
+    "yearFrom": 2015,
+    "yearTo": 2021,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Ford",
+    "model": "Freestyle",
+    "variants": [
+      "Titanium",
+      "Titanium+"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2021,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Crossover"
+  },
+  {
+    "make": "Hero",
+    "model": "Glamour",
+    "variants": [
+      "Kick",
+      "Self"
+    ],
+    "yearFrom": 2006,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Hero",
+    "model": "HF Deluxe",
+    "variants": [
+      "Kick",
+      "Self"
+    ],
+    "yearFrom": 2005,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Hero",
+    "model": "Karizma XMR",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Hero",
+    "model": "Passion Pro",
+    "variants": [
+      "Pro",
+      "i3S"
+    ],
+    "yearFrom": 2001,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Hero",
+    "model": "Splendor Plus",
+    "variants": [
+      "Kick",
+      "Self",
+      "i3S"
+    ],
+    "yearFrom": 1994,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Hero",
+    "model": "Xpulse 200",
+    "variants": [
+      "Xpulse",
+      "Xpulse 200 4V"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Honda",
+    "model": "Activa",
+    "variants": [
+      "6G",
+      "7G",
+      "DLX",
+      "H-Smart"
+    ],
+    "yearFrom": 2001,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Honda",
+    "model": "Amaze",
+    "variants": [
+      "E",
+      "S",
+      "VX",
+      "ZX"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Honda",
+    "model": "Brio",
+    "variants": [
+      "E",
+      "S",
+      "VX"
+    ],
+    "yearFrom": 2011,
+    "yearTo": 2020,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Honda",
+    "model": "CB350",
+    "variants": [
+      "DLX",
+      "RS"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Honda",
+    "model": "City",
+    "variants": [
+      "SV",
+      "V",
+      "VX",
+      "ZX"
+    ],
+    "yearFrom": 2014,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel",
+      "Hybrid"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Honda",
+    "model": "Civic",
+    "variants": [
+      "V",
+      "VX",
+      "ZX"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2021,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Honda",
+    "model": "CR-V",
+    "variants": [
+      "RV",
+      "EV"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2020,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Honda",
+    "model": "Dio",
+    "variants": [
+      "STD",
+      "DLX"
+    ],
+    "yearFrom": 2002,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Honda",
+    "model": "Elevate",
+    "variants": [
+      "SV",
+      "V",
+      "VX",
+      "ZX"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Honda",
+    "model": "Jazz",
+    "variants": [
+      "V",
+      "VX",
+      "ZX"
+    ],
+    "yearFrom": 2015,
+    "yearTo": 2020,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Honda",
+    "model": "Shine",
+    "variants": [
+      "Drum",
+      "Disc"
+    ],
+    "yearFrom": 2006,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Honda",
+    "model": "SP 125",
+    "variants": [
+      "Drum",
+      "Disc"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Honda",
+    "model": "Unicorn",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2004,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Honda",
+    "model": "WR-V",
+    "variants": [
+      "SV",
+      "VX",
+      "ZX"
+    ],
+    "yearFrom": 2017,
+    "yearTo": 2020,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Crossover"
+  },
+  {
+    "make": "Hyundai",
+    "model": "Alcazar",
+    "variants": [
+      "Prestige",
+      "Platinum",
+      "Signature"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Hyundai",
+    "model": "Aura",
+    "variants": [
+      "E",
+      "S",
+      "SX",
+      "SX+"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Hyundai",
+    "model": "Creta",
+    "variants": [
+      "E",
+      "EX",
+      "S",
+      "SX",
+      "SX(O)"
+    ],
+    "yearFrom": 2015,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Hyundai",
+    "model": "Exter",
+    "variants": [
+      "EX",
+      "S",
+      "SX",
+      "SX(O)"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Micro SUV"
+  },
+  {
+    "make": "Hyundai",
+    "model": "Grand i10 Nios",
+    "variants": [
+      "Era",
+      "Magna",
+      "Sportz",
+      "Asta"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Hyundai",
+    "model": "i20",
+    "variants": [
+      "Magna",
+      "Sportz",
+      "Asta",
+      "Asta(O)"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Hyundai",
+    "model": "i20 N Line",
+    "variants": [
+      "N6",
+      "N8"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Hyundai",
+    "model": "Ioniq 5",
+    "variants": [
+      "Premium",
+      "Signature"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Crossover"
+  },
+  {
+    "make": "Hyundai",
+    "model": "Kona Electric",
+    "variants": [
+      "Premium",
+      "Premium Dual Tone"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Hyundai",
+    "model": "Tucson",
+    "variants": [
+      "Platinum",
+      "Signature"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Hyundai",
+    "model": "Venue",
+    "variants": [
+      "E",
+      "S",
+      "S+",
+      "SX",
+      "SX(O)"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Hyundai",
+    "model": "Verna",
+    "variants": [
+      "EX",
+      "S",
+      "SX",
+      "SX(O)"
+    ],
+    "yearFrom": 2017,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Jeep",
+    "model": "Compass",
+    "variants": [
+      "Sport",
+      "Longitude",
+      "Limited",
+      "Model S"
+    ],
+    "yearFrom": 2017,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Jeep",
+    "model": "Meridian",
+    "variants": [
+      "Limited",
+      "Model S",
+      "Overland"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Jeep",
+    "model": "Wrangler",
+    "variants": [
+      "Rubicon"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Kia",
+    "model": "Carens",
+    "variants": [
+      "Premium",
+      "Prestige",
+      "Prestige Plus",
+      "Luxury",
+      "Luxury Plus"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "Kia",
+    "model": "Carnival",
+    "variants": [
+      "Premium",
+      "Prestige",
+      "Limousine"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Diesel"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "Kia",
+    "model": "EV6",
+    "variants": [
+      "GT Line"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Crossover"
+  },
+  {
+    "make": "Kia",
+    "model": "Seltos",
+    "variants": [
+      "HTE",
+      "HTK",
+      "HTX",
+      "HTX+",
+      "GTX",
+      "GTX+",
+      "X-Line"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Kia",
+    "model": "Sonet",
+    "variants": [
+      "HTE",
+      "HTK",
+      "HTX",
+      "HTX+",
+      "GTX",
+      "GTX+"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Land Rover",
+    "model": "Defender",
+    "variants": [
+      "90",
+      "110"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Land Rover",
+    "model": "Discovery Sport",
+    "variants": [
+      "SE",
+      "HSE"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Land Rover",
+    "model": "Range Rover Evoque",
+    "variants": [
+      "SE",
+      "HSE",
+      "Dynamic"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Land Rover",
+    "model": "Range Rover Sport",
+    "variants": [
+      "SE",
+      "HSE"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Land Rover",
+    "model": "Range Rover Velar",
+    "variants": [
+      "S",
+      "R-Dynamic"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Lexus",
+    "model": "ES",
+    "variants": [
+      "Luxury",
+      "F-Sport"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Hybrid"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Lexus",
+    "model": "NX",
+    "variants": [
+      "Luxury",
+      "F-Sport"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Hybrid"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Lexus",
+    "model": "RX",
+    "variants": [
+      "Luxury",
+      "F-Sport"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Hybrid"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "BE 6",
+    "variants": [
+      "Pack One",
+      "Pack Two",
+      "Pack Three"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "Bolero",
+    "variants": [
+      "B4",
+      "B6",
+      "B6(O)"
+    ],
+    "yearFrom": 2010,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "Bolero Neo",
+    "variants": [
+      "N4",
+      "N8",
+      "N10"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "Marazzo",
+    "variants": [
+      "M2",
+      "M4",
+      "M6",
+      "M8"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Diesel"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "Scorpio",
+    "variants": [
+      "S3",
+      "S5",
+      "S7",
+      "S9",
+      "S11"
+    ],
+    "yearFrom": 2014,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "Scorpio-N",
+    "variants": [
+      "Z4",
+      "Z6",
+      "Z8"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "Thar",
+    "variants": [
+      "AX",
+      "LX"
+    ],
+    "yearFrom": 2010,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "Thar Roxx",
+    "variants": [
+      "MX1",
+      "MX3",
+      "AX5",
+      "AX7"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "XEV 9e",
+    "variants": [
+      "Pack One",
+      "Pack Two",
+      "Pack Three"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "XUV300",
+    "variants": [
+      "W4",
+      "W6",
+      "W8",
+      "W8(O)"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "XUV3XO",
+    "variants": [
+      "MX1",
+      "MX2",
+      "MX3",
+      "AX5",
+      "AX7"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "XUV400",
+    "variants": [
+      "EC",
+      "EL"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Mahindra",
+    "model": "XUV700",
+    "variants": [
+      "MX",
+      "AX3",
+      "AX5",
+      "AX7"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Maruti",
+    "model": "Alto 800",
+    "variants": [
+      "STD",
+      "LXI",
+      "VXI",
+      "VXI+"
+    ],
+    "yearFrom": 2012,
+    "yearTo": 2023,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Maruti",
+    "model": "Alto K10",
+    "variants": [
+      "STD",
+      "LXI",
+      "VXI",
+      "VXI+"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Maruti",
+    "model": "Baleno",
+    "variants": [
+      "Sigma",
+      "Delta",
+      "Zeta",
+      "Alpha"
+    ],
+    "yearFrom": 2015,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Maruti",
+    "model": "Brezza",
+    "variants": [
+      "LXI",
+      "VXI",
+      "ZXI",
+      "ZXI+"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Maruti",
+    "model": "Celerio",
+    "variants": [
+      "LXI",
+      "VXI",
+      "ZXI",
+      "ZXI+"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Maruti",
+    "model": "Ciaz",
+    "variants": [
+      "Sigma",
+      "Delta",
+      "Zeta",
+      "Alpha"
+    ],
+    "yearFrom": 2014,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Maruti",
+    "model": "Dzire",
+    "variants": [
+      "LXI",
+      "VXI",
+      "ZXI",
+      "ZXI+"
+    ],
+    "yearFrom": 2017,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Maruti",
+    "model": "Eeco",
+    "variants": [
+      "Standard",
+      "AC"
+    ],
+    "yearFrom": 2010,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Van"
+  },
+  {
+    "make": "Maruti",
+    "model": "Ertiga",
+    "variants": [
+      "LXI",
+      "VXI",
+      "ZXI",
+      "ZXI+"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "Maruti",
+    "model": "Fronx",
+    "variants": [
+      "Sigma",
+      "Delta",
+      "Zeta",
+      "Alpha"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Maruti",
+    "model": "Grand Vitara",
+    "variants": [
+      "Sigma",
+      "Delta",
+      "Zeta",
+      "Alpha"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Hybrid",
+      "CNG"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Maruti",
+    "model": "Ignis",
+    "variants": [
+      "Sigma",
+      "Delta",
+      "Zeta",
+      "Alpha"
+    ],
+    "yearFrom": 2017,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Maruti",
+    "model": "Invicto",
+    "variants": [
+      "Zeta+",
+      "Alpha+"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Hybrid"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "Maruti",
+    "model": "Jimny",
+    "variants": [
+      "Zeta",
+      "Alpha"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Maruti",
+    "model": "S-Cross",
+    "variants": [
+      "Sigma",
+      "Delta",
+      "Zeta",
+      "Alpha"
+    ],
+    "yearFrom": 2015,
+    "yearTo": 2022,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Crossover"
+  },
+  {
+    "make": "Maruti",
+    "model": "S-Presso",
+    "variants": [
+      "STD",
+      "LXI",
+      "VXI",
+      "VXI+"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Maruti",
+    "model": "Swift",
+    "variants": [
+      "LXI",
+      "VXI",
+      "ZXI",
+      "ZXI+"
+    ],
+    "yearFrom": 2014,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Maruti",
+    "model": "Vitara Brezza",
+    "variants": [
+      "LXI",
+      "VXI",
+      "ZXI",
+      "ZXI+"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2020,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Maruti",
+    "model": "Wagon R",
+    "variants": [
+      "LXI",
+      "VXI",
+      "ZXI",
+      "ZXI+"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Maruti",
+    "model": "XL6",
+    "variants": [
+      "Zeta",
+      "Alpha",
+      "Alpha+"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "Mercedes-Benz",
+    "model": "A-Class",
+    "variants": [
+      "A200",
+      "A200d"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2023,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Mercedes-Benz",
+    "model": "C-Class",
+    "variants": [
+      "C200",
+      "C220d",
+      "C300d"
+    ],
+    "yearFrom": 2015,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Mercedes-Benz",
+    "model": "E-Class",
+    "variants": [
+      "E200",
+      "E220d",
+      "E350d"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Mercedes-Benz",
+    "model": "GLA",
+    "variants": [
+      "200",
+      "220d"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Mercedes-Benz",
+    "model": "GLC",
+    "variants": [
+      "200",
+      "220d",
+      "300"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Mercedes-Benz",
+    "model": "GLE",
+    "variants": [
+      "300d",
+      "400d",
+      "450"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Mercedes-Benz",
+    "model": "S-Class",
+    "variants": [
+      "S350d",
+      "S450"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "MG",
+    "model": "Astor",
+    "variants": [
+      "Style",
+      "Super",
+      "Smart",
+      "Sharp",
+      "Savvy"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "MG",
+    "model": "Comet EV",
+    "variants": [
+      "Play",
+      "Plush"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "MG",
+    "model": "Gloster",
+    "variants": [
+      "Super",
+      "Sharp",
+      "Savvy"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "MG",
+    "model": "Hector",
+    "variants": [
+      "Style",
+      "Super",
+      "Sharp",
+      "Savvy",
+      "Plus"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel",
+      "Hybrid"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "MG",
+    "model": "Hector Plus",
+    "variants": [
+      "Style",
+      "Super",
+      "Sharp",
+      "Savvy"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel",
+      "Hybrid"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "MG",
+    "model": "Windsor EV",
+    "variants": [
+      "Excite",
+      "Exclusive",
+      "Essence"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Crossover"
+  },
+  {
+    "make": "MG",
+    "model": "ZS EV",
+    "variants": [
+      "Excite",
+      "Exclusive",
+      "Essence"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Nissan",
+    "model": "Kicks",
+    "variants": [
+      "XL",
+      "XV",
+      "XV Premium"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2022,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Nissan",
+    "model": "Magnite",
+    "variants": [
+      "XE",
+      "XL",
+      "XV",
+      "XV Premium"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Renault",
+    "model": "Duster",
+    "variants": [
+      "RXE",
+      "RXL",
+      "RXS",
+      "RXZ"
+    ],
+    "yearFrom": 2012,
+    "yearTo": 2022,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Renault",
+    "model": "Kiger",
+    "variants": [
+      "RXE",
+      "RXL",
+      "RXT",
+      "RXZ"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Renault",
+    "model": "Kwid",
+    "variants": [
+      "RXE",
+      "RXL",
+      "RXT",
+      "Climber"
+    ],
+    "yearFrom": 2015,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Renault",
+    "model": "Triber",
+    "variants": [
+      "RXE",
+      "RXL",
+      "RXT",
+      "RXZ"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "Royal Enfield",
+    "model": "Bullet 350",
+    "variants": [
+      "Standard",
+      "ES"
+    ],
+    "yearFrom": 2010,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Royal Enfield",
+    "model": "Classic 350",
+    "variants": [
+      "Redditch",
+      "Halcyon",
+      "Signals"
+    ],
+    "yearFrom": 2009,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Royal Enfield",
+    "model": "Continental GT 650",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Royal Enfield",
+    "model": "Himalayan",
+    "variants": [
+      "Standard",
+      "450"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Royal Enfield",
+    "model": "Hunter 350",
+    "variants": [
+      "Retro",
+      "Metro"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Royal Enfield",
+    "model": "Interceptor 650",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Royal Enfield",
+    "model": "Meteor 350",
+    "variants": [
+      "Fireball",
+      "Stellar",
+      "Supernova"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Skoda",
+    "model": "Kodiaq",
+    "variants": [
+      "Sportline",
+      "L&K"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Skoda",
+    "model": "Kushaq",
+    "variants": [
+      "Active",
+      "Ambition",
+      "Style",
+      "Monte Carlo"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Skoda",
+    "model": "Octavia",
+    "variants": [
+      "Ambition",
+      "Style",
+      "L&K",
+      "RS"
+    ],
+    "yearFrom": 2014,
+    "yearTo": 2023,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Skoda",
+    "model": "Rapid",
+    "variants": [
+      "Active",
+      "Ambition",
+      "Style",
+      "Monte Carlo"
+    ],
+    "yearFrom": 2014,
+    "yearTo": 2022,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Skoda",
+    "model": "Slavia",
+    "variants": [
+      "Active",
+      "Ambition",
+      "Style",
+      "Monte Carlo"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Skoda",
+    "model": "Superb",
+    "variants": [
+      "Sportline",
+      "L&K"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2023,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Suzuki",
+    "model": "Access 125",
+    "variants": [
+      "STD",
+      "Special Edition"
+    ],
+    "yearFrom": 2007,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Suzuki",
+    "model": "Burgman Street",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Suzuki",
+    "model": "Gixxer",
+    "variants": [
+      "Standard",
+      "SF"
+    ],
+    "yearFrom": 2014,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Suzuki",
+    "model": "Gixxer 250",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Tata",
+    "model": "Altroz",
+    "variants": [
+      "XE",
+      "XM",
+      "XZ",
+      "XZ+"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel",
+      "CNG"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Tata",
+    "model": "Curvv",
+    "variants": [
+      "Smart",
+      "Pure",
+      "Creative",
+      "Accomplished"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel",
+      "EV"
+    ],
+    "bodyType": "Crossover"
+  },
+  {
+    "make": "Tata",
+    "model": "Harrier",
+    "variants": [
+      "XE",
+      "XM",
+      "XZ",
+      "XZ+",
+      "Fearless"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Tata",
+    "model": "Nexon",
+    "variants": [
+      "XE",
+      "XM",
+      "XZ",
+      "XZ+",
+      "Fearless",
+      "Creative"
+    ],
+    "yearFrom": 2017,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Tata",
+    "model": "Nexon EV",
+    "variants": [
+      "XM",
+      "XZ+",
+      "Empowered"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Tata",
+    "model": "Punch",
+    "variants": [
+      "Pure",
+      "Adventure",
+      "Accomplished",
+      "Creative"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Micro SUV"
+  },
+  {
+    "make": "Tata",
+    "model": "Punch EV",
+    "variants": [
+      "Smart",
+      "Adventure",
+      "Empowered"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Micro SUV"
+  },
+  {
+    "make": "Tata",
+    "model": "Safari",
+    "variants": [
+      "XE",
+      "XM",
+      "XZ",
+      "XZ+",
+      "Accomplished"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Tata",
+    "model": "Tiago",
+    "variants": [
+      "XE",
+      "XM",
+      "XT",
+      "XZ"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Tata",
+    "model": "Tiago EV",
+    "variants": [
+      "XE",
+      "XT",
+      "XZ"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Tata",
+    "model": "Tigor",
+    "variants": [
+      "XE",
+      "XM",
+      "XT",
+      "XZ"
+    ],
+    "yearFrom": 2017,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Tata",
+    "model": "Tigor EV",
+    "variants": [
+      "XE",
+      "XT",
+      "XZ"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Toyota",
+    "model": "Camry",
+    "variants": [
+      "Hybrid"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Hybrid"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Toyota",
+    "model": "Fortuner",
+    "variants": [
+      "4x2",
+      "4x4",
+      "Legender"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Toyota",
+    "model": "Glanza",
+    "variants": [
+      "E",
+      "S",
+      "G",
+      "V"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Toyota",
+    "model": "Hilux",
+    "variants": [
+      "High"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Diesel"
+    ],
+    "bodyType": "Pickup"
+  },
+  {
+    "make": "Toyota",
+    "model": "Innova Crysta",
+    "variants": [
+      "G",
+      "GX",
+      "VX",
+      "ZX",
+      "ZX(O)"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2022,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "Toyota",
+    "model": "Innova Hycross",
+    "variants": [
+      "GX",
+      "VX",
+      "ZX",
+      "ZX(O)"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Hybrid"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "Toyota",
+    "model": "Rumion",
+    "variants": [
+      "S",
+      "G",
+      "V"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "Toyota",
+    "model": "Taisor",
+    "variants": [
+      "E",
+      "S",
+      "G",
+      "V"
+    ],
+    "yearFrom": 2024,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "CNG"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Toyota",
+    "model": "Urban Cruiser",
+    "variants": [
+      "Mid",
+      "High",
+      "Premium"
+    ],
+    "yearFrom": 2020,
+    "yearTo": 2022,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Toyota",
+    "model": "Urban Cruiser Hyryder",
+    "variants": [
+      "E",
+      "S",
+      "G",
+      "V"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Hybrid",
+      "CNG"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Toyota",
+    "model": "Vellfire",
+    "variants": [
+      "Luxury"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Hybrid"
+    ],
+    "bodyType": "MPV"
+  },
+  {
+    "make": "TVS",
+    "model": "Apache RTR 160",
+    "variants": [
+      "Drum",
+      "Disc",
+      "4V"
+    ],
+    "yearFrom": 2007,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "TVS",
+    "model": "Apache RTR 200 4V",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "TVS",
+    "model": "Jupiter",
+    "variants": [
+      "STD",
+      "ZX",
+      "Classic"
+    ],
+    "yearFrom": 2013,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "TVS",
+    "model": "Ntorq 125",
+    "variants": [
+      "Drum",
+      "Disc",
+      "Race Edition"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "TVS",
+    "model": "Raider",
+    "variants": [
+      "Drum",
+      "Disc"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "TVS",
+    "model": "Sport",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2007,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Volkswagen",
+    "model": "Polo",
+    "variants": [
+      "Trendline",
+      "Comfortline",
+      "Highline",
+      "GT"
+    ],
+    "yearFrom": 2014,
+    "yearTo": 2022,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Hatchback"
+  },
+  {
+    "make": "Volkswagen",
+    "model": "Taigun",
+    "variants": [
+      "Comfortline",
+      "Highline",
+      "Topline",
+      "GT"
+    ],
+    "yearFrom": 2021,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Volkswagen",
+    "model": "Tiguan",
+    "variants": [
+      "Elegance"
+    ],
+    "yearFrom": 2017,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Volkswagen",
+    "model": "Vento",
+    "variants": [
+      "Trendline",
+      "Comfortline",
+      "Highline"
+    ],
+    "yearFrom": 2014,
+    "yearTo": 2022,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Volkswagen",
+    "model": "Virtus",
+    "variants": [
+      "Comfortline",
+      "Highline",
+      "Topline",
+      "GT"
+    ],
+    "yearFrom": 2022,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Volvo",
+    "model": "C40 Recharge",
+    "variants": [
+      "Plus",
+      "Ultimate"
+    ],
+    "yearFrom": 2023,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "EV"
+    ],
+    "bodyType": "Crossover"
+  },
+  {
+    "make": "Volvo",
+    "model": "S90",
+    "variants": [
+      "Momentum",
+      "Inscription"
+    ],
+    "yearFrom": 2017,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "Sedan"
+  },
+  {
+    "make": "Volvo",
+    "model": "XC40",
+    "variants": [
+      "Momentum",
+      "R-Design",
+      "Inscription"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "EV"
+    ],
+    "bodyType": "Compact SUV"
+  },
+  {
+    "make": "Volvo",
+    "model": "XC60",
+    "variants": [
+      "Momentum",
+      "R-Design",
+      "Inscription"
+    ],
+    "yearFrom": 2018,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Volvo",
+    "model": "XC90",
+    "variants": [
+      "Momentum",
+      "Inscription"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol",
+      "Diesel",
+      "Hybrid"
+    ],
+    "bodyType": "SUV"
+  },
+  {
+    "make": "Yamaha",
+    "model": "Fascino",
+    "variants": [
+      "Standard",
+      "Fi"
+    ],
+    "yearFrom": 2015,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Yamaha",
+    "model": "FZ",
+    "variants": [
+      "FZ",
+      "FZS",
+      "FZ-X"
+    ],
+    "yearFrom": 2008,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Yamaha",
+    "model": "MT-15",
+    "variants": [
+      "Standard",
+      "V2"
+    ],
+    "yearFrom": 2019,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Yamaha",
+    "model": "R15",
+    "variants": [
+      "R15",
+      "R15 V4",
+      "R15M"
+    ],
+    "yearFrom": 2008,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  },
+  {
+    "make": "Yamaha",
+    "model": "RayZR",
+    "variants": [
+      "Standard",
+      "Street Rally"
+    ],
+    "yearFrom": 2016,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Scooter"
+  },
+  {
+    "make": "Yamaha",
+    "model": "Saluto RX",
+    "variants": [
+      "Standard"
+    ],
+    "yearFrom": 2015,
+    "yearTo": 2025,
+    "fuelTypes": [
+      "Petrol"
+    ],
+    "bodyType": "Motorcycle"
+  }
+]

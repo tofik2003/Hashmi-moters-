@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hashmimotors.app.data.repository.CategoryRepository
 import com.hashmimotors.app.data.repository.PartRepository
+import com.hashmimotors.app.data.seed.ReferenceDataRepository
+import com.hashmimotors.app.data.seed.SeedCategory
+import com.hashmimotors.app.data.seed.SeedPartReference
 import com.hashmimotors.app.domain.model.Category
 import com.hashmimotors.app.domain.model.Part
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +34,8 @@ data class CatalogUiState(
 @HiltViewModel
 class CatalogViewModel @Inject constructor(
     private val partRepo: PartRepository,
-    private val categoryRepo: CategoryRepository
+    private val categoryRepo: CategoryRepository,
+    private val referenceDataRepository: ReferenceDataRepository
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -89,4 +93,17 @@ class CatalogViewModel @Inject constructor(
             partRepo.deletePart(part)
         }
     }
+
+    /**
+     * Search the bundled common-parts reference catalog. Used for the
+     * "quick add" suggestions in Add Part.
+     */
+    fun searchReferenceParts(query: String, limit: Int = 12): List<SeedPartReference> =
+        referenceDataRepository.searchParts(query, limit)
+
+    /**
+     * Default HSN code / GST rate for a category (used to auto-fill Add Part).
+     */
+    fun categoryDefaults(categoryName: String): SeedCategory? =
+        referenceDataRepository.defaultsForCategory(categoryName)
 }

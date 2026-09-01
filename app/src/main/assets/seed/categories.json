@@ -1,0 +1,134 @@
+[
+  {
+    "name": "Engine",
+    "icon": "engine",
+    "defaultHsn": "87089900",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Brakes",
+    "icon": "brake",
+    "defaultHsn": "87083000",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Suspension",
+    "icon": "suspension",
+    "defaultHsn": "87088000",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Steering",
+    "icon": "steering",
+    "defaultHsn": "87089400",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Clutch",
+    "icon": "clutch",
+    "defaultHsn": "87089300",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Transmission",
+    "icon": "transmission",
+    "defaultHsn": "87084000",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Filters",
+    "icon": "filter",
+    "defaultHsn": "84212300",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Electrical",
+    "icon": "bolt",
+    "defaultHsn": "85119000",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Lighting",
+    "icon": "light",
+    "defaultHsn": "85122010",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Batteries",
+    "icon": "battery",
+    "defaultHsn": "85071000",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Ignition",
+    "icon": "ignition",
+    "defaultHsn": "85113000",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Cooling",
+    "icon": "cooling",
+    "defaultHsn": "87089100",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Air Conditioning",
+    "icon": "ac",
+    "defaultHsn": "84159000",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Oils & Fluids",
+    "icon": "oil",
+    "defaultHsn": "27101990",
+    "defaultGstPercent": 18.0
+  },
+  {
+    "name": "Belts & Hoses",
+    "icon": "belt",
+    "defaultHsn": "40103990",
+    "defaultGstPercent": 18.0
+  },
+  {
+    "name": "Body Parts",
+    "icon": "body",
+    "defaultHsn": "87082900",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Glass",
+    "icon": "glass",
+    "defaultHsn": "70072190",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Exhaust",
+    "icon": "exhaust",
+    "defaultHsn": "87089200",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Wheels & Hubs",
+    "icon": "wheel",
+    "defaultHsn": "87087000",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Bearings & Seals",
+    "icon": "bearing",
+    "defaultHsn": "84821090",
+    "defaultGstPercent": 18.0
+  },
+  {
+    "name": "Accessories",
+    "icon": "star",
+    "defaultHsn": "87089900",
+    "defaultGstPercent": 28.0
+  },
+  {
+    "name": "Tools",
+    "icon": "tool",
+    "defaultHsn": "82055990",
+    "defaultGstPercent": 18.0
+  }
+]

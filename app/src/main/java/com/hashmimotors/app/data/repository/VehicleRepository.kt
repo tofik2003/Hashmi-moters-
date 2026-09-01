@@ -4,6 +4,7 @@ import com.hashmimotors.app.data.local.FitmentDao
 import com.hashmimotors.app.data.local.FitmentEntity
 import com.hashmimotors.app.data.local.VehicleDao
 import com.hashmimotors.app.data.local.VehicleEntity
+import com.hashmimotors.app.data.seed.ReferenceDataRepository
 import com.hashmimotors.app.domain.model.Fitment
 import com.hashmimotors.app.domain.model.Vehicle
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +15,8 @@ import javax.inject.Singleton
 @Singleton
 class VehicleRepository @Inject constructor(
     private val vehicleDao: VehicleDao,
-    private val fitmentDao: FitmentDao
+    private val fitmentDao: FitmentDao,
+    private val referenceDataRepository: ReferenceDataRepository
 ) {
     fun getAllVehicles(): Flow<List<Vehicle>> = vehicleDao.getAll().map { list ->
         list.map { it.toDomain() }
@@ -28,14 +30,27 @@ class VehicleRepository @Inject constructor(
 
     suspend fun ensureSeeded() {
         if (vehicleDao.count() == 0) {
-            seedTopBrands()
+            val seeded = referenceDataRepository.vehicles.map { seed ->
+                VehicleEntity(
+                    id = java.util.UUID.randomUUID().toString(),
+                    make = seed.make,
+                    model = seed.model,
+                    variants = seed.variants,
+                    yearFrom = seed.yearFrom,
+                    yearTo = seed.yearTo,
+                    fuelTypes = seed.fuelTypes,
+                    bodyType = seed.bodyType
+                )
+            }
+            vehicleDao.insertAll(if (seeded.isNotEmpty()) seeded else legacySeed())
         }
     }
 
     /**
-     * Pre-seed top 20 Indian car brands with common models.
+     * Legacy hardcoded seed — kept only as a fallback in case the bundled
+     * assets are unavailable at runtime.
      */
-    private suspend fun seedTopBrands() {
+    private fun legacySeed(): List<VehicleEntity> {
         val vehicles = mutableListOf<VehicleEntity>()
         val id = { java.util.UUID.randomUUID().toString() }
         val v = { make: String, model: String, variants: List<String>, from: Int, to: Int, fuels: List<String>, body: String ->
@@ -106,7 +121,7 @@ class VehicleRepository @Inject constructor(
         vehicles += v("Citroen", "C3 Aircross", listOf("You","Plus","Max"), 2023, 2025, listOf("Petrol"), "Compact SUV")
         vehicles += v("Force", "Gurkha", listOf("Xplorer","Xpedition"), 2021, 2025, listOf("Diesel"), "SUV")
 
-        vehicleDao.insertAll(vehicles)
+        return vehicles
     }
 
     fun getFitmentsForVehicle(vehicleId: String): Flow<List<Fitment>> =

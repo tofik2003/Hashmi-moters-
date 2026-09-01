@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -18,9 +19,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -61,6 +65,7 @@ fun AddPartScreen(
     var stockQty by remember { mutableStateOf("0") }
     var reorderLevel by remember { mutableStateOf("5") }
     var hsnCode by remember { mutableStateOf("") }
+    var gstPercent by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
     var barcode by remember { mutableStateOf("") }
     var saving by remember { mutableStateOf(false) }
@@ -81,6 +86,7 @@ fun AddPartScreen(
                 stockQty = part.stockQty.toString()
                 reorderLevel = part.reorderLevel.toString()
                 hsnCode = part.hsnCode ?: ""
+                gstPercent = if (part.gstPercent > 0.0) part.gstPercent.toString() else ""
                 notes = part.notes ?: ""
                 barcode = part.barcode ?: ""
             }
@@ -145,6 +151,71 @@ fun AddPartScreen(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
+
+            // Quick-add suggestions from the bundled reference catalog
+            if (name.isNotBlank()) {
+                val suggestions = viewModel.searchReferenceParts(name, limit = 6)
+                if (suggestions.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Card(
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.White.copy(alpha = 0.08f)
+                        )
+                    ) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text(
+                                text = "Suggested from catalog — tap to fill",
+                                color = Color.White.copy(alpha = 0.6f),
+                                fontSize = 11.sp
+                            )
+                            Spacer(modifier = Modifier.height(6.dp))
+                            suggestions.forEach { s ->
+                                val cat = state.categories.firstOrNull {
+                                    it.name.equals(s.category, ignoreCase = true)
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            name = s.name
+                                            categoryId = cat?.id
+                                            hsnCode = s.hsnCode ?: hsnCode
+                                            gstPercent = if (s.gstPercent > 0.0) s.gstPercent.toString() else gstPercent
+                                        }
+                                        .padding(vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        Icons.Filled.Add,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = s.name,
+                                            color = Color.White,
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                        Text(
+                                            text = listOfNotNull(
+                                                s.category,
+                                                s.hsnCode?.let { "HSN $it" },
+                                                if (s.gstPercent > 0.0) "GST ${s.gstPercent}%" else null
+                                            ).joinToString("  •  "),
+                                            color = Color.White.copy(alpha = 0.55f),
+                                            fontSize = 11.sp
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             Spacer(modifier = Modifier.height(12.dp))
 
             // SKU
@@ -190,7 +261,17 @@ fun AddPartScreen(
                 CategorySelector(
                     categories = state.categories.map { it.id to it.name },
                     selected = categoryId,
-                    onSelect = { categoryId = it }
+                    onSelect = { id ->
+                        categoryId = id
+                        val catName = state.categories.firstOrNull { it.id == id }?.name
+                        if (catName != null) {
+                            val defaults = viewModel.categoryDefaults(catName)
+                            if (hsnCode.isBlank()) hsnCode = defaults?.defaultHsn ?: ""
+                            if (gstPercent.isBlank() && defaults?.defaultGstPercent != null && defaults.defaultGstPercent > 0.0) {
+                                gstPercent = defaults.defaultGstPercent.toString()
+                            }
+                        }
+                    }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }
@@ -248,6 +329,17 @@ fun AddPartScreen(
                 label = { Text("HSN Code (for GST)") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // GST %
+            OutlinedTextField(
+                value = gstPercent,
+                onValueChange = { gstPercent = it },
+                label = { Text("GST % (auto-filled from category)") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -313,7 +405,7 @@ fun AddPartScreen(
                             categoryId = categoryId,
                             mrp = mrpVal,
                             sellingPrice = priceVal,
-                            gstPercent = 0.0, // Composition scheme
+                            gstPercent = gstPercent.toDoubleOrNull()?.coerceAtLeast(0.0) ?: 0.0,
                             hsnCode = hsnCode.ifBlank { null },
                             stockQty = stockQty.toIntOrNull() ?: 0,
                             reorderLevel = reorderLevel.toIntOrNull() ?: 5,
