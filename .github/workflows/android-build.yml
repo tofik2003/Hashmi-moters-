@@ -1,0 +1,66 @@
+name: Android APK Build
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug
+      
+    - name: Upload Debug APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: hashmi-motors-debug-apk
+        path: app/build/outputs/apk/debug/*.apk
+        retention-days: 30
+        
+    - name: Build Release APK (Unsigned)
+      run: ./gradlew assembleRelease
+      
+    - name: Upload Release APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: hashmi-motors-release-unsigned-apk
+        path: app/build/outputs/apk/release/*-unsigned.apk
+        retention-days: 30
+        
+    - name: Build Summary
+      run: |
+        echo "## ✅ Build Complete!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Build Date:** $(date)" >> $GITHUB_STEP_SUMMARY
+        echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📦 Generated Artifacts:" >> $GITHUB_STEP_SUMMARY
+        echo "- Debug APK: \`hashmi-motors-debug-apk\`" >> $GITHUB_STEP_SUMMARY
+        echo "- Release APK (unsigned): \`hashmi-motors-release-unsigned-apk\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 🚀 Ultra Advanced Features Included:" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Smart Search with AI ranking" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ QR Product Parser (auto-detection)" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Past Scan History tracking" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Quick In-Out (fast-moving items)" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Favorite Parts system" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Sales Analytics tracking" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Enhanced premium app icon theme" >> $GITHUB_STEP_SUMMARY

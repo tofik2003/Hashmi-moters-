@@ -61,6 +61,43 @@ interface PartDao {
     @Query("SELECT * FROM parts WHERE name = :name AND active = 1 LIMIT 1")
     suspend fun findByNameOnce(name: String): PartEntity?
 
+    // Smart search: fuzzy match with scoring based on recency, frequency, and favorites
+    @Query("""
+        SELECT *, 
+            (CASE WHEN favorite = 1 THEN 100 ELSE 0 END +
+             CASE WHEN lastScannedAt IS NOT NULL THEN MIN((julianday('now') - julianday(lastScannedAt/1000.0)), 30) * 2 ELSE 0 END +
+             CASE WHEN scanCount > 0 THEN MIN(scanCount, 50) ELSE 0 END +
+             CASE WHEN totalSold > 0 THEN MIN(totalSold, 100) ELSE 0 END) AS smartScore
+        FROM parts
+        WHERE active = 1
+        AND (name LIKE '%' || :query || '%'
+             OR sku LIKE '%' || :query || '%'
+             OR brand LIKE '%' || :query || '%'
+             OR barcode LIKE '%' || :query || '%'
+             OR oemNumbers LIKE '%' || :query || '%')
+        ORDER BY smartScore DESC, name ASC
+    """)
+    fun smartSearch(query: String): Flow<List<PartEntity>>
+
+    // Past scan history: most recently scanned parts
+    @Query("SELECT * FROM parts WHERE active = 1 AND lastScannedAt IS NOT NULL ORDER BY lastScannedAt DESC LIMIT :limit")
+    fun getRecentlyScanned(limit: Int = 20): Flow<List<PartEntity>>
+
+    // Quick in-out: fast moving items (high scan count or sales in last 7 days)
+    @Query("""
+        SELECT * FROM parts 
+        WHERE active = 1 
+        AND lastScannedAt IS NOT NULL 
+        AND lastScannedAt > (strftime('%s', 'now') - 604800) * 1000
+        ORDER BY scanCount DESC, lastScannedAt DESC
+        LIMIT :limit
+    """)
+    fun getQuickInOutItems(limit: Int = 20): Flow<List<PartEntity>>
+
+    // Favorite parts for quick access
+    @Query("SELECT * FROM parts WHERE active = 1 AND favorite = 1 ORDER BY lastScannedAt DESC")
+    fun getFavoriteParts(): Flow<List<PartEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(part: PartEntity)
 
@@ -75,6 +112,15 @@ interface PartDao {
 
     @Query("UPDATE parts SET stockQty = stockQty + :delta, updatedAt = :timestamp WHERE id = :partId")
     suspend fun adjustStock(partId: String, delta: Int, timestamp: Long = System.currentTimeMillis())
+
+    @Query("UPDATE parts SET scanCount = scanCount + 1, lastScannedAt = :timestamp WHERE id = :partId")
+    suspend fun incrementScanCount(partId: String, timestamp: Long = System.currentTimeMillis())
+
+    @Query("UPDATE parts SET totalSold = totalSold + :qty, lastSoldAt = :timestamp WHERE id = :partId")
+    suspend fun recordSale(partId: String, qty: Int, timestamp: Long = System.currentTimeMillis())
+
+    @Query("UPDATE parts SET favorite = :isFavorite WHERE id = :partId")
+    suspend fun setFavorite(partId: String, isFavorite: Boolean)
 }
 
 @Dao

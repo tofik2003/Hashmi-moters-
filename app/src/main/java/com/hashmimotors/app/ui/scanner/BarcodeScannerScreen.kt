@@ -40,6 +40,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.hashmimotors.app.ui.theme.PremiumGold
+import com.hashmimotors.app.util.QrProductParser
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -95,6 +97,9 @@ fun BarcodeScannerScreen(
     var lastValue by remember { mutableStateOf("") }
     var lastTime by remember { mutableStateOf(0L) }
 
+    // Track auto-detected product info from QR codes
+    var detectedProductInfo by remember { mutableStateOf<String?>(null) }
+
     val controller = remember {
         LifecycleCameraController(context).apply {
             setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
@@ -112,6 +117,16 @@ fun BarcodeScannerScreen(
                         .addOnSuccessListener { barcodes ->
                             val value = barcodes.firstOrNull()?.rawValue
                             if (value != null) {
+                                // Try to parse as full product data (QR code with embedded product info)
+                                val product = QrProductParser.parse(value)
+                                if (product != null) {
+                                    // Rich QR code detected - notify UI with product details
+                                    detectedProductInfo = "${product.name} • ₹${product.mrp ?: "?"}"
+                                } else {
+                                    // Standard barcode - just show the code
+                                    detectedProductInfo = null
+                                }
+                                
                                 if (continuous) {
                                     val now = System.currentTimeMillis()
                                     if (value != lastValue || now - lastTime >= COOLDOWN_MS) {
@@ -201,7 +216,7 @@ fun BarcodeScannerScreen(
             )
         }
 
-        // Bottom hint / continuous-scan summary
+        // Bottom hint / continuous-scan summary with QR product detection
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -247,19 +262,31 @@ fun BarcodeScannerScreen(
                     }
                 }
             } else {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(24.dp))
                         .padding(horizontal = 16.dp, vertical = 10.dp)
                 ) {
-                    Icon(Icons.Filled.QrCodeScanner, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
-                    Spacer(modifier = Modifier.size(8.dp))
-                    Text(
-                        text = "Point at a barcode to search",
-                        color = Color.White,
-                        fontSize = 13.sp
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Filled.QrCodeScanner, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.size(8.dp))
+                        Text(
+                            text = "Point at barcode or QR code",
+                            color = Color.White,
+                            fontSize = 13.sp
+                        )
+                    }
+                    // Show detected product info for rich QR codes
+                    detectedProductInfo?.let { productInfo ->
+                        Spacer(modifier = Modifier.size(8.dp))
+                        Text(
+                            text = "📦 $productInfo",
+                            color = PremiumGold,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
                 }
             }
         }

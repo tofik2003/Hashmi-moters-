@@ -4,14 +4,25 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Premium midnight indigo -> violet gradient (matches app background) -->
+    <!-- Ultra-premium multi-layer gradient with gold accents -->
+    <!-- Base: Deep midnight indigo -->
     <path
-        android:fillColor="#141433"
+        android:fillColor="#0F0F2D"
         android:pathData="M0,0 L108,0 L108,108 L0,108 Z" />
+    <!-- Layer 1: Rich indigo gradient -->
     <path
         android:fillColor="#1E1B5E"
-        android:pathData="M0,0 L108,0 L108,54 L0,108 Z" />
+        android:pathData="M0,0 L108,0 L108,60 L0,108 Z" />
+    <!-- Layer 2: Violet accent corner -->
     <path
         android:fillColor="#3B1E7A"
-        android:pathData="M0,0 L80,0 L0,80 Z" />
+        android:pathData="M0,0 L90,0 L0,90 Z" />
+    <!-- Layer 3: Gold highlight top-right -->
+    <path
+        android:fillColor="#2D2A6E"
+        android:pathData="M60,0 L108,0 L108,48 Z" />
+    <!-- Subtle gold glow effect bottom-left -->
+    <path
+        android:fillColor="#1A1A4A"
+        android:pathData="M0,70 L40,108 L0,108 Z" />
 </vector>

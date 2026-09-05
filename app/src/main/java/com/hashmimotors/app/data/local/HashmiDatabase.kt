@@ -18,7 +18,7 @@ import androidx.room.TypeConverters
         SettingsEntity::class,
         UserEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

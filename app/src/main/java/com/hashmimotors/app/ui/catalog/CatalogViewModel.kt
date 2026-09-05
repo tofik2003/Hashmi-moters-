@@ -49,7 +49,12 @@ data class CatalogUiState(
     val stockFilter: StockFilter = StockFilter.ALL,
     val brandFilter: String? = null,
     val availableBrands: List<String> = emptyList(),
-    val recentSearches: List<String> = emptyList()
+    val recentSearches: List<String> = emptyList(),
+    // Smart features
+    val recentlyScannedParts: List<Part> = emptyList(),
+    val quickInOutItems: List<Part> = emptyList(),
+    val favoriteParts: List<Part> = emptyList(),
+    val isSmartSearchEnabled: Boolean = true
 )
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -67,6 +72,7 @@ class CatalogViewModel @Inject constructor(
     private val _brandFilter = MutableStateFlow<String?>(null)
     private val _stockFilter = MutableStateFlow(StockFilter.ALL)
     private val _recentSearches = MutableStateFlow(searchHistoryStore.get())
+    private val _useSmartSearch = MutableStateFlow(true)
 
     /** Immediate query, safe to bind to a TextField without input lag. */
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
@@ -80,16 +86,30 @@ class CatalogViewModel @Inject constructor(
         _selectedCategoryId,
         _sortMode,
         _brandFilter,
-        _stockFilter
-    ) { q, catId, sort, brand, stock ->
-        Params(q, catId, sort, brand, stock)
+        _stockFilter,
+        _useSmartSearch
+    ) { q, catId, sort, brand, stock, useSmart ->
+        Params(q, catId, sort, brand, stock, useSmart)
     }.flatMapLatest { params ->
         val partsFlow = if (params.query.isNotBlank()) {
-            partRepo.searchParts(params.query)
+            if (params.useSmart) {
+                partRepo.smartSearchParts(params.query)
+            } else {
+                partRepo.searchParts(params.query)
+            }
         } else {
             partRepo.getAllParts()
         }
-        combine(partsFlow, categoryRepo.getAllCategories(), partRepo.getAllParts()) { parts, categories, allParts ->
+        
+        // Combine with smart feature data streams
+        combine(
+            partsFlow, 
+            categoryRepo.getAllCategories(), 
+            partRepo.getAllParts(),
+            partRepo.getRecentlyScannedParts(15),
+            partRepo.getQuickInOutItems(15),
+            partRepo.getFavoriteParts()
+        ) { parts, categories, allParts, recentScanned, quickInOut, favorites ->
             val brands = allParts.mapNotNull { it.brand }
                 .distinct()
                 .sortedBy { it.lowercase() }
@@ -116,7 +136,11 @@ class CatalogViewModel @Inject constructor(
                 sortMode = params.sort,
                 stockFilter = params.stock,
                 brandFilter = params.brand,
-                availableBrands = brands
+                availableBrands = brands,
+                recentlyScannedParts = recentScanned,
+                quickInOutItems = quickInOut,
+                favoriteParts = favorites,
+                isSmartSearchEnabled = params.useSmart
             )
         }
     }.combine(_recentSearches) { state, recent ->
@@ -164,6 +188,10 @@ class CatalogViewModel @Inject constructor(
         _stockFilter.value = stock
     }
 
+    fun toggleSmartSearch() {
+        _useSmartSearch.value = !_useSmartSearch.value
+    }
+
     fun savePart(part: Part) {
         viewModelScope.launch {
             partRepo.savePart(part)
@@ -173,6 +201,27 @@ class CatalogViewModel @Inject constructor(
     fun deletePart(part: Part) {
         viewModelScope.launch {
             partRepo.deletePart(part)
+        }
+    }
+
+    /** Record a scan for analytics (called when part is scanned/used) */
+    fun recordPartScan(partId: String) {
+        viewModelScope.launch {
+            partRepo.recordScan(partId)
+        }
+    }
+
+    /** Record a sale for analytics */
+    fun recordPartSale(partId: String, qty: Int) {
+        viewModelScope.launch {
+            partRepo.recordSale(partId, qty)
+        }
+    }
+
+    /** Toggle favorite status */
+    fun toggleFavorite(partId: String, currentStatus: Boolean) {
+        viewModelScope.launch {
+            partRepo.setFavorite(partId, !currentStatus)
         }
     }
 
@@ -216,6 +265,7 @@ class CatalogViewModel @Inject constructor(
         val categoryId: String?,
         val sort: SortMode,
         val brand: String?,
-        val stock: StockFilter
+        val stock: StockFilter,
+        val useSmart: Boolean = true
     )
 }

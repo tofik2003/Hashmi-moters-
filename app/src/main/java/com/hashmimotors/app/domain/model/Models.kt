@@ -83,7 +83,13 @@ data class Part(
     val notes: String? = null,
     val active: Boolean = true,
     val createdAt: Long = System.currentTimeMillis(),
-    val updatedAt: Long = System.currentTimeMillis()
+    val updatedAt: Long = System.currentTimeMillis(),
+    // Advanced analytics fields for smart features
+    val lastScannedAt: Long? = null,      // Last time part was scanned
+    val scanCount: Int = 0,                // Total number of scans
+    val lastSoldAt: Long? = null,          // Last time part was sold
+    val totalSold: Int = 0,                // Total quantity sold
+    val favorite: Boolean = false          // User-marked favorite for quick access
 )
 
 // ============================================

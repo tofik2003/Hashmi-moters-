@@ -1,13 +1,35 @@
-*.iml
-.gradle
-/local.properties
-/.idea
+```
+# Compiled and build artifacts
+*.class
+*.o
+*.obj
+*.out
+build/
+target/
+
+# Dependencies
+.gradle/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+coverage/
+htmlcov/
+*.coverage
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# System
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
-app/build/
-*.apk
-*.aab
+Thumbs.db
+*.log
+
+# Environment
+.env
+.env.local
+*.env.*
+```
