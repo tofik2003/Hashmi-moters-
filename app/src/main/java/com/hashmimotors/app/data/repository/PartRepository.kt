@@ -37,6 +37,41 @@ class PartRepository @Inject constructor(
         list.map { it.toDomain() }
     }
 
+    /** Smart search with scoring based on recency, frequency, and favorites */
+    fun smartSearchParts(query: String): Flow<List<Part>> = partDao.smartSearch(query).map { list ->
+        list.map { it.toDomain() }
+    }
+
+    /** Get recently scanned parts (past scan history) */
+    fun getRecentlyScannedParts(limit: Int = 20): Flow<List<Part>> = partDao.getRecentlyScanned(limit).map { list ->
+        list.map { it.toDomain() }
+    }
+
+    /** Get quick in-out items (fast moving parts) */
+    fun getQuickInOutItems(limit: Int = 20): Flow<List<Part>> = partDao.getQuickInOutItems(limit).map { list ->
+        list.map { it.toDomain() }
+    }
+
+    /** Get favorite parts */
+    fun getFavoriteParts(): Flow<List<Part>> = partDao.getFavoriteParts().map { list ->
+        list.map { it.toDomain() }
+    }
+
+    /** Increment scan count when a part is scanned/used */
+    suspend fun recordScan(partId: String) {
+        partDao.incrementScanCount(partId)
+    }
+
+    /** Record a sale for analytics */
+    suspend fun recordSale(partId: String, qty: Int) {
+        partDao.recordSale(partId, qty)
+    }
+
+    /** Toggle favorite status */
+    suspend fun setFavorite(partId: String, isFavorite: Boolean) {
+        partDao.setFavorite(partId, isFavorite)
+    }
+
     fun getLowStock(): Flow<List<Part>> = partDao.getLowStock().map { list ->
         list.map { it.toDomain() }
     }
@@ -200,7 +235,12 @@ fun PartEntity.toDomain() = Part(
     notes = notes,
     active = active,
     createdAt = createdAt,
-    updatedAt = updatedAt
+    updatedAt = updatedAt,
+    lastScannedAt = lastScannedAt,
+    scanCount = scanCount,
+    lastSoldAt = lastSoldAt,
+    totalSold = totalSold,
+    favorite = favorite
 )
 
 fun Part.toEntity() = PartEntity(
@@ -223,5 +263,10 @@ fun Part.toEntity() = PartEntity(
     notes = notes,
     active = active,
     createdAt = createdAt,
-    updatedAt = System.currentTimeMillis()
+    updatedAt = System.currentTimeMillis(),
+    lastScannedAt = lastScannedAt,
+    scanCount = scanCount,
+    lastSoldAt = lastSoldAt,
+    totalSold = totalSold,
+    favorite = favorite
 )

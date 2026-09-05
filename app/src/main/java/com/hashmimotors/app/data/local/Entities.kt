@@ -16,7 +16,9 @@ import kotlinx.serialization.Serializable
         Index(value = ["name"]),
         Index(value = ["sku"]),
         Index(value = ["barcode"]),
-        Index(value = ["categoryId"])
+        Index(value = ["categoryId"]),
+        Index(value = ["lastScannedAt"]),
+        Index(value = ["scanCount"])
     ]
 )
 data class PartEntity(
@@ -59,7 +61,17 @@ data class PartEntity(
     @ColumnInfo(name = "createdAt")
     val createdAt: Long,
     @ColumnInfo(name = "updatedAt")
-    val updatedAt: Long
+    val updatedAt: Long,
+    @ColumnInfo(name = "lastScannedAt")
+    val lastScannedAt: Long? = null,
+    @ColumnInfo(name = "scanCount")
+    val scanCount: Int = 0,
+    @ColumnInfo(name = "lastSoldAt")
+    val lastSoldAt: Long? = null,
+    @ColumnInfo(name = "totalSold")
+    val totalSold: Int = 0,
+    @ColumnInfo(name = "favorite")
+    val favorite: Boolean = false
 )
 
 @Entity(tableName = "categories")
